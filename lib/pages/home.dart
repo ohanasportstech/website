@@ -759,6 +759,10 @@ class _GlassHeader extends StatelessWidget {
                       const Spacer(),
                       TextButton(onPressed: () {}, child: const Text('App')),
                       TextButton(onPressed: () {}, child: const Text('SmartModule')),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pushNamed('/about'),
+                        child: const Text('About'),
+                      ),
                       TextButton(onPressed: () {}, child: const Text('Contact')),
                     ],
                   ),

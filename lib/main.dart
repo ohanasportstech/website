@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'pages/home_page.dart';
+import 'pages/home.dart';
+import 'pages/about.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,8 +32,11 @@ class MyApp extends StatelessWidget {
         ),
         textTheme: GoogleFonts.interTextTheme(ThemeData.dark(useMaterial3: true).textTheme),
       ),
-      home: const HomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomePage(),
+        '/about': (context) => const AboutPage(),
+      },
     );
   }
 }
-
