@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:visibility_detector/visibility_detector.dart';
+import '../widgets/reveal.dart';
+import '../widgets/separator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -42,18 +43,18 @@ class _HomePageState extends State<HomePage> {
                 controller: _scrollController,
                 slivers: [
                   SliverToBoxAdapter(child: _HeroSection(isMobile: isMobile, scroll: _scroll)),
-                  const SliverToBoxAdapter(child: _Separator()),
-                  SliverToBoxAdapter(child: _Reveal(child: _ProductSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _Reveal(delayMs: 60, child: _FeaturesSection(isMobile: isMobile))),
-                  const SliverToBoxAdapter(child: _Separator()),
-                  SliverToBoxAdapter(child: _Reveal(delayMs: 90, child: _HowItWorksSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile))),
-                  const SliverToBoxAdapter(child: _Separator()),
-                  SliverToBoxAdapter(child: _Reveal(delayMs: 150, child: _TestimonialsSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _Reveal(delayMs: 180, child: _FaqSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _Reveal(delayMs: 210, child: _ContactSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _Reveal(delayMs: 240, child: _CtaSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: const _Footer()),
+                  const SliverToBoxAdapter(child: Separator()),
+                  SliverToBoxAdapter(child: Reveal(child: _ProductSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _FeaturesSection(isMobile: isMobile))),
+                  const SliverToBoxAdapter(child: Separator()),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _HowItWorksSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile))),
+                  const SliverToBoxAdapter(child: Separator()),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 150, child: _TestimonialsSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 180, child: _FaqSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 210, child: _ContactSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 240, child: _CtaSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: const Separator()),
                 ],
               ),
               const _GlassHeader(),
@@ -65,28 +66,46 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _Separator extends StatelessWidget {
-  const _Separator();
+class _GlassHeader extends StatelessWidget {
+  const _GlassHeader();
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: Container(
-            height: 1.2,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.transparent,
-                  color.outlineVariant,
-                  Colors.transparent,
-                ],
-                stops: const [0.0, 0.5, 1.0],
+    return Positioned(
+      top: 0, left: 0, right: 0,
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                height: 56,
+                decoration: BoxDecoration(
+                  color: color.surface.withValues(alpha: 0.6),
+                  border: Border.all(color: color.outlineVariant),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 8)),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      Text('Kai Tennis', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+                      const Spacer(),
+                      TextButton(onPressed: () {}, child: const Text('App')),
+                      TextButton(onPressed: () {}, child: const Text('SmartModule')),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pushNamed('/about'),
+                        child: const Text('About'),
+                      ),
+                      TextButton(onPressed: () {}, child: const Text('Contact')),
+                    ],
+                  ),
+                ),
               ),
-              borderRadius: BorderRadius.circular(100),
             ),
           ),
         ),
@@ -95,55 +114,11 @@ class _Separator extends StatelessWidget {
   }
 }
 
-class _Reveal extends StatefulWidget {
-  final Widget child;
-  final int delayMs;
-  const _Reveal({required this.child, this.delayMs = 0});
-
-  @override
-  State<_Reveal> createState() => _RevealState();
-}
-
-class _RevealState extends State<_Reveal> {
-  final _visKey = UniqueKey();
-  bool _shown = false;
-  bool _scheduled = false;
-
-  void _trigger() {
-    if (_scheduled || _shown) return;
-    _scheduled = true;
-    Future.delayed(Duration(milliseconds: widget.delayMs), () {
-      if (mounted) setState(() => _shown = true);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return VisibilityDetector(
-      key: _visKey,
-      onVisibilityChanged: (info) {
-        if (info.visibleFraction > 0.1) {
-          _trigger();
-        }
-      },
-      child: AnimatedSlide(
-        offset: _shown ? Offset.zero : Offset(0, 0.06),
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeOut,
-        child: AnimatedOpacity(
-          opacity: _shown ? 1 : 0,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeOut,
-          child: widget.child,
-        ),
-      ),
-    );
-  }
-}
 
 EdgeInsets _sectionPadding(bool isMobile) =>
     EdgeInsets.symmetric(horizontal: isMobile ? 20 : 80, vertical: isMobile ? 32 : 56);
 
+// MARK: Hero
 class _HeroSection extends StatelessWidget {
   final bool isMobile;
   final double scroll;
@@ -253,6 +228,7 @@ class _HeroSection extends StatelessWidget {
   }
 }
 
+// MARK: Product
 class _ProductSection extends StatelessWidget {
   final bool isMobile;
   const _ProductSection({required this.isMobile});
@@ -726,52 +702,3 @@ class _Footer extends StatelessWidget {
   }
 }
 
-class _GlassHeader extends StatelessWidget {
-  const _GlassHeader();
-  @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(
-                height: 56,
-                decoration: BoxDecoration(
-                  color: color.surface.withValues(alpha: 0.6),
-                  border: Border.all(color: color.outlineVariant),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 8)),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      Text('Kai Tennis', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-                      const Spacer(),
-                      TextButton(onPressed: () {}, child: const Text('App')),
-                      TextButton(onPressed: () {}, child: const Text('SmartModule')),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pushNamed('/about'),
-                        child: const Text('About'),
-                      ),
-                      TextButton(onPressed: () {}, child: const Text('Contact')),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

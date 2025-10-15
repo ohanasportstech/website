@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'pages/home.dart';
 import 'pages/about.dart';
-import 'pages/privacy_policy.dart';
-import 'pages/terms_of_use.dart';
+import 'docs/privacy_policy.dart';
+import 'docs/terms_of_use.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 void main() {
