@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../widgets/reveal.dart';
 import '../widgets/separator.dart';
+import '../widgets/card.dart';
+import '../strings.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,11 +46,12 @@ class _HomePageState extends State<HomePage> {
                 slivers: [
                   SliverToBoxAdapter(child: _HeroSection(isMobile: isMobile, scroll: _scroll)),
                   const SliverToBoxAdapter(child: Separator()),
-                  SliverToBoxAdapter(child: Reveal(child: _ProductSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _FeaturesSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: Reveal(child: _MeetKaiSection(isMobile: isMobile))),
+                  //SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _FeaturesSection(isMobile: isMobile))),
+                  //SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _ClubsCollegesSection(isMobile: isMobile))),
                   const SliverToBoxAdapter(child: Separator()),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _HowItWorksSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile))),
+                  //SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _HowItWorksSection(isMobile: isMobile))),
+                  //SliverToBoxAdapter(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile))),
                   const SliverToBoxAdapter(child: Separator()),
                   SliverToBoxAdapter(child: Reveal(delayMs: 150, child: _TestimonialsSection(isMobile: isMobile))),
                   SliverToBoxAdapter(child: Reveal(delayMs: 180, child: _FaqSection(isMobile: isMobile))),
@@ -93,15 +96,16 @@ class _GlassHeader extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      Text('Kai Tennis', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+                      Text(Strings.navMain, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
                       const Spacer(),
-                      TextButton(onPressed: () {}, child: const Text('App')),
-                      TextButton(onPressed: () {}, child: const Text('SmartModule')),
+                      TextButton(onPressed: () {}, child: const Text(Strings.nav1)),
+                      TextButton(onPressed: () {}, child: const Text(Strings.nav2)),
+                      TextButton(onPressed: () {}, child: const Text(Strings.nav3)),
                       TextButton(
                         onPressed: () => Navigator.of(context).pushNamed('/about'),
-                        child: const Text('About'),
+                        child: const Text(Strings.nav4),
                       ),
-                      TextButton(onPressed: () {}, child: const Text('Contact')),
+                      FilledButton(onPressed: () {}, child: const Text(Strings.navCTA)),
                     ],
                   ),
                 ),
@@ -125,7 +129,6 @@ class _HeroSection extends StatelessWidget {
   const _HeroSection({required this.isMobile, required this.scroll});
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
     return SizedBox(
       height: isMobile ? 420 : 560,
       child: Stack(
@@ -171,7 +174,7 @@ class _HeroSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Smarter tennis practice, together',
+                        Strings.heroHeader,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.displaySmall?.copyWith(
                               color: Colors.white,
@@ -180,41 +183,11 @@ class _HeroSection extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'App + SmartModule to control your ball machine with ease. Warm coaching, sporty energy, and data that helps you grow.',
+                        Strings.heroDesc,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               color: Colors.white,
                             ),
-                      ),
-                      const SizedBox(height: 24),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 12,
-                        runSpacing: 12,
-                        children: [
-                          FilledButton(
-                            onPressed: () {},
-                            style: FilledButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: isMobile ? 18 : 22, vertical: 14),
-                              shape: const StadiumBorder(),
-                              elevation: 0,
-                            ).copyWith(
-                              overlayColor: WidgetStatePropertyAll(color.primary.withValues(alpha: 0.08)),
-                            ),
-                            child: const Text('Get the App'),
-                          ),
-                          FilledButton(
-                            onPressed: () {},
-                            style: FilledButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: isMobile ? 18 : 22, vertical: 14),
-                              shape: const StadiumBorder(),
-                              elevation: 0,
-                            ).copyWith(
-                              overlayColor: WidgetStatePropertyAll(color.primary.withValues(alpha: 0.08)),
-                            ),
-                            child: const Text('Meet the SmartModule'),
-                          ),
-                        ],
                       ),
                     ],
                   ),
@@ -228,10 +201,10 @@ class _HeroSection extends StatelessWidget {
   }
 }
 
-// MARK: Product
-class _ProductSection extends StatelessWidget {
+// MARK: Meet Kai
+class _MeetKaiSection extends StatelessWidget {
   final bool isMobile;
-  const _ProductSection({required this.isMobile});
+  const _MeetKaiSection({required this.isMobile});
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
@@ -242,35 +215,30 @@ class _ProductSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: [
-            Text('Two pieces. One smooth experience.',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    )),
+            Text(Strings.meetHeader, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 16),
-            Text(
-              'The Kai Tennis app pairs with our SmartModule to bring pro-level controls to your existing ball machine. Set drills, tweak speed and spin, and track progress—without breaking rhythm.',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: color.onSurfaceVariant,
-              ),
-            ),
+            Text(Strings.meetDesc, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: color.onSurfaceVariant)),
             const SizedBox(height: 24),
             Wrap(
               alignment: WrapAlignment.start,
               runAlignment: WrapAlignment.start,
               spacing: 24,
               runSpacing: 24,
-              children: const [
-                _Card(
-                  title: 'Kai Tennis app',
-                  body:
-                      'Friendly controls, session tracking, and coaching tips to keep your practice flowing.',
-                  icon: Icons.phone_iphone,
+              children: [
+                ImageCard(
+                  title: Strings.meetCardTitle1,
+                  body: Strings.meetCardBody1,
+                  image: 'assets/meet_kai1.png',
                 ),
-                _Card(
-                  title: 'SmartModule',
-                  body:
-                      'A compact add-on that connects to your ball machine for precise, wireless control.',
-                  icon: Icons.memory,
+                ImageCard(
+                  title: Strings.meetCardTitle2,
+                  body: Strings.meetCardBody2,
+                  image: 'assets/meet_kai2.png',
+                ),
+                ImageCard(
+                  title: Strings.meetCardTitle3,
+                  body: Strings.meetCardBody3,
+                  image: 'assets/meet_kai3.png',
                 ),
               ],
             )
@@ -281,88 +249,18 @@ class _ProductSection extends StatelessWidget {
   }
 }
 
-class _Card extends StatefulWidget {
-  final String title;
-  final String body;
-  final IconData icon;
-  const _Card({required this.title, required this.body, required this.icon});
-  @override
-  State<_Card> createState() => _CardState();
-}
+// MARK: Skill triple
 
-class _CardState extends State<_Card> {
-  bool _hovering = false;
-  @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovering = true),
-      onExit: (_) => setState(() => _hovering = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        constraints: const BoxConstraints(minHeight: 180),
-        curve: Curves.easeOut,
-        transform: _hovering ? (Matrix4.identity()..scale(1.02)) : Matrix4.identity(),
-        width: 340,
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: color.surfaceContainerHighest.withValues(alpha: _hovering ? 0.92 : 1),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.outlineVariant),
-          boxShadow: _hovering
-              ? [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.12), blurRadius: 24, spreadRadius: 0, offset: const Offset(0, 12)),
-                ]
-              : [],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(widget.icon, size: 32, color: color.primary),
-            const SizedBox(height: 12),
-            Text(widget.title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: 8),
-            Text(widget.body, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color.onSurfaceVariant)),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// MARK: Carousel
 
-class _FeaturesSection extends StatelessWidget {
+/*
+// MARK: Clubs / Colleges
+class _ClubsCollegesSection extends StatelessWidget {
   final bool isMobile;
-  const _FeaturesSection({required this.isMobile});
+  const _ClubsCollegesSection({required this.isMobile});
   @override
   Widget build(BuildContext context) {
-    final features = const [
-      ['Drills made easy', 'Build patterns with pace, spin, and placement. Save favorites.'],
-      ['Real-time control', 'Adjust settings on the fly. No more walking to the machine.'],
-      ['Progress insights', 'Track sessions to see growth over weeks and months.'],
-      ['Friendly by design', 'Warm prompts and simple flows keep you in the zone.'],
-    ];
-    return Container(
-      padding: _sectionPadding(isMobile),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: Column(
-          crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-          children: [
-            Text('Features that fuel your practice',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: 24),
-            Wrap(
-              spacing: 24,
-              runSpacing: 24,
-              children: [
-                for (final f in features)
-                  _Card(title: f[0], body: f[1], icon: Icons.check_circle_outline),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    // 
   }
 }
 
@@ -378,11 +276,11 @@ class _HowItWorksSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: const [
-            Text('How it works', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+            Text(Strings.howTitle, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
             SizedBox(height: 16),
-            _Step(number: '1', title: 'Connect', desc: 'Attach the SmartModule to your ball machine and pair via Bluetooth.'),
-            _Step(number: '2', title: 'Set your drill', desc: 'Choose pace, spin, and placement in the app. Save it for next time.'),
-            _Step(number: '3', title: 'Hit with flow', desc: 'Control from the baseline. Adjust on the fly and keep your rhythm.'),
+            _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
+            _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
+            _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
           ],
         ),
       ),
@@ -432,7 +330,7 @@ class _PricingSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: [
-            Text('Simple pricing', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
+            Text(Strings.pricingTitle, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 16),
             Wrap(
               spacing: 24,
@@ -450,11 +348,11 @@ class _PricingSection extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
                     children: [
-                      Text('Ohana App', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+                      Text(Strings.pricingAppTitle, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
                       const SizedBox(height: 8),
-                      const Text('Free to try • Premium coaching insights optional'),
+                      const Text(Strings.pricingAppNote),
                       const SizedBox(height: 16),
-                      FilledButton(onPressed: () {}, child: const Text('Get the App')),
+                      FilledButton(onPressed: () {}, child: const Text(Strings.pricingAppCta)),
                     ],
                   ),
                 ),
@@ -470,11 +368,11 @@ class _PricingSection extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
                     children: [
-                      Text('SmartModule', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+                      Text(Strings.pricingModuleTitle, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
                       const SizedBox(height: 8),
-                      const Text('Preorder pricing • Limited early units'),
+                      const Text(Strings.pricingModuleNote),
                       const SizedBox(height: 16),
-                      FilledButton(onPressed: () {}, child: const Text('Join waitlist')),
+                      FilledButton(onPressed: () {}, child: const Text(Strings.pricingModuleCta)),
                     ],
                   ),
                 ),
@@ -486,6 +384,7 @@ class _PricingSection extends StatelessWidget {
     );
   }
 }
+*/
 
 class _TestimonialsSection extends StatelessWidget {
   final bool isMobile;
@@ -504,10 +403,10 @@ class _TestimonialsSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: const [
-            Text('Players love Kai Tennis', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+            Text(Strings.testimonialsHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
             SizedBox(height: 16),
-            _Quote(text: 'Finally, I can tweak drills without stopping my groove.', author: 'Alex, 4.0 USTA'),
-            _Quote(text: 'The app feels like a friendly coach in my pocket.', author: 'Priya, weekend player'),
+            _Quote(text: Strings.quote1, author: Strings.quote1Author),
+            _Quote(text: Strings.quote2, author: Strings.quote2Author),
           ],
         ),
       ),
@@ -548,9 +447,9 @@ class _FaqSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final faqs = const [
-      ['Will it work with my ball machine?', 'We aim to support popular models. Compatibility list coming soon.'],
-      ['Is there a subscription?', 'Core app is free to try. Premium insights are optional.'],
-      ['When can I get the module?', 'Join the waitlist to get notified about early units.'],
+      [Strings.faq1Q, Strings.faq1A],
+      [Strings.faq2Q, Strings.faq2A],
+      [Strings.faq3Q, Strings.faq3A],
     ];
     return Container(
       padding: _sectionPadding(isMobile),
@@ -559,7 +458,7 @@ class _FaqSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: [
-            Text('FAQ', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
+            Text(Strings.faqHeader, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
             for (final f in faqs)
               ExpansionTile(
@@ -595,9 +494,9 @@ class _ContactSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
             children: [
-              Text('Contact', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
+              Text(Strings.contactHeader, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
-              Text('Have a question about the app or SmartModule? We’d love to hear from you.',
+              Text(Strings.contactLead,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: color.onSurfaceVariant)),
               const SizedBox(height: 16),
               Wrap(
@@ -607,13 +506,13 @@ class _ContactSection extends StatelessWidget {
                   SizedBox(
                     width: isMobile ? double.infinity : 360,
                     child: TextField(
-                      decoration: InputDecoration(labelText: 'Your name', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
+                      decoration: InputDecoration(labelText: Strings.contactName, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
                     ),
                   ),
                   SizedBox(
                     width: isMobile ? double.infinity : 360,
                     child: TextField(
-                      decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
+                      decoration: InputDecoration(labelText: Strings.contactEmail, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
                     ),
                   ),
                 ],
@@ -623,13 +522,13 @@ class _ContactSection extends StatelessWidget {
                 width: isMobile ? double.infinity : 744,
                 child: TextField(
                   maxLines: 4,
-                  decoration: InputDecoration(labelText: 'Message', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
+                  decoration: InputDecoration(labelText: Strings.contactMessage, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
                 ),
               ),
               const SizedBox(height: 12),
-              FilledButton(onPressed: () {}, child: const Text('Send message')),
+              FilledButton(onPressed: () {}, child: const Text(Strings.contactSend)),
               const SizedBox(height: 8),
-              Text('Prefer email? info@ohanasports.com', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color.onSurfaceVariant)),
+              Text(Strings.contactAlt, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color.onSurfaceVariant)),
             ],
           ),
         ),
@@ -658,15 +557,15 @@ class _CtaSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Ready to rally with Kai Tennis?', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
+            Text(Strings.ctaHeader, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 12),
             Wrap(
               alignment: WrapAlignment.center,
               spacing: 12,
               runSpacing: 12,
               children: [
-                FilledButton(onPressed: () {}, child: const Text('Get the App')),
-                FilledButton(onPressed: () {}, child: const Text('Join the Waitlist')),
+                FilledButton(onPressed: () {}, child: const Text(Strings.ctaGetApp)),
+                FilledButton(onPressed: () {}, child: const Text(Strings.ctaJoinWaitlist)),
               ],
             ),
           ],
@@ -691,9 +590,9 @@ class _Footer extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: const [
-              Text('© Ohana Sports'),
+              Text(Strings.footerCopyright),
               SizedBox(height: 8),
-              Text('Made for players, with heart.'),
+              Text(Strings.footerTagline),
             ],
           ),
         ),
