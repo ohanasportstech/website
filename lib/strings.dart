@@ -24,21 +24,21 @@ class Strings {
   // Skill level triple caption
   static const skillHeader = 'Improve no matter your skill level';
   static const skillTitle1 = 'Beginner';
-  static const skillDesc1 = 'Description 1';
+  static const skillDesc1 = 'Start your journey with guided fundamentals, step-by-step tutorials, and personalized feedback to build confidence from day one.';
   static const skillTitle2 = 'Intermediate';
-  static const skillDesc2 = 'Description 2';
+  static const skillDesc2 = 'Refine your technique with advanced drills, performance analytics, and AI-powered insights to take your game to the next level.';
   static const skillTitle3 = 'Advanced';
-  static const skillDesc3 = 'Description 3';
+  static const skillDesc3 = 'Master your craft with elite training programs, competitive strategies, and data-driven optimization for peak performance.';
 
   // Carousel
-  static const carouselTitle1 = 'Title 1';
-  static const carouselDesc1 = 'Description 1';
-  static const carouselTitle2 = 'Title 2';
-  static const carouselDesc2 = 'Description 2';
-  static const carouselTitle3 = 'Title 3';
-  static const carouselDesc3 = 'Description 3';
-  static const carouselTitle4 = 'Title 4';
-  static const carouselDesc4 = 'Description 4';
+  static const carouselTitle1 = 'Home Page';
+  static const carouselDesc1 = 'See your dashboard at a glance with quick access to drills, favorites, and stats.';
+  static const carouselTitle2 = 'Drill Library';
+  static const carouselDesc2 = 'Browse a curated catalog of pro-designed drills to hone your skills or improve your strategy.';
+  static const carouselTitle3 = 'Drill Detail';
+  static const carouselDesc3 = 'View drill steps, targets, and parameters with visuals and tips before you start.';
+  static const carouselTitle4 = 'Custom Drills';
+  static const carouselDesc4 = 'Design your own drills by setting patterns, speeds, and sequences to fit your needs.';
 
   // Individual/team triple caption
   static const playersHeader = 'Practice for all';

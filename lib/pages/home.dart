@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../widgets/reveal.dart';
 import '../widgets/separator.dart';
 import '../widgets/card.dart';
+import '../widgets/triple_cap.dart';
+import '../widgets/carousel.dart';
 import '../strings.dart';
 
 class HomePage extends StatefulWidget {
@@ -47,6 +49,10 @@ class _HomePageState extends State<HomePage> {
                   SliverToBoxAdapter(child: _HeroSection(isMobile: isMobile, scroll: _scroll)),
                   const SliverToBoxAdapter(child: Separator()),
                   SliverToBoxAdapter(child: Reveal(child: _MeetKaiSection(isMobile: isMobile))),
+                  const SliverToBoxAdapter(child: Separator()),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _CarouselSection(isMobile: isMobile))),
+                  const SliverToBoxAdapter(child: Separator()),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _SkillLevelsSection(isMobile: isMobile))),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _FeaturesSection(isMobile: isMobile))),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _ClubsCollegesSection(isMobile: isMobile))),
                   const SliverToBoxAdapter(child: Separator()),
@@ -249,9 +255,79 @@ class _MeetKaiSection extends StatelessWidget {
   }
 }
 
-// MARK: Skill triple
-
 // MARK: Carousel
+class _CarouselSection extends StatelessWidget {
+  final bool isMobile;
+  const _CarouselSection({required this.isMobile});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: _sectionPadding(isMobile),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: Carousel(
+          items: const [
+            CarouselItem(
+              title: Strings.carouselTitle1,
+              description: Strings.carouselDesc1,
+              image: 'assets/app1.png',
+            ),
+            CarouselItem(
+              title: Strings.carouselTitle2,
+              description: Strings.carouselDesc2,
+              image: 'assets/app2.png',
+            ),
+            CarouselItem(
+              title: Strings.carouselTitle3,
+              description: Strings.carouselDesc3,
+              image: 'assets/app3.png',
+            ),
+            CarouselItem(
+              title: Strings.carouselTitle4,
+              description: Strings.carouselDesc4,
+              image: 'assets/app4.png',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// MARK: Skill triple
+class _SkillLevelsSection extends StatelessWidget {
+  final bool isMobile;
+  const _SkillLevelsSection({required this.isMobile});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: _sectionPadding(isMobile),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: TripleCap(
+          items: const [
+            TripleCapItem(
+              title: Strings.skillTitle1,
+              description: Strings.skillDesc1,
+              heroImage: 'assets/skill1.jpg',
+            ),
+            TripleCapItem(
+              title: Strings.skillTitle2,
+              description: Strings.skillDesc2,
+              heroImage: 'assets/skill2.jpg',
+            ),
+            TripleCapItem(
+              title: Strings.skillTitle3,
+              description: Strings.skillDesc3,
+              heroImage: 'assets/skill3.jpg',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 /*
 // MARK: Clubs / Colleges

@@ -24,20 +24,10 @@ class _ImageCardState extends State<ImageCard> {
         transform: _hovering ? (Matrix4.identity()..scale(1.02)) : Matrix4.identity(),
         width: 340,
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: color.surfaceContainerHighest.withValues(alpha: _hovering ? 0.92 : 1),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.outlineVariant),
-          boxShadow: _hovering
-              ? [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.12), blurRadius: 24, spreadRadius: 0, offset: const Offset(0, 12)),
-                ]
-              : [],
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(widget.image, width: 32, height: 32),
+            Image.asset(widget.image),
             const SizedBox(height: 12),
             Text(widget.title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
