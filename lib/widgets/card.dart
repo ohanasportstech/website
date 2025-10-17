@@ -19,14 +19,14 @@ class _ImageCardState extends State<ImageCard> {
       onExit: (_) => setState(() => _hovering = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        constraints: const BoxConstraints(minHeight: 180),
+        constraints: const BoxConstraints(minHeight: 180, maxWidth: 520),
         curve: Curves.easeOut,
         transform: _hovering ? (Matrix4.identity()..scale(1.02)) : Matrix4.identity(),
-        width: 340,
+        width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(widget.image),
+            Image.asset(widget.image, width: double.infinity, fit: BoxFit.cover),
             const SizedBox(height: 12),
             Text(widget.title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),

@@ -17,10 +17,12 @@ class QuiltGridItem {
 class QuiltGrid extends StatelessWidget {
   final List<QuiltGridItem> items;
   final double spacing;
+  final bool isMobile;
 
   const QuiltGrid({
     super.key,
     required this.items,
+    required this.isMobile,
     this.spacing = 16.0,
     int? crossAxisCount,
     double? aspectRatio,
@@ -30,12 +32,9 @@ class QuiltGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 700;
-        
         if (isMobile) {
           return _buildMobileLayout(context);
         }
-        
         return _buildQuiltLayout(context, constraints);
       },
     );

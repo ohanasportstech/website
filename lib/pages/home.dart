@@ -48,27 +48,23 @@ class _HomePageState extends State<HomePage> {
                 controller: _scrollController,
                 slivers: [
                   SliverToBoxAdapter(child: _HeroSection(isMobile: isMobile, scroll: _scroll)),
-                  const SliverToBoxAdapter(child: Separator()),
                   SliverToBoxAdapter(child: Reveal(child: _MeetKaiSection(isMobile: isMobile))),
                   const SliverToBoxAdapter(child: Separator()),
                   SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _CarouselSection(isMobile: isMobile))),
                   const SliverToBoxAdapter(child: Separator()),
                   SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _SkillLevelsSection(isMobile: isMobile))),
-                  //SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _FeaturesSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _ClubsCollegesSection(isMobile: isMobile))),
                   const SliverToBoxAdapter(child: Separator()),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _ClubsCollegesSection(isMobile: isMobile))),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _HowItWorksSection(isMobile: isMobile))),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile))),
-                  const SliverToBoxAdapter(child: Separator()),
                   SliverToBoxAdapter(child: Reveal(delayMs: 150, child: _TestimonialsSection(isMobile: isMobile))),
                   SliverToBoxAdapter(child: Reveal(delayMs: 180, child: _FaqSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 210, child: _ContactSection(isMobile: isMobile))),
+                  //SliverToBoxAdapter(child: Reveal(delayMs: 210, child: _ContactSection(isMobile: isMobile))),
                   SliverToBoxAdapter(child: Reveal(delayMs: 240, child: _CtaSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: const Separator()),
                   SliverToBoxAdapter(child: _Footer()),
                 ],
               ),
-              const _GlassHeader(),
+              _GlassHeader(isMobile: isMobile, scroll: _scroll),
             ],
           );
         },
@@ -79,43 +75,50 @@ class _HomePageState extends State<HomePage> {
 
 // MARK: Glass Header
 class _GlassHeader extends StatelessWidget {
-  const _GlassHeader();
+  final bool isMobile;
+  final double scroll;
+  const _GlassHeader({required this.isMobile, required this.scroll});
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
     return Positioned(
       top: 0, left: 0, right: 0,
       child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(
-                height: 56,
-                decoration: BoxDecoration(
-                  color: color.surface.withValues(alpha: 0.6),
-                  border: Border.all(color: color.outlineVariant),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 8)),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      Text(Strings.navMain, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-                      const Spacer(),
-                      TextButton(onPressed: () {}, child: const Text(Strings.nav1)),
-                      TextButton(onPressed: () {}, child: const Text(Strings.nav2)),
-                      TextButton(onPressed: () {}, child: const Text(Strings.nav3)),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pushNamed('/about'),
-                        child: const Text(Strings.nav4),
-                      ),
-                      FilledButton(onPressed: () {}, child: const Text(Strings.navCTA)),
+        child: Opacity(
+          opacity: isMobile ? (1.0 - (scroll / 80.0)).clamp(0.0, 1.0) : 1.0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: color.surface.withValues(alpha: 0.6),
+                    border: Border.all(color: color.outlineVariant),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 8)),
                     ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        Text(Strings.navMain, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+                        const Spacer(),
+                        if (!isMobile) ...[
+                          TextButton(onPressed: () {}, child: const Text(Strings.nav1)),
+                          TextButton(onPressed: () {}, child: const Text(Strings.nav2)),
+                          TextButton(onPressed: () {}, child: const Text(Strings.nav3)),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pushNamed('/about'),
+                            child: const Text(Strings.nav4),
+                          ),
+                        ],
+                        FilledButton(onPressed: () {}, child: const Text(Strings.navCTA)),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -230,24 +233,54 @@ class _MeetKaiSection extends StatelessWidget {
             const SizedBox(height: 24),
             if (isMobile)
               Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: const [
-                  ImageCard(
-                    title: Strings.meetCardTitle1,
-                    body: Strings.meetCardBody1,
-                    image: 'assets/meet_kai1.png',
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final w = constraints.maxWidth.clamp(0.0, 520.0);
+                        return SizedBox(
+                          width: w,
+                          child: const ImageCard(
+                            title: Strings.meetCardTitle1,
+                            body: Strings.meetCardBody1,
+                            image: 'assets/meet_kai1.png',
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                  SizedBox(height: 24),
-                  ImageCard(
-                    title: Strings.meetCardTitle2,
-                    body: Strings.meetCardBody2,
-                    image: 'assets/meet_kai2.png',
+                  const SizedBox(height: 24),
+                  Center(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final w = constraints.maxWidth.clamp(0.0, 520.0);
+                        return SizedBox(
+                          width: w,
+                          child: const ImageCard(
+                            title: Strings.meetCardTitle2,
+                            body: Strings.meetCardBody2,
+                            image: 'assets/meet_kai2.png',
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                  SizedBox(height: 24),
-                  ImageCard(
-                    title: Strings.meetCardTitle3,
-                    body: Strings.meetCardBody3,
-                    image: 'assets/meet_kai3.png',
+                  const SizedBox(height: 24),
+                  Center(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final w = constraints.maxWidth.clamp(0.0, 520.0);
+                        return SizedBox(
+                          width: w,
+                          child: const ImageCard(
+                            title: Strings.meetCardTitle3,
+                            body: Strings.meetCardBody3,
+                            image: 'assets/meet_kai3.png',
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               )
@@ -298,6 +331,7 @@ class _CarouselSection extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Carousel(
+          isMobile: isMobile,
           items: const [
             CarouselItem(
               title: Strings.carouselTitle1,
@@ -337,6 +371,7 @@ class _SkillLevelsSection extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
         child: TripleCap(
+          isMobile: isMobile,
           items: const [
             TripleCapItem(
               title: Strings.skillTitle1,
@@ -373,6 +408,7 @@ class _ClubsCollegesSection extends StatelessWidget {
     return Container(
       padding: _sectionPadding(isMobile),
       child: QuiltGrid(
+        isMobile: isMobile,
         items: [
           QuiltGridItem(
                 title: Strings.cncTitle1,
@@ -711,10 +747,8 @@ class _Footer extends StatelessWidget {
   const _Footer();
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-      color: color.surfaceContainerHigh,
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),

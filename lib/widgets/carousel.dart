@@ -14,10 +14,12 @@ class CarouselItem {
 
 class Carousel extends StatefulWidget {
   final List<CarouselItem> items;
+  final bool isMobile;
 
   const Carousel({
     super.key,
     required this.items,
+    required this.isMobile,
   }) : assert(items.length > 0, 'Must provide at least one carousel item');
 
   @override
@@ -239,11 +241,9 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 900;
-
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-          child: isMobile ? _buildMobileLayout(currentItem, color) : _buildDesktopLayout(currentItem, color),
+          child: widget.isMobile ? _buildMobileLayout(currentItem, color) : _buildDesktopLayout(currentItem, color),
         );
       },
     );
@@ -352,10 +352,21 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
             final maxW = constraints.maxWidth;
             final baseCurrentWidth = (maxW * 0.2).clamp(260.0, 560.0);
             final baseNextWidth = (baseCurrentWidth * 0.75).clamp(200.0, baseCurrentWidth - 40.0);
+            // Mobile-specific height caps to avoid overly tall images
+            final isMobileLocal = constraints.maxWidth < 900;
+            final double? currentMaxHeight = isMobileLocal ? 360.0 : null;
+            final double? peekMaxHeight = isMobileLocal ? 220.0 : null;
 
-            return Stack(
-              alignment: Alignment.center,
-              children: [
+            // Fix container height on mobile so content below doesn't shift during animations
+            final containerHeight = isMobileLocal
+                ? (currentMaxHeight ?? 360.0)
+                : null; // desktop can be intrinsic
+
+            return SizedBox(
+              height: containerHeight,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
                 if (hasPrev)
                   Align(
                     alignment: Alignment.centerLeft,
@@ -370,6 +381,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                                 child: Image.asset(
                                   outgoingPeekImage,
                                   width: baseNextWidth,
+                                  height: peekMaxHeight,
                                   fit: BoxFit.contain,
                                 ),
                               ),
@@ -383,6 +395,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                                     child: Image.asset(
                                       prevItem!.image,
                                       width: baseNextWidth,
+                                      height: peekMaxHeight,
                                       fit: BoxFit.contain,
                                     ),
                                   ),
@@ -396,6 +409,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                                       child: Image.asset(
                                         prevItem!.image,
                                         width: baseNextWidth,
+                                        height: peekMaxHeight,
                                         fit: BoxFit.contain,
                                       ),
                                     ),
@@ -428,6 +442,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                                     child: Image.asset(
                                       nextItem!.image,
                                       width: baseNextWidth,
+                                      height: peekMaxHeight,
                                       fit: BoxFit.contain,
                                     ),
                                   ),
@@ -441,6 +456,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                                       child: Image.asset(
                                         nextItem!.image,
                                         width: baseNextWidth,
+                                        height: peekMaxHeight,
                                         fit: BoxFit.contain,
                                       ),
                                     ),
@@ -464,6 +480,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                           child: Image.asset(
                             widget.items[_previousIndex!].image,
                             width: baseNextWidth,
+                            height: peekMaxHeight,
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -487,6 +504,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                         child: Image.asset(
                           currentItem.image,
                           width: baseCurrentWidth,
+                          height: currentMaxHeight,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -494,6 +512,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                   ),
                 ),
               ],
+              ),
             );
           },
         );
