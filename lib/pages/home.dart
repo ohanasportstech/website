@@ -5,6 +5,7 @@ import '../widgets/separator.dart';
 import '../widgets/card.dart';
 import '../widgets/triple_cap.dart';
 import '../widgets/carousel.dart';
+import '../widgets/quilt_grid.dart';
 import '../strings.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,11 +34,11 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  // MARK: Section layout
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: color.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 700;
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                   const SliverToBoxAdapter(child: Separator()),
                   SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _SkillLevelsSection(isMobile: isMobile))),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _FeaturesSection(isMobile: isMobile))),
-                  //SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _ClubsCollegesSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _ClubsCollegesSection(isMobile: isMobile))),
                   const SliverToBoxAdapter(child: Separator()),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _HowItWorksSection(isMobile: isMobile))),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile))),
@@ -76,6 +77,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// MARK: Glass Header
 class _GlassHeader extends StatelessWidget {
   const _GlassHeader();
   @override
@@ -330,16 +332,40 @@ class _SkillLevelsSection extends StatelessWidget {
 }
 
 
-/*
 // MARK: Clubs / Colleges
+
 class _ClubsCollegesSection extends StatelessWidget {
   final bool isMobile;
+
   const _ClubsCollegesSection({required this.isMobile});
+
   @override
   Widget build(BuildContext context) {
-    // 
+    return Container(
+      padding: _sectionPadding(isMobile),
+      child: QuiltGrid(
+        items: [
+          QuiltGridItem(
+                title: Strings.cncTitle1,
+                description: Strings.cncDesc1,
+                image: 'assets/cnc1.png',
+              ),
+              QuiltGridItem(
+                title: Strings.cncTitle2,
+                description: Strings.cncDesc2,
+                image: 'assets/cnc2.png',
+              ),
+              QuiltGridItem(
+                title: Strings.cncTitle3,
+                description: Strings.cncDesc3,
+                image: 'assets/cnc3.png',
+              ),
+            ],
+          ),
+    );
   }
 }
+/*
 
 class _HowItWorksSection extends StatelessWidget {
   final bool isMobile;

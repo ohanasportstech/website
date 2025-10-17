@@ -50,13 +50,14 @@ class Strings {
   static const playersDesc3 = 'Description 3';
 
   // Clubs / Colleges
-  static const cncHeader = 'For clubs and colleges';
-  static const cncTitle1 = 'Description 1';
-  static const cncDesc1 = 'Description 1';
-  static const cncTitle2 = 'Description 2';
-  static const cncDesc2 = 'Description 2';
-  static const cncTitle3 = 'Description 3';
-  static const cncDesc3 = 'Description 3';
+  static const cncTitle1 = 'The ultimate tool for pros and coaches';
+  static const cncDesc1 = 'Free your hands to coach, not just feed.';
+  
+  static const cncTitle2 = 'You assistant coach for college programs.';
+  static const cncDesc2 = 'Run drills on all your courts.';
+  
+  static const cncTitle3 = 'Create and share custom Drills';
+  static const cncDesc3 = 'Focus on what your students need.';
   
   // Testimonials
   static const testimonialsHeader = 'Players love Kai Tennis';
