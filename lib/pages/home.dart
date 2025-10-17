@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> {
                   SliverToBoxAdapter(child: Reveal(delayMs: 210, child: _ContactSection(isMobile: isMobile))),
                   SliverToBoxAdapter(child: Reveal(delayMs: 240, child: _CtaSection(isMobile: isMobile))),
                   SliverToBoxAdapter(child: const Separator()),
+                  SliverToBoxAdapter(child: _Footer()),
                 ],
               ),
               const _GlassHeader(),
