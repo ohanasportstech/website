@@ -434,6 +434,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                                 child: Image.asset(
                                   outgoingPeekImage,
                                   width: baseNextWidth,
+                                  height: peekMaxHeight,
                                   fit: BoxFit.contain,
                                 ),
                               ),
