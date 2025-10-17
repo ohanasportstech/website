@@ -39,8 +39,12 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomePage(),
         '/about': (context) => const AboutPage(),
-        '/docs/privacy-policy': (context) => const MarkdownViewer(assetPath: 'privacy-policy.md', title: 'Ohana Sports Privacy Policy', errorMessage: 'Failed to load Privacy Policy'),
-        '/docs/terms-of-use': (context) => const MarkdownViewer(assetPath: 'terms-of-use.md', title: 'Ohana Sports Terms of Use', errorMessage: 'Failed to load Terms of Use'),
+        '/docs/privacy-policy': (context) => const MarkdownViewer(assetPath: 'markdown/privacy-policy.md', title: 'Ohana Sports Privacy Policy', errorMessage: 'Failed to load Privacy Policy'),
+        '/docs/terms-of-use': (context) => const MarkdownViewer(assetPath: 'markdown/terms-of-use.md', title: 'Ohana Sports Terms of Use', errorMessage: 'Failed to load Terms of Use'),
+        '/pages/data-deletion': (context) => const MarkdownViewer(assetPath: 'markdown/data-deletion.md', title: 'Ohana Sports Data Deletion', errorMessage: 'Failed to load Data Deletion'),
+        '/pages/help': (context) => const MarkdownViewer(assetPath: 'markdown/help.md', title: 'Ohana Sports Help', errorMessage: 'Failed to load Help'),
+        '/pages/kai-module': (context) => const MarkdownViewer(assetPath: 'markdown/kai-module.md', title: 'Ohana Sports Kai SmartModule', errorMessage: 'Failed to load Kai SmartModule'),
+        '/pages/subscription': (context) => const MarkdownViewer(assetPath: 'markdown/subscription.md', title: 'Ohana Sports Subscription', errorMessage: 'Failed to load Subscription'),
       },
     );
   }
