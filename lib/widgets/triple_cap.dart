@@ -34,32 +34,30 @@ class _TripleCapState extends State<TripleCap> {
     return Column(
       children: [
         // Full-width hero image at top
-        AspectRatio(
-          aspectRatio: 16 / 9,
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            child: ClipRect(
-              child: Image.asset(
-                widget.items[_selectedIndex].heroImage,
-                key: ValueKey<int>(_selectedIndex),
-                fit: BoxFit.cover, // maintain aspect while filling 16:9, cropping as needed
-                alignment: Alignment.center,
-                gaplessPlayback: true,
-                filterQuality: FilterQuality.medium,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[300],
-                    child: const Icon(
-                      Icons.image,
-                      size: 64,
-                      color: Colors.grey,
+        LayoutBuilder(
+          builder: (context, constraints) {
+            // Define the target aspect ratio (16:9)
+            const targetAspectRatio = 16 / 9;
+            
+            return AspectRatio(
+              aspectRatio: targetAspectRatio,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 1000),
+                child: Container(
+                  key: ValueKey<int>(_selectedIndex),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(widget.items[_selectedIndex].heroImage),
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
+        const SizedBox(height: 24),
         // Three column caption section at bottom
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
