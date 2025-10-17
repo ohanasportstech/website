@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'pages/home.dart';
 import 'pages/about.dart';
-import 'docs/privacy_policy.dart';
-import 'docs/terms_of_use.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'widgets/markdown_viewer.dart';
 
 void main() {
   setPathUrlStrategy();
@@ -40,8 +39,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomePage(),
         '/about': (context) => const AboutPage(),
-        '/docs/privacy-policy': (context) => const PrivacyPolicyPage(),
-        '/docs/terms-of-use': (context) => const TermsOfUsePage(),
+        '/docs/privacy-policy': (context) => const MarkdownViewer(assetPath: 'privacy-policy.md', title: 'Ohana Sports Privacy Policy', errorMessage: 'Failed to load Privacy Policy'),
+        '/docs/terms-of-use': (context) => const MarkdownViewer(assetPath: 'terms-of-use.md', title: 'Ohana Sports Terms of Use', errorMessage: 'Failed to load Terms of Use'),
       },
     );
   }
