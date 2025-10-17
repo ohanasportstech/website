@@ -1,0 +1,17 @@
+{
+    "name": "Kai Tennis",
+    "short_name": "Kai Tennis",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0077C8",
+    "theme_color": "#0077C8",
+    "description": "Kai Tennis pairs a friendly app with a SmartModule to control your tennis ball machine—set drills, adjust on the fly, and track progress.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/AppIcon.png",
+            "type": "image/png"
+        }
+    ]
+}
