@@ -18,10 +18,9 @@ class TripleCap extends StatefulWidget {
   final List<TripleCapItem> items;
 
   const TripleCap({
-    Key? key,
+    super.key,
     required this.items,
-  })  : assert(items.length == 3, 'Must provide exactly 3 items'),
-        super(key: key);
+  })  : assert(items.length == 3, 'Must provide exactly 3 items');
 
   @override
   State<TripleCap> createState() => _TripleCapState();

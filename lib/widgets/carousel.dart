@@ -16,10 +16,9 @@ class Carousel extends StatefulWidget {
   final List<CarouselItem> items;
 
   const Carousel({
-    Key? key,
+    super.key,
     required this.items,
-  }) : assert(items.length > 0, 'Must provide at least one carousel item'),
-       super(key: key);
+  }) : assert(items.length > 0, 'Must provide at least one carousel item');
 
   @override
   State<Carousel> createState() => _CarouselState();
