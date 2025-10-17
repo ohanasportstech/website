@@ -191,7 +191,7 @@ class _GlassHeader extends StatelessWidget {
 
 
 EdgeInsets _sectionPadding(bool isMobile) =>
-    EdgeInsets.symmetric(horizontal: isMobile ? 20 : 80, vertical: isMobile ? 32 : 56);
+    EdgeInsets.symmetric(horizontal: isMobile ? 20 : 80, vertical: isMobile ? 24 : 32);
 
 // MARK: Hero
 class _HeroSection extends StatelessWidget {
@@ -884,7 +884,7 @@ class _Footer extends StatelessWidget {
               Text(Strings.footerCopyright),
               SizedBox(height: 8),
               Text(Strings.footerTagline),
-              SizedBox(height: 300),
+              SizedBox(height: 400),
             ],
           ),
         ),

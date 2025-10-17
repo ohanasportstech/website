@@ -282,7 +282,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       children: [
         _buildPhoneImage(currentItem),
         const SizedBox(height: 32),
-        _buildTextContent(currentItem, fixedHeight: 180),
+        _buildTextContent(currentItem, fixedHeight: 140),
         const SizedBox(height: 24),
         _buildControls(color, center: true),
       ],
