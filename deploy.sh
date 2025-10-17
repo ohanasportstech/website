@@ -18,7 +18,7 @@ git init
 git add -A
 git commit -m "Deploy: $(date '+%Y-%m-%d %H:%M')"
 git branch -M gh-pages
-git remote add origin https://github.com/ohanasportstech/website.git
 git push -f origin gh-pages
+git branch -M main
 
 echo "Deployment successful!"
