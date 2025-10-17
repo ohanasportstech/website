@@ -150,7 +150,7 @@ class _GlassHeader extends StatelessWidget {
       top: 0, left: 0, right: 0,
       child: SafeArea(
         child: Opacity(
-          opacity: (1.0 - (scroll / 300.0)).clamp(0.0, 1.0),
+          opacity: isMobile ? (1.0 - (scroll / 300.0)).clamp(0.0, 1.0) : 1.0,
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1200),
