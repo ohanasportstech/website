@@ -166,13 +166,14 @@ class _GlassHeader extends StatelessWidget {
                         Text(Strings.navMain, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
                         const Spacer(),
                         if (!isMobile) ...[
-                          TextButton(onPressed: onHowItWorksPressed, child: const Text(Strings.nav1)),
-                          TextButton(onPressed: onClubsPressed, child: const Text(Strings.nav2)),
                           TextButton(onPressed: onPlayersPressed, child: const Text(Strings.nav3)),
+                          TextButton(onPressed: onClubsPressed, child: const Text(Strings.nav2)),
+                          TextButton(onPressed: onHowItWorksPressed, child: const Text(Strings.nav1)),
                           TextButton(
                             onPressed: () => Navigator.of(context).pushNamed('/about'),
                             child: const Text(Strings.nav4),
                           ),
+                          const SizedBox(width: 12),
                         ],
                         FilledButton(onPressed: onCtaPressed, child: const Text(Strings.navCTA)),
                       ],
