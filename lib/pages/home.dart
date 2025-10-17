@@ -228,29 +228,58 @@ class _MeetKaiSection extends StatelessWidget {
             const SizedBox(height: 16),
             Text(Strings.meetDesc, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: color.onSurfaceVariant)),
             const SizedBox(height: 24),
-            Wrap(
-              alignment: WrapAlignment.start,
-              runAlignment: WrapAlignment.start,
-              spacing: 24,
-              runSpacing: 24,
-              children: [
-                ImageCard(
-                  title: Strings.meetCardTitle1,
-                  body: Strings.meetCardBody1,
-                  image: 'assets/meet_kai1.png',
-                ),
-                ImageCard(
-                  title: Strings.meetCardTitle2,
-                  body: Strings.meetCardBody2,
-                  image: 'assets/meet_kai2.png',
-                ),
-                ImageCard(
-                  title: Strings.meetCardTitle3,
-                  body: Strings.meetCardBody3,
-                  image: 'assets/meet_kai3.png',
-                ),
-              ],
-            )
+            if (isMobile)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: const [
+                  ImageCard(
+                    title: Strings.meetCardTitle1,
+                    body: Strings.meetCardBody1,
+                    image: 'assets/meet_kai1.png',
+                  ),
+                  SizedBox(height: 24),
+                  ImageCard(
+                    title: Strings.meetCardTitle2,
+                    body: Strings.meetCardBody2,
+                    image: 'assets/meet_kai2.png',
+                  ),
+                  SizedBox(height: 24),
+                  ImageCard(
+                    title: Strings.meetCardTitle3,
+                    body: Strings.meetCardBody3,
+                    image: 'assets/meet_kai3.png',
+                  ),
+                ],
+              )
+            else
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Expanded(
+                    child: ImageCard(
+                      title: Strings.meetCardTitle1,
+                      body: Strings.meetCardBody1,
+                      image: 'assets/meet_kai1.png',
+                    ),
+                  ),
+                  SizedBox(width: 24),
+                  Expanded(
+                    child: ImageCard(
+                      title: Strings.meetCardTitle2,
+                      body: Strings.meetCardBody2,
+                      image: 'assets/meet_kai2.png',
+                    ),
+                  ),
+                  SizedBox(width: 24),
+                  Expanded(
+                    child: ImageCard(
+                      title: Strings.meetCardTitle3,
+                      body: Strings.meetCardBody3,
+                      image: 'assets/meet_kai3.png',
+                    ),
+                  ),
+                ],
+              )
           ],
         ),
       ),

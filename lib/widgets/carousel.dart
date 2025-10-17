@@ -348,8 +348,10 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
             final String? outgoingPeekImage =
                 outgoingPeekIndex != null ? widget.items[outgoingPeekIndex].image : null;
 
-            final baseCurrentWidth = constraints.maxWidth * 0.5; // 50% smaller
-            final baseNextWidth = baseCurrentWidth * 0.75; // 25% smaller than current
+            // Responsive sizing: scale with available width but keep reasonable bounds
+            final maxW = constraints.maxWidth;
+            final baseCurrentWidth = (maxW * 0.2).clamp(260.0, 560.0);
+            final baseNextWidth = (baseCurrentWidth * 0.75).clamp(200.0, baseCurrentWidth - 40.0);
 
             return Stack(
               alignment: Alignment.center,

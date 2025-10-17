@@ -23,7 +23,6 @@ class _ImageCardState extends State<ImageCard> {
         curve: Curves.easeOut,
         transform: _hovering ? (Matrix4.identity()..scale(1.02)) : Matrix4.identity(),
         width: 340,
-        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
