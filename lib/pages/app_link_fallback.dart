@@ -87,7 +87,7 @@ class AppLinkFallbackPage extends StatelessWidget {
                   onTap: () => launchUrl(appleUrl, mode: LaunchMode.externalApplication),
                   borderRadius: BorderRadius.circular(12),
                   child: SvgPicture.asset(
-                    'icons/AppStore.svg',
+                    'assets/icons/AppStore.svg',
                     height: 56,
                     semanticsLabel: 'Download on the App Store',
                   ),
@@ -99,7 +99,7 @@ class AppLinkFallbackPage extends StatelessWidget {
                   onTap: () => launchUrl(playUrl, mode: LaunchMode.externalApplication),
                   borderRadius: BorderRadius.circular(12),
                   child: SvgPicture.asset(
-                    'icons/GooglePlay.svg',
+                    'assets/icons/GooglePlay.svg',
                     height: 56,
                     semanticsLabel: 'Get it on Google Play',
                   ),

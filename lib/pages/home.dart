@@ -181,7 +181,7 @@ class _GlassHeader extends StatelessWidget {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(3),
-                                    child: Image.asset('icons/AppIcon.png', height: 24),
+                                    child: Image.asset('assets/icons/AppIcon.png', height: 24),
                                   ),
                                   const SizedBox(width: 8),
                                   Text(Strings.navMain, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700)),
@@ -272,7 +272,7 @@ class _HeroSection extends StatelessWidget {
                 child: Transform.scale(
                   scale: 1.5,
                   child: Image.asset(
-                    'images/hero.jpg',
+                    'assets/images/hero.jpg',
                     fit: BoxFit.cover,
                     alignment: Alignment.center,
                   ),
@@ -369,7 +369,7 @@ class _MeetKaiSection extends StatelessWidget {
                           child: const ImageCard(
                             title: Strings.meetCardTitle1,
                             body: Strings.meetCardBody1,
-                            image: 'images/meet_kai1.png',
+                            image: 'assets/images/meet_kai1.png',
                           ),
                         );
                       },
@@ -385,7 +385,7 @@ class _MeetKaiSection extends StatelessWidget {
                           child: const ImageCard(
                             title: Strings.meetCardTitle2,
                             body: Strings.meetCardBody2,
-                            image: 'images/meet_kai2.png',
+                            image: 'assets/images/meet_kai2.png',
                           ),
                         );
                       },
@@ -401,7 +401,7 @@ class _MeetKaiSection extends StatelessWidget {
                           child: const ImageCard(
                             title: Strings.meetCardTitle3,
                             body: Strings.meetCardBody3,
-                            image: 'images/meet_kai3.png',
+                            image: 'assets/images/meet_kai3.png',
                           ),
                         );
                       },
@@ -417,7 +417,7 @@ class _MeetKaiSection extends StatelessWidget {
                     child: ImageCard(
                       title: Strings.meetCardTitle1,
                       body: Strings.meetCardBody1,
-                      image: 'images/meet_kai1.png',
+                      image: 'assets/images/meet_kai1.png',
                     ),
                   ),
                   SizedBox(width: 24),
@@ -425,7 +425,7 @@ class _MeetKaiSection extends StatelessWidget {
                     child: ImageCard(
                       title: Strings.meetCardTitle2,
                       body: Strings.meetCardBody2,
-                      image: 'images/meet_kai2.png',
+                      image: 'assets/images/meet_kai2.png',
                     ),
                   ),
                   SizedBox(width: 24),
@@ -433,7 +433,7 @@ class _MeetKaiSection extends StatelessWidget {
                     child: ImageCard(
                       title: Strings.meetCardTitle3,
                       body: Strings.meetCardBody3,
-                      image: 'images/meet_kai3.png',
+                      image: 'assets/images/meet_kai3.png',
                     ),
                   ),
                 ],
@@ -461,22 +461,22 @@ class _CarouselSection extends StatelessWidget {
             CarouselItem(
               title: Strings.carouselTitle1,
               description: Strings.carouselDesc1,
-              image: 'images/app1.png',
+              image: 'assets/images/app1.png',
             ),
             CarouselItem(
               title: Strings.carouselTitle2,
               description: Strings.carouselDesc2,
-              image: 'images/app2.png',
+              image: 'assets/images/app2.png',
             ),
             CarouselItem(
               title: Strings.carouselTitle3,
               description: Strings.carouselDesc3,
-              image: 'images/app3.png',
+              image: 'assets/images/app3.png',
             ),
             CarouselItem(
               title: Strings.carouselTitle4,
               description: Strings.carouselDesc4,
-              image: 'images/app4.png',
+              image: 'assets/images/app4.png',
             ),
           ],
         ),
@@ -501,17 +501,17 @@ class _SkillLevelsSection extends StatelessWidget {
             TripleCapItem(
               title: Strings.skillTitle1,
               description: Strings.skillDesc1,
-              heroImage: 'images/skill1.jpg',
+              heroImage: 'assets/images/skill1.jpg',
             ),
             TripleCapItem(
               title: Strings.skillTitle2,
               description: Strings.skillDesc2,
-              heroImage: 'images/skill2.jpg',
+              heroImage: 'assets/images/skill2.jpg',
             ),
             TripleCapItem(
               title: Strings.skillTitle3,
               description: Strings.skillDesc3,
-              heroImage: 'images/skill3.jpg',
+              heroImage: 'assets/images/skill3.jpg',
             ),
           ],
         ),
@@ -538,17 +538,17 @@ class _ClubsCollegesSection extends StatelessWidget {
           QuiltGridItem(
                 title: Strings.cncTitle1,
                 description: Strings.cncDesc1,
-                image: 'images/cnc1.png',
+                image: 'assets/images/cnc1.png',
               ),
               QuiltGridItem(
                 title: Strings.cncTitle2,
                 description: Strings.cncDesc2,
-                image: 'images/cnc2.png',
+                image: 'assets/images/cnc2.png',
               ),
               QuiltGridItem(
                 title: Strings.cncTitle3,
                 description: Strings.cncDesc3,
-                image: 'images/cnc3.png',
+                image: 'assets/images/cnc3.png',
               ),
             ],
           ),
@@ -909,7 +909,7 @@ class _GetTheAppSection extends StatelessWidget {
                     onTap: () => launchUrl(appleUrl, mode: LaunchMode.externalApplication),
                     borderRadius: BorderRadius.circular(12),
                     child: SvgPicture.asset(
-                      'icons/AppStore.svg',
+                      'assets/icons/AppStore.svg',
                       height: 44,
                       semanticsLabel: 'Download on the App Store',
                     ),
@@ -918,7 +918,7 @@ class _GetTheAppSection extends StatelessWidget {
                     onTap: () => launchUrl(playUrl, mode: LaunchMode.externalApplication),
                     borderRadius: BorderRadius.circular(12),
                     child: SvgPicture.asset(
-                      'icons/GooglePlay.svg',
+                      'assets/icons/GooglePlay.svg',
                       height: 44,
                       semanticsLabel: 'Get it on Google Play',
                     ),
