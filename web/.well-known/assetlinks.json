@@ -1,0 +1,16 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "net.OhanaSports.Kai",
+      "sha256_cert_fingerprints": [
+        "C2:E7:70:CE:E7:96:2B:C7:5A:EE:F9:91:59:7A:B9:9B:59:34:BE:8E:6C:27:08:4C:CA:20:3E:3A:BF:09:D3:F3",
+        "1D:F5:A2:62:90:44:11:C6:6B:43:CF:88:07:4C:A6:38:DF:4C:0C:DA:0A:0F:F2:56:74:15:93:70:16:F2:F0:44",
+        "9D:A3:BF:1F:86:A7:E5:9A:F2:7A:A7:8A:FC:00:E9:DA:68:6B:D1:09:22:43:C1:AE:30:65:5A:E6:EB:A0:A1:BA"
+      ]
+    }
+  }
+]

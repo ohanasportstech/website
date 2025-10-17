@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "87KQLAHT8Y.net.OhanaSports.Kai",
+        "paths": [ "/reset-password", "/reset-password/*", "/playlist*", "/drill*" ]
+      }
+    ]
+  }
+}
