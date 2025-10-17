@@ -74,6 +74,13 @@ class _HomePageState extends State<HomePage> {
               _GlassHeader(
                 isMobile: isMobile,
                 scroll: _scroll,
+                onLogoPressed: () {
+                  _scrollController.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOutCubic,
+                  );
+                },
                 onCtaPressed: () {
                   final ctx = _getAppKey.currentContext;
                   if (ctx != null) {
@@ -134,7 +141,8 @@ class _GlassHeader extends StatelessWidget {
   final VoidCallback? onClubsPressed;
   final VoidCallback? onPlayersPressed;
   final VoidCallback? onHowItWorksPressed;
-  const _GlassHeader({required this.isMobile, required this.scroll, this.onCtaPressed, this.onClubsPressed, this.onPlayersPressed, this.onHowItWorksPressed});
+  final VoidCallback? onLogoPressed;
+  const _GlassHeader({required this.isMobile, required this.scroll, this.onCtaPressed, this.onClubsPressed, this.onPlayersPressed, this.onHowItWorksPressed, this.onLogoPressed});
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
@@ -142,41 +150,80 @@ class _GlassHeader extends StatelessWidget {
       top: 0, left: 0, right: 0,
       child: SafeArea(
         child: Opacity(
-          opacity: isMobile ? (1.0 - (scroll / 120.0)).clamp(0.0, 1.0) : 1.0,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: color.surface.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: color.outlineVariant),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 8)),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Text(Strings.navMain, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-                        const Spacer(),
-                        if (!isMobile) ...[
-                          TextButton(onPressed: onPlayersPressed, child: const Text(Strings.nav3)),
-                          TextButton(onPressed: onClubsPressed, child: const Text(Strings.nav2)),
-                          TextButton(onPressed: onHowItWorksPressed, child: const Text(Strings.nav1)),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pushNamed('/about'),
-                            child: const Text(Strings.nav4),
-                          ),
-                          const SizedBox(width: 12),
+          opacity: (1.0 - (scroll / 300.0)).clamp(0.0, 1.0),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1200),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: color.surface.withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: color.outlineVariant),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 8)),
                         ],
-                        FilledButton(onPressed: onCtaPressed, child: const Text(Strings.navCTA)),
-                      ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            // crop with rounded rect and tap to scroll top
+                            GestureDetector(
+                              onTap: onLogoPressed,
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(3),
+                                    child: Image.asset('assets/AppIcon.png', height: 24),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(Strings.navMain, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700)),
+                                ],
+                              ),
+                            ),
+                            const Spacer(),
+                            if (!isMobile) ...[
+                              TextButton(
+                                onPressed: onPlayersPressed,
+                                child: Text(
+                                  Strings.nav3,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: onClubsPressed,
+                                child: Text(
+                                  Strings.nav2,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: onHowItWorksPressed,
+                                child: Text(
+                                  Strings.nav1,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pushNamed('/about'),
+                                child: Text(
+                                  Strings.nav4,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                            ],
+                            FilledButton(onPressed: onCtaPressed, child: const Text(Strings.navCTA)),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -202,71 +249,76 @@ class _HeroSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: isMobile ? 420 : 560,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Transform.translate(
-              offset: Offset(0, -scroll * 0.12),
-              child: Image.asset(
-                'assets/hero.jpg',
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.black.withValues(alpha: 0.45),
-                    Colors.black.withValues(alpha: 0.25),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: isMobile ? 24 : 48,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: _sectionPadding(isMobile).left,
-              ),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1200),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        Strings.heroHeader,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        Strings.heroDesc,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                            ),
-                      ),
-                    ],
+      child: ClipRect(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Transform.translate(
+                offset: Offset(0, -scroll * 0.2),
+                child: Transform.scale(
+                  scale: 1.5,
+                  child: Image.asset(
+                    'assets/hero.jpg',
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withValues(alpha: 0.05),
+                      Colors.black.withValues(alpha: 0.75),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: isMobile ? 24 : 48,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: _sectionPadding(isMobile).left,
+                ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1200),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          Strings.heroHeader,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          Strings.heroDesc,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: Colors.white,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

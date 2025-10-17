@@ -1,6 +1,6 @@
 class Strings {
   // Header / Navigation
-  static const navMain = 'Ohana Sports Tech';
+  static const navMain = 'Kai Tennis';
   static const nav1 = 'How It Works';
   static const nav2 = 'For Clubs';
   static const nav3 = 'For Players';
