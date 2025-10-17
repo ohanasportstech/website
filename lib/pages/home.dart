@@ -53,22 +53,22 @@ class _HomePageState extends State<HomePage> {
               CustomScrollView(
                 controller: _scrollController,
                 slivers: [
-                  SliverToBoxAdapter(child: _HeroSection(isMobile: isMobile, scroll: _scroll)),
-                  SliverToBoxAdapter(child: Reveal(child: _MeetKaiSection(isMobile: isMobile))),
-                  const SliverToBoxAdapter(child: Separator()),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _CarouselSection(isMobile: isMobile))),
-                  const SliverToBoxAdapter(child: Separator()),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile))),
-                  const SliverToBoxAdapter(child: Separator()),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile))),
-                  const SliverToBoxAdapter(child: Separator()),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile))),
-                  //SliverToBoxAdapter(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 150, child: _TestimonialsSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 180, child: _FaqSection(isMobile: isMobile))),
-                  //SliverToBoxAdapter(child: Reveal(delayMs: 210, child: _ContactSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 240, child: _GetTheAppSection(key: _getAppKey))),
-                  SliverToBoxAdapter(child: _Footer()),
+                  SliverToBoxAdapter(child: _MaxWidth(child: _HeroSection(isMobile: isMobile, scroll: _scroll))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _MeetKaiSection(isMobile: isMobile)))),
+                  const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 60, child: _CarouselSection(isMobile: isMobile)))),
+                  const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 90, child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile)))),
+                  const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 90, child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile)))),
+                  const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 90, child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile)))),
+                  //SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 150, child: _TestimonialsSection(isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 180, child: _FaqSection(isMobile: isMobile)))),
+                  //SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 210, child: _ContactSection(isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 240, child: _GetTheAppSection(key: _getAppKey)))) ,
+                  SliverToBoxAdapter(child: _MaxWidth(child: _Footer())),
                 ],
               ),
               _GlassHeader(
@@ -239,6 +239,20 @@ class _GlassHeader extends StatelessWidget {
 
 EdgeInsets _sectionPadding(bool isMobile) =>
     EdgeInsets.symmetric(horizontal: isMobile ? 20 : 80, vertical: isMobile ? 24 : 32);
+
+class _MaxWidth extends StatelessWidget {
+  final Widget child;
+  const _MaxWidth({required this.child});
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: child,
+      ),
+    );
+  }
+}
 
 // MARK: Hero
 class _HeroSection extends StatelessWidget {
