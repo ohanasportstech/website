@@ -491,9 +491,8 @@ class _ClubsCollegesSection extends StatelessWidget {
 
 // MARK: How it Works
 class _HowItWorksSection extends StatelessWidget {
-  final GlobalKey key;
   final bool isMobile;
-  const _HowItWorksSection({required this.key, required this.isMobile});
+  const _HowItWorksSection({super.key, required this.isMobile});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -711,6 +710,7 @@ class _FaqSection extends StatelessWidget {
   }
 }
 
+/*
 // MARK: Contact
 class _ContactSection extends StatelessWidget {
   final bool isMobile;
@@ -769,6 +769,7 @@ class _ContactSection extends StatelessWidget {
   }
 }
 
+
 // MARK: CTA
 class _CtaSection extends StatelessWidget {
   final bool isMobile;
@@ -807,6 +808,7 @@ class _CtaSection extends StatelessWidget {
     );
   }
 }
+*/
 
 // MARK: Get the app section
 class _GetTheAppSection extends StatelessWidget {
