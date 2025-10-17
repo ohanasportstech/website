@@ -59,6 +59,15 @@ class Strings {
   static const cncTitle3 = 'Create and share custom Drills';
   static const cncDesc3 = 'Focus on what your students need.';
   
+  // How it works
+  static const howHeader = 'How it works';
+  static const how1Title = 'Step 1';
+  static const how1Desc = 'Description 1';
+  static const how2Title = 'Step 2';
+  static const how2Desc = 'Description 2';
+  static const how3Title = 'Step 3';
+  static const how3Desc = 'Description 3';
+  
   // Testimonials
   static const testimonialsHeader = 'Players love Kai Tennis';
   static const quote1 = 'Finally, I can tweak drills without stopping my groove.';

@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey _getAppKey = GlobalKey();
   final GlobalKey _clubsKey = GlobalKey();
   final GlobalKey _playersKey = GlobalKey();
+  final GlobalKey _howItWorksKey = GlobalKey();
 
   @override
   void initState() {
@@ -60,7 +61,8 @@ class _HomePageState extends State<HomePage> {
                   SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile))),
                   const SliverToBoxAdapter(child: Separator()),
                   SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile))),
-                  //SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _HowItWorksSection(isMobile: isMobile))),
+                  const SliverToBoxAdapter(child: Separator()),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile))),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile))),
                   SliverToBoxAdapter(child: Reveal(delayMs: 150, child: _TestimonialsSection(isMobile: isMobile))),
                   SliverToBoxAdapter(child: Reveal(delayMs: 180, child: _FaqSection(isMobile: isMobile))),
@@ -79,6 +81,17 @@ class _HomePageState extends State<HomePage> {
                       ctx,
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOutCubic,
+                    );
+                  }
+                },
+                onHowItWorksPressed: () {
+                  final ctx = _howItWorksKey.currentContext;
+                  if (ctx != null) {
+                    Scrollable.ensureVisible(
+                      ctx,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOutCubic,
+                      alignment: 0.2,
                     );
                   }
                 },
@@ -120,7 +133,8 @@ class _GlassHeader extends StatelessWidget {
   final VoidCallback? onCtaPressed;
   final VoidCallback? onClubsPressed;
   final VoidCallback? onPlayersPressed;
-  const _GlassHeader({required this.isMobile, required this.scroll, this.onCtaPressed, this.onClubsPressed, this.onPlayersPressed});
+  final VoidCallback? onHowItWorksPressed;
+  const _GlassHeader({required this.isMobile, required this.scroll, this.onCtaPressed, this.onClubsPressed, this.onPlayersPressed, this.onHowItWorksPressed});
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
@@ -152,7 +166,7 @@ class _GlassHeader extends StatelessWidget {
                         Text(Strings.navMain, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
                         const Spacer(),
                         if (!isMobile) ...[
-                          TextButton(onPressed: onPlayersPressed, child: const Text(Strings.nav1)),
+                          TextButton(onPressed: onHowItWorksPressed, child: const Text(Strings.nav1)),
                           TextButton(onPressed: onClubsPressed, child: const Text(Strings.nav2)),
                           TextButton(onPressed: onPlayersPressed, child: const Text(Strings.nav3)),
                           TextButton(
@@ -474,11 +488,12 @@ class _ClubsCollegesSection extends StatelessWidget {
     );
   }
 }
-/*
 
+// MARK: How it Works
 class _HowItWorksSection extends StatelessWidget {
+  final GlobalKey key;
   final bool isMobile;
-  const _HowItWorksSection({required this.isMobile});
+  const _HowItWorksSection({required this.key, required this.isMobile});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -488,7 +503,7 @@ class _HowItWorksSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: const [
-            Text(Strings.howTitle, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+            Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
             SizedBox(height: 16),
             _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
             _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
@@ -529,6 +544,7 @@ class _Step extends StatelessWidget {
   }
 }
 
+/*
 class _PricingSection extends StatelessWidget {
   final bool isMobile;
   const _PricingSection({required this.isMobile});
@@ -619,6 +635,7 @@ class _TestimonialsSection extends StatelessWidget {
             Text(Strings.testimonialsHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
             SizedBox(height: 16),
             _Quote(text: Strings.quote1, author: Strings.quote1Author),
+            SizedBox(height: 16),
             _Quote(text: Strings.quote2, author: Strings.quote2Author),
           ],
         ),
@@ -864,6 +881,7 @@ class _Footer extends StatelessWidget {
               Text(Strings.footerCopyright),
               SizedBox(height: 8),
               Text(Strings.footerTagline),
+              SizedBox(height: 300),
             ],
           ),
         ),
