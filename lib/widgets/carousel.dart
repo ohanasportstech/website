@@ -260,7 +260,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildTextContent(currentItem),
+              _buildTextContent(currentItem, fixedHeight: 220),
               const SizedBox(height: 32),
               _buildControls(color),
             ],
@@ -282,39 +282,44 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       children: [
         _buildPhoneImage(currentItem),
         const SizedBox(height: 32),
-        _buildTextContent(currentItem),
+        _buildTextContent(currentItem, fixedHeight: 180),
         const SizedBox(height: 24),
         _buildControls(color, center: true),
       ],
     );
   }
 
-  Widget _buildTextContent(CarouselItem currentItem) {
+  Widget _buildTextContent(CarouselItem currentItem, {required double fixedHeight}) {
     return AnimatedBuilder(
       animation: _fadeAnimation,
       builder: (context, child) {
         return Opacity(
           opacity: _fadeAnimation.value,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                currentItem.title,
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      height: 1.1,
-                    ),
+          child: SizedBox(
+            height: fixedHeight,
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    currentItem.title,
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          height: 1.1,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    currentItem.description,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          height: 1.5,
+                        ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              Text(
-                currentItem.description,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      height: 1.5,
-                    ),
-              ),
-              const SizedBox(height: 24),
-            ],
+            ),
           ),
         );
       },

@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/reveal.dart';
 import '../widgets/separator.dart';
 import '../widgets/card.dart';
@@ -18,6 +20,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final ScrollController _scrollController;
   double _scroll = 0;
+  final GlobalKey _getAppKey = GlobalKey();
+  final GlobalKey _clubsKey = GlobalKey();
+  final GlobalKey _playersKey = GlobalKey();
 
   @override
   void initState() {
@@ -52,19 +57,54 @@ class _HomePageState extends State<HomePage> {
                   const SliverToBoxAdapter(child: Separator()),
                   SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _CarouselSection(isMobile: isMobile))),
                   const SliverToBoxAdapter(child: Separator()),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _SkillLevelsSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile))),
                   const SliverToBoxAdapter(child: Separator()),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _ClubsCollegesSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 60, child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile))),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 90, child: _HowItWorksSection(isMobile: isMobile))),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile))),
                   SliverToBoxAdapter(child: Reveal(delayMs: 150, child: _TestimonialsSection(isMobile: isMobile))),
                   SliverToBoxAdapter(child: Reveal(delayMs: 180, child: _FaqSection(isMobile: isMobile))),
                   //SliverToBoxAdapter(child: Reveal(delayMs: 210, child: _ContactSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: Reveal(delayMs: 240, child: _CtaSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: Reveal(delayMs: 240, child: _GetTheAppSection(key: _getAppKey))),
                   SliverToBoxAdapter(child: _Footer()),
                 ],
               ),
-              _GlassHeader(isMobile: isMobile, scroll: _scroll),
+              _GlassHeader(
+                isMobile: isMobile,
+                scroll: _scroll,
+                onCtaPressed: () {
+                  final ctx = _getAppKey.currentContext;
+                  if (ctx != null) {
+                    Scrollable.ensureVisible(
+                      ctx,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOutCubic,
+                    );
+                  }
+                },
+                onClubsPressed: () {
+                  final ctx = _clubsKey.currentContext;
+                  if (ctx != null) {
+                    Scrollable.ensureVisible(
+                      ctx,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOutCubic,
+                      alignment: -0.4,
+                    );
+                  }
+                },
+                onPlayersPressed: () {
+                  final ctx = _playersKey.currentContext;
+                  if (ctx != null) {
+                    Scrollable.ensureVisible(
+                      ctx,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOutCubic,
+                      alignment: 0.4,
+                    );
+                  }
+                },
+              ),
             ],
           );
         },
@@ -77,7 +117,10 @@ class _HomePageState extends State<HomePage> {
 class _GlassHeader extends StatelessWidget {
   final bool isMobile;
   final double scroll;
-  const _GlassHeader({required this.isMobile, required this.scroll});
+  final VoidCallback? onCtaPressed;
+  final VoidCallback? onClubsPressed;
+  final VoidCallback? onPlayersPressed;
+  const _GlassHeader({required this.isMobile, required this.scroll, this.onCtaPressed, this.onClubsPressed, this.onPlayersPressed});
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
@@ -85,7 +128,7 @@ class _GlassHeader extends StatelessWidget {
       top: 0, left: 0, right: 0,
       child: SafeArea(
         child: Opacity(
-          opacity: isMobile ? (1.0 - (scroll / 80.0)).clamp(0.0, 1.0) : 1.0,
+          opacity: isMobile ? (1.0 - (scroll / 120.0)).clamp(0.0, 1.0) : 1.0,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ClipRRect(
@@ -96,6 +139,7 @@ class _GlassHeader extends StatelessWidget {
                   height: 56,
                   decoration: BoxDecoration(
                     color: color.surface.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: color.outlineVariant),
                     boxShadow: [
                       BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 8)),
@@ -108,15 +152,15 @@ class _GlassHeader extends StatelessWidget {
                         Text(Strings.navMain, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
                         const Spacer(),
                         if (!isMobile) ...[
-                          TextButton(onPressed: () {}, child: const Text(Strings.nav1)),
-                          TextButton(onPressed: () {}, child: const Text(Strings.nav2)),
-                          TextButton(onPressed: () {}, child: const Text(Strings.nav3)),
+                          TextButton(onPressed: onPlayersPressed, child: const Text(Strings.nav1)),
+                          TextButton(onPressed: onClubsPressed, child: const Text(Strings.nav2)),
+                          TextButton(onPressed: onPlayersPressed, child: const Text(Strings.nav3)),
                           TextButton(
                             onPressed: () => Navigator.of(context).pushNamed('/about'),
                             child: const Text(Strings.nav4),
                           ),
                         ],
-                        FilledButton(onPressed: () {}, child: const Text(Strings.navCTA)),
+                        FilledButton(onPressed: onCtaPressed, child: const Text(Strings.navCTA)),
                       ],
                     ),
                   ),
@@ -363,7 +407,7 @@ class _CarouselSection extends StatelessWidget {
 // MARK: Skill triple
 class _SkillLevelsSection extends StatelessWidget {
   final bool isMobile;
-  const _SkillLevelsSection({required this.isMobile});
+  const _SkillLevelsSection({super.key, required this.isMobile});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -401,7 +445,7 @@ class _SkillLevelsSection extends StatelessWidget {
 class _ClubsCollegesSection extends StatelessWidget {
   final bool isMobile;
 
-  const _ClubsCollegesSection({required this.isMobile});
+  const _ClubsCollegesSection({super.key, required this.isMobile});
 
   @override
   Widget build(BuildContext context) {
@@ -554,6 +598,7 @@ class _PricingSection extends StatelessWidget {
 }
 */
 
+// MARK: Testimonials
 class _TestimonialsSection extends StatelessWidget {
   final bool isMobile;
   const _TestimonialsSection({required this.isMobile});
@@ -609,6 +654,7 @@ class _Quote extends StatelessWidget {
   }
 }
 
+// MARK: FAQ
 class _FaqSection extends StatelessWidget {
   final bool isMobile;
   const _FaqSection({required this.isMobile});
@@ -648,6 +694,7 @@ class _FaqSection extends StatelessWidget {
   }
 }
 
+// MARK: Contact
 class _ContactSection extends StatelessWidget {
   final bool isMobile;
   const _ContactSection({required this.isMobile});
@@ -705,6 +752,7 @@ class _ContactSection extends StatelessWidget {
   }
 }
 
+// MARK: CTA
 class _CtaSection extends StatelessWidget {
   final bool isMobile;
   const _CtaSection({required this.isMobile});
@@ -743,6 +791,63 @@ class _CtaSection extends StatelessWidget {
   }
 }
 
+// MARK: Get the app section
+class _GetTheAppSection extends StatelessWidget {
+  const _GetTheAppSection({super.key});
+  @override
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme;
+    final appleUrl = Uri.parse('https://apps.apple.com/us/app/kai-tennis/id6748925788');
+    final playUrl = Uri.parse('https://play.google.com/store/apps/details?id=net.OhanaSports.Kai');
+    return Container(
+      padding: _sectionPadding(MediaQuery.of(context).size.width < 700),
+      decoration: BoxDecoration(
+        color: color.surfaceContainer,
+        border: Border(top: BorderSide(color: color.outlineVariant)),
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(Strings.ctaGetApp, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
+              const SizedBox(height: 24),
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 24,
+                runSpacing: 24,
+                children: [
+                  InkWell(
+                    onTap: () => launchUrl(appleUrl, mode: LaunchMode.externalApplication),
+                    borderRadius: BorderRadius.circular(12),
+                    child: SvgPicture.asset(
+                      'assets/AppStore.svg',
+                      height: 44,
+                      semanticsLabel: 'Download on the App Store',
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => launchUrl(playUrl, mode: LaunchMode.externalApplication),
+                    borderRadius: BorderRadius.circular(12),
+                    child: SvgPicture.asset(
+                      'assets/GooglePlay.svg',
+                      height: 44,
+                      semanticsLabel: 'Get it on Google Play',
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// MARK: Footer
 class _Footer extends StatelessWidget {
   const _Footer();
   @override

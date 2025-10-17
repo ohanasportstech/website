@@ -86,10 +86,10 @@ class Strings {
 
   // CTA
   static const ctaHeader = 'Ready to rally with Kai Tennis?';
-  static const ctaGetApp = 'Get the App';
+  static const ctaGetApp = 'Get Kai Tennis';
   static const ctaJoinWaitlist = 'Join the Waitlist';
 
   // Footer
-  static const footerCopyright = '© Ohana Sports';
+  static const footerCopyright = '© 2025 Ohana Sports';
   static const footerTagline = 'Made for players, with heart.';
 }
