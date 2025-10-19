@@ -32,6 +32,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   int? _previousIndex;
   bool _hadPrevBefore = false;
   bool _hadNextBefore = false;
+  final double _peekOpacity = 0.3;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
@@ -69,7 +70,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
   void _configureAnimations() {
     // Incoming current image fades from peek opacity to full
-    _fadeAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
+    _fadeAnimation = Tween<double>(begin: _peekOpacity, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
@@ -110,7 +111,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     );
 
     // Outgoing image animations (demote to side peek)
-    _outFadeAnimation = Tween<double>(begin: 1.0, end: 0.4).animate(
+    _outFadeAnimation = Tween<double>(begin: 1.0, end: _peekOpacity).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
@@ -149,7 +150,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     );
 
     // Incoming side peek animation (element 2 when moving forward, element 0 when moving back)
-    _peekFadeAnimation = Tween<double>(begin: 0.0, end: 0.4).animate(
+    _peekFadeAnimation = Tween<double>(begin: 0.0, end: _peekOpacity).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
@@ -166,7 +167,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     );
 
     // Outgoing side peek animation (opposite side): slide out and fade out
-    _peekOutFadeAnimation = Tween<double>(begin: 0.4, end: 0.0).animate(
+    _peekOutFadeAnimation = Tween<double>(begin: _peekOpacity, end: 0.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
@@ -219,21 +220,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     }
   }
 
-  void _goToIndex(int index) {
-    if (index != _currentIndex && index >= 0 && index < widget.items.length) {
-      _direction = (index > _currentIndex) ? 1 : -1;
-      _configureAnimations();
-      _animationController.reset();
-      setState(() {
-        _hadPrevBefore = _currentIndex > 0;
-        _hadNextBefore = _currentIndex < widget.items.length - 1;
-        _previousIndex = _currentIndex;
-        _currentIndex = index;
-      });
-      _animationController.forward();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
@@ -255,7 +241,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       children: [
         // Left side - Text content
         Expanded(
-          flex: 5,
+          flex: 2,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -266,10 +252,9 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
             ],
           ),
         ),
-        const SizedBox(width: 60),
         // Right side - Phone image
         Expanded(
-          flex: 5,
+          flex: 3,
           child: _buildPhoneImage(currentItem),
         ),
       ],
@@ -355,16 +340,14 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
             // Responsive sizing: scale with available width but keep reasonable bounds
             final maxW = constraints.maxWidth;
-            final baseCurrentWidth = (maxW * 0.2).clamp(260.0, 560.0);
-            final baseNextWidth = (baseCurrentWidth * 0.75).clamp(200.0, baseCurrentWidth - 40.0);
-            // Mobile-specific height caps to avoid overly tall images
-            final isMobileLocal = constraints.maxWidth < 900;
-            final double? currentMaxHeight = isMobileLocal ? 360.0 : null;
-            final double? peekMaxHeight = isMobileLocal ? 220.0 : null;
+            final baseCurrentWidth = (maxW * 0.6);
+            final baseNextWidth = (baseCurrentWidth * 0.75);
+            final double? currentMaxHeight = widget.isMobile ? 460.0 : null;
+            final double? peekMaxHeight = widget.isMobile ? 300.0 : null;
 
             // Fix container height on mobile so content below doesn't shift during animations
-            final containerHeight = isMobileLocal
-                ? (currentMaxHeight ?? 360.0)
+            final containerHeight = widget.isMobile
+                ? (currentMaxHeight ?? 460.0)
                 : null; // desktop can be intrinsic
 
             return SizedBox(
@@ -410,7 +393,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                                   // No old left peek existed; show nothing while central demotes into place
                                   ? const SizedBox.shrink()
                                   : Opacity(
-                                      opacity: 0.4,
+                                      opacity: _peekOpacity,
                                       child: Image.asset(
                                         prevItem!.image,
                                         width: baseNextWidth,
@@ -458,7 +441,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                                   // No old right peek existed; show nothing while central demotes into place
                                   ? const SizedBox.shrink()
                                   : Opacity(
-                                      opacity: 0.4,
+                                      opacity: _peekOpacity,
                                       child: Image.asset(
                                         nextItem!.image,
                                         width: baseNextWidth,
@@ -535,18 +518,15 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
           mainAxisAlignment: center ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: List.generate(
             widget.items.length,
-            (index) => GestureDetector(
-              onTap: () => _goToIndex(index),
-              child: Container(
-                margin: const EdgeInsets.only(right: 24, bottom: 12),
-                width: 12,
-                height: 12,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _currentIndex == index
-                      ? color.onSurface
-                      : color.onSurface.withValues(alpha: 0.3),
-                ),
+            (index) => Container(
+              margin: const EdgeInsets.only(right: 24, bottom: 12),
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _currentIndex == index
+                    ? color.onSurface
+                    : color.onSurface.withValues(alpha: _peekOpacity),
               ),
             ),
           ),
@@ -599,7 +579,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
           icon,
           color: isEnabled
               ? color.onSurface
-              : color.onSurface.withValues(alpha: 0.3),
+              : color.onSurface.withValues(alpha: _peekOpacity),
         ),
       ),
     );
