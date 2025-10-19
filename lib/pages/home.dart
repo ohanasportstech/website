@@ -2,13 +2,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:video_player/video_player.dart';
 import '../widgets/reveal.dart';
 import '../widgets/separator.dart';
 import '../widgets/card.dart';
 import '../widgets/triple_cap.dart';
 import '../widgets/carousel.dart';
 import '../widgets/quilt_grid.dart';
+import '../widgets/loop_video.dart';
 import '../strings.dart';
 
 class HomePage extends StatefulWidget {
@@ -457,6 +457,87 @@ class _MeetKaiSection extends StatelessWidget {
   }
 }
 
+// MARK: How it Works
+class _HowItWorksSection extends StatelessWidget {
+  final bool isMobile;
+  const _HowItWorksSection({super.key, required this.isMobile});
+  @override
+  Widget build(BuildContext context) {
+    return Container
+      (
+      padding: _sectionPadding(isMobile),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: isMobile
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 16),
+                  const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
+                  const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
+                  const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
+                  const SizedBox(height: 16),
+                  const LoopVideo(assetName: 'assets/images/how_it_works.mp4'),
+                ],
+              )
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+                        SizedBox(height: 16),
+                        _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
+                        _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
+                        _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  const Expanded(
+                    flex: 3,
+                    child: LoopVideo(assetName: 'assets/images/how_it_works.mp4'),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+class _Step extends StatelessWidget {
+  final String number, title, desc;
+  const _Step({required this.number, required this.title, required this.desc});
+  @override
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(backgroundColor: color.primary, child: Text(number, style: TextStyle(color: color.onPrimary))),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+                const SizedBox(height: 4),
+                Text(desc, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color.onSurfaceVariant)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // MARK: Carousel
 class _CarouselSection extends StatelessWidget {
   final bool isMobile;
@@ -564,138 +645,6 @@ class _ClubsCollegesSection extends StatelessWidget {
               ),
             ],
           ),
-    );
-  }
-}
-
-// MARK: How it Works
-class _HowItWorksSection extends StatelessWidget {
-  final bool isMobile;
-  const _HowItWorksSection({super.key, required this.isMobile});
-  @override
-  Widget build(BuildContext context) {
-    return Container
-      (
-      padding: _sectionPadding(isMobile),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: isMobile
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 16),
-                  const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
-                  const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
-                  const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-                  const SizedBox(height: 16),
-                  const _HowItWorksVideo(),
-                ],
-              )
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
-                        SizedBox(height: 16),
-                        _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
-                        _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
-                        _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 24),
-                  const Expanded(
-                    flex: 3,
-                    child: _HowItWorksVideo(),
-                  ),
-                ],
-              ),
-      ),
-    );
-  }
-}
-
-class _Step extends StatelessWidget {
-  final String number, title, desc;
-  const _Step({required this.number, required this.title, required this.desc});
-  @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(backgroundColor: color.primary, child: Text(number, style: TextStyle(color: color.onPrimary))),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-                const SizedBox(height: 4),
-                Text(desc, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color.onSurfaceVariant)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _HowItWorksVideo extends StatefulWidget {
-  const _HowItWorksVideo();
-  @override
-  State<_HowItWorksVideo> createState() => _HowItWorksVideoState();
-}
-
-class _HowItWorksVideoState extends State<_HowItWorksVideo> {
-  late final VideoPlayerController _controller;
-  bool _initialized = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.asset('assets/images/how_it_works.mp4')
-      ..setLooping(true)
-      ..setVolume(0.0);
-    _controller.initialize().then((_) {
-      if (!mounted) return;
-      setState(() => _initialized = true);
-      _controller.play();
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final borderRadius = BorderRadius.circular(16);
-    Widget child;
-    if (_initialized) {
-      child = AspectRatio(
-        aspectRatio: _controller.value.aspectRatio == 0 ? 16 / 9 : _controller.value.aspectRatio,
-        child: VideoPlayer(_controller),
-      );
-    } else {
-      child = Container(
-        height: 200,
-        decoration: BoxDecoration(color: Colors.black12, borderRadius: borderRadius),
-      );
-    }
-    return ClipRRect(
-      borderRadius: borderRadius,
-      child: child,
     );
   }
 }
