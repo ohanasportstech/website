@@ -1,54 +1,64 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:ui_web' as ui; // for platformViewRegistry on web
+import 'dart:js_interop'; // for JSPromise.toDart
+import 'package:web/web.dart' as html; // web-only
 
-class LoopVideo extends StatefulWidget {
+class LoopVideo extends StatelessWidget {
   final String assetName;
   const LoopVideo({super.key, required this.assetName});
-  @override
-  State<LoopVideo> createState() => _LoopVideoState();
-}
 
-class _LoopVideoState extends State<LoopVideo> {
-  late final VideoPlayerController _controller;
-  bool _initialized = false;
+  static final Set<String> _registered = <String>{};
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.asset(widget.assetName)
-      ..setLooping(true)
-      ..setVolume(0.0);
-    _controller.initialize().then((_) {
-      if (!mounted) return;
-      setState(() => _initialized = true);
-      _controller.play();
+  void _ensureRegistered(String viewType, String srcUrl) {
+    if (_registered.contains(viewType)) return;
+    ui.platformViewRegistry.registerViewFactory(viewType, (int viewId) {
+      final el = html.HTMLVideoElement()
+        ..src = srcUrl
+        ..autoplay = true
+        ..muted = true
+        ..loop = true
+        ..controls = false
+        ..preload = 'auto'
+        ..setAttribute('playsinline', 'true')
+        ..setAttribute('muted', '')
+        ..setAttribute('autoplay', '')
+        ..style.width = '100%'
+        ..style.height = '100%'
+        ..style.objectFit = 'contain';
+      // Try to start playback when ready (in case autoplay policy requires a programmatic call)
+      el.onCanPlay.first.then((_) {
+        el.play().toDart.catchError((_) => null);
+      });
+      return el;
     });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    _registered.add(viewType);
   }
 
   @override
   Widget build(BuildContext context) {
     final borderRadius = BorderRadius.circular(16);
-    Widget child;
-    if (_initialized) {
-      child = AspectRatio(
-        aspectRatio: _controller.value.aspectRatio == 0 ? 16 / 9 : _controller.value.aspectRatio,
-        child: VideoPlayer(_controller),
-      );
-    } else {
-      child = Container(
-        height: 200,
-        decoration: BoxDecoration(color: Colors.black12, borderRadius: borderRadius),
+    if (!kIsWeb) {
+      return ClipRRect(
+        borderRadius: borderRadius,
+        child: Container(
+          height: 200,
+          decoration: BoxDecoration(color: Colors.black12, borderRadius: borderRadius),
+        ),
       );
     }
+
+    final srcUrl = '${Uri.base.origin}/assets/$assetName';
+    final viewType = 'loop_video_${assetName.hashCode}';
+    _ensureRegistered(viewType, srcUrl);
+
     return ClipRRect(
       borderRadius: borderRadius,
-      child: child,
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: HtmlElementView(viewType: viewType),
+      ),
     );
   }
 }
