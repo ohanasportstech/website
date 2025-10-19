@@ -249,7 +249,7 @@ class _MaxWidth extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
+        constraints: const BoxConstraints(maxWidth: 1440),
         child: child,
       ),
     );
@@ -466,45 +466,42 @@ class _HowItWorksSection extends StatelessWidget {
     return Container
       (
       padding: _sectionPadding(isMobile),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: isMobile
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 16),
-                  const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
-                  const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
-                  const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-                  const SizedBox(height: 16),
-                  const LoopVideo(assetName: 'assets/images/how_it_works.mp4'),
-                ],
-              )
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
-                        SizedBox(height: 16),
-                        _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
-                        _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
-                        _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-                      ],
-                    ),
+      child: isMobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 16),
+                const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
+                const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
+                const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
+                const SizedBox(height: 16),
+                const LoopVideo(assetName: 'assets/images/how_it_works.mp4'),
+              ],
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+                      SizedBox(height: 16),
+                      _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
+                      _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
+                      _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
+                    ],
                   ),
-                  const SizedBox(width: 24),
-                  const Expanded(
-                    flex: 3,
-                    child: LoopVideo(assetName: 'assets/images/how_it_works.mp4'),
-                  ),
-                ],
-              ),
-      ),
+                ),
+                const SizedBox(width: 24),
+                const Expanded(
+                  flex: 3,
+                  child: LoopVideo(assetName: 'assets/images/how_it_works.mp4'),
+                ),
+              ],
+            ),
     );
   }
 }
