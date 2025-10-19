@@ -262,15 +262,15 @@ class _HeroSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: isMobile ? 420 : 560,
+      height: isMobile ? 420 : 640,
       child: ClipRect(
         child: Stack(
           children: [
             Positioned.fill(
               child: Transform.translate(
-                offset: Offset(0, -scroll * 0.2),
+                offset: Offset(0, -scroll * 0.15),
                 child: Transform.scale(
-                  scale: 1.5,
+                  scale: 1.2,
                   child: Image.asset(
                     'assets/images/hero.jpg',
                     fit: BoxFit.cover,
@@ -279,16 +279,22 @@ class _HeroSection extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.black.withValues(alpha: 0.05),
-                      Colors.black.withValues(alpha: 0.75),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: 180,
+              child: IgnorePointer(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black,
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -296,39 +302,43 @@ class _HeroSection extends StatelessWidget {
             Positioned(
               left: 0,
               right: 0,
-              bottom: isMobile ? 24 : 48,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: _sectionPadding(isMobile).left,
-                ),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1200),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          Strings.heroHeader,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                              ),
+              bottom: 24,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: _sectionPadding(isMobile).left,
+                    ),
+                    child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1200),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              Strings.heroHeader,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              Strings.heroDesc,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          Strings.heroDesc,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: Colors.white,
-                              ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ],
