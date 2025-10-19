@@ -21,7 +21,7 @@ class _ImageCardState extends State<ImageCard> {
         duration: const Duration(milliseconds: 200),
         constraints: const BoxConstraints(minHeight: 180, maxWidth: 520),
         curve: Curves.easeOut,
-        transform: _hovering ? (Matrix4.identity()..scaleByDouble(1.02, 1.02, 1.02, 1.02)) : Matrix4.identity(),
+        transform: _hovering ? (Matrix4.identity()..scaleByDouble(1.02, 1.02, 1.02, 1.0)) : Matrix4.identity(),
         width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
