@@ -53,7 +53,7 @@ class Strings {
   static const cncTitle1 = 'The ultimate tool for pros and coaches';
   static const cncDesc1 = 'Free your hands to coach, not just feed.';
   
-  static const cncTitle2 = 'You assistant coach for college programs.';
+  static const cncTitle2 = 'Your assistant coach for college programs.';
   static const cncDesc2 = 'Run drills on all your courts.';
   
   static const cncTitle3 = 'Create and share custom Drills';
@@ -61,12 +61,14 @@ class Strings {
   
   // How it works
   static const howHeader = 'How it works';
-  static const how1Title = 'Step 1';
-  static const how1Desc = 'Description 1';
-  static const how2Title = 'Step 2';
-  static const how2Desc = 'Description 2';
-  static const how3Title = 'Step 3';
-  static const how3Desc = 'Description 3';
+  static const how1Title = 'Plug in your Kai SmartModule';
+  static const how1Desc = 'Simply attach it to a compatible ball machine and switch it on.';
+  static const how2Title = 'Launch the Kai app';
+  static const how2Desc = 'Kai automatically connects over Bluetooth - no pairing required.';
+  static const how3Title = 'Select your drill';
+  static const how3Desc = 'Browse the library, pick your level, and customize with random or timed options.';
+  static const how4Title = 'Press start & play';
+  static const how4Desc = 'Tap start and let Kai take it from there - just focus on your game.';
   
   // Testimonials
   static const testimonialsHeader = 'Players love Kai Tennis';

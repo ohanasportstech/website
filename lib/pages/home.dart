@@ -380,7 +380,7 @@ class _MeetKaiSection extends StatelessWidget {
                           child: const ImageCard(
                             title: Strings.meetCardTitle1,
                             body: Strings.meetCardBody1,
-                            image: 'assets/images/meet_kai1.png',
+                            image: 'assets/images/meet_kai1.jpg',
                           ),
                         );
                       },
@@ -396,7 +396,7 @@ class _MeetKaiSection extends StatelessWidget {
                           child: const ImageCard(
                             title: Strings.meetCardTitle2,
                             body: Strings.meetCardBody2,
-                            image: 'assets/images/meet_kai2.png',
+                            image: 'assets/images/meet_kai2.jpg',
                           ),
                         );
                       },
@@ -412,7 +412,7 @@ class _MeetKaiSection extends StatelessWidget {
                           child: const ImageCard(
                             title: Strings.meetCardTitle3,
                             body: Strings.meetCardBody3,
-                            image: 'assets/images/meet_kai3.png',
+                            image: 'assets/images/meet_kai3.jpg',
                           ),
                         );
                       },
@@ -428,7 +428,7 @@ class _MeetKaiSection extends StatelessWidget {
                     child: ImageCard(
                       title: Strings.meetCardTitle1,
                       body: Strings.meetCardBody1,
-                      image: 'assets/images/meet_kai1.png',
+                      image: 'assets/images/meet_kai1.jpg',
                     ),
                   ),
                   SizedBox(width: 24),
@@ -436,7 +436,7 @@ class _MeetKaiSection extends StatelessWidget {
                     child: ImageCard(
                       title: Strings.meetCardTitle2,
                       body: Strings.meetCardBody2,
-                      image: 'assets/images/meet_kai2.png',
+                      image: 'assets/images/meet_kai2.jpg',
                     ),
                   ),
                   SizedBox(width: 24),
@@ -444,7 +444,7 @@ class _MeetKaiSection extends StatelessWidget {
                     child: ImageCard(
                       title: Strings.meetCardTitle3,
                       body: Strings.meetCardBody3,
-                      image: 'assets/images/meet_kai3.png',
+                      image: 'assets/images/meet_kai3.jpg',
                     ),
                   ),
                 ],
@@ -474,6 +474,7 @@ class _HowItWorksSection extends StatelessWidget {
                 const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
                 const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
                 const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
+                const _Step(number: '4', title: Strings.how4Title, desc: Strings.how4Desc),
               ],
             )
           : Column(
@@ -484,6 +485,7 @@ class _HowItWorksSection extends StatelessWidget {
               _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
               _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
               _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
+              _Step(number: '4', title: Strings.how4Title, desc: Strings.how4Desc),
             ],
           ),
     );
@@ -612,17 +614,17 @@ class _ClubsCollegesSection extends StatelessWidget {
           QuiltGridItem(
                 title: Strings.cncTitle1,
                 description: Strings.cncDesc1,
-                image: 'assets/images/cnc1.png',
+                image: 'assets/images/cnc1.jpg',
               ),
               QuiltGridItem(
                 title: Strings.cncTitle2,
                 description: Strings.cncDesc2,
-                image: 'assets/images/cnc2.png',
+                image: 'assets/images/cnc2.jpg',
               ),
               QuiltGridItem(
                 title: Strings.cncTitle3,
                 description: Strings.cncDesc3,
-                image: 'assets/images/cnc3.png',
+                image: 'assets/images/cnc3.jpg',
               ),
             ],
           ),

@@ -57,11 +57,10 @@ class QuiltGrid extends StatelessWidget {
     if (items.isEmpty) return const SizedBox.shrink();
     
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _buildTextImageCard(context, items[0]),
-        const SizedBox(height: 16),
         _buildImageTextCard(context, items[1]),
-        const SizedBox(height: 16),
         _buildTextImageCard(context, items[2]),
       ],
     );
@@ -70,14 +69,15 @@ class QuiltGrid extends StatelessWidget {
   Widget _buildTextImageCard(BuildContext context, QuiltGridItem item) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final half = (constraints.maxWidth - spacing) / 2;
+        final tile = (constraints.maxWidth - spacing) / 2 * 0.8;
         return GestureDetector(
           onTap: item.onTap,
           child: Row(
             spacing: spacing,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextCard(size: half, title: item.title, description: item.description),
-              _SquareImage(size: half, image: item.image),
+              TextCard(size: tile, title: item.title, description: item.description),
+              _SquareImage(size: tile, image: item.image),
             ],
           ),
         );
@@ -88,14 +88,15 @@ class QuiltGrid extends StatelessWidget {
   Widget _buildImageTextCard(BuildContext context, QuiltGridItem item) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final half = (constraints.maxWidth - spacing) / 2;
+        final tile = (constraints.maxWidth - spacing) / 2 * 0.8;
         return GestureDetector(
           onTap: item.onTap,
           child: Row(
             spacing: spacing,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _SquareImage(size: half, image: item.image),
-              TextCard(size: half, title: item.title, description: item.description),
+              _SquareImage(size: tile, image: item.image),
+              TextCard(size: tile, title: item.title, description: item.description),
             ],
           ),
         );
@@ -115,7 +116,7 @@ class QuiltGrid extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: AspectRatio(
-              aspectRatio: 16 / 9,
+              aspectRatio: 4/3,
               child: Image.asset(
                 item.image,
                 fit: BoxFit.cover,
@@ -165,7 +166,7 @@ class TextCard extends StatelessWidget {
     return Container(
       height: size,
       width: size,
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -177,12 +178,12 @@ class TextCard extends StatelessWidget {
                   height: 1.2,
                 ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Text(
             description,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  height: 1.5,
+                  height: 1.4,
                 ),
           ),
         ],
