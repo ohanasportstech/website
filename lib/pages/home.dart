@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:video_player/video_player.dart';
 import '../widgets/reveal.dart';
 import '../widgets/separator.dart';
 import '../widgets/card.dart';
@@ -56,18 +57,19 @@ class _HomePageState extends State<HomePage> {
                   SliverToBoxAdapter(child: _MaxWidth(child: _HeroSection(isMobile: isMobile, scroll: _scroll))),
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _MeetKaiSection(isMobile: isMobile)))),
                   const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 60, child: _CarouselSection(isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile)))),
                   const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 90, child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _CarouselSection(isMobile: isMobile)))),
                   const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 90, child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile)))),
                   const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 90, child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile)))),
+                  const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
                   //SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile)))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 150, child: _TestimonialsSection(isMobile: isMobile)))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 180, child: _FaqSection(isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _TestimonialsSection(isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _FaqSection(isMobile: isMobile)))),
                   //SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 210, child: _ContactSection(isMobile: isMobile)))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 240, child: _GetTheAppSection(key: _getAppKey)))) ,
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _GetTheAppSection(key: _getAppKey)))) ,
                   SliverToBoxAdapter(child: _MaxWidth(child: _Footer())),
                 ],
               ),
@@ -191,6 +193,13 @@ class _GlassHeader extends StatelessWidget {
                             const Spacer(),
                             if (!isMobile) ...[
                               TextButton(
+                                onPressed: onHowItWorksPressed,
+                                child: Text(
+                                  Strings.nav1,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ),
+                              TextButton(
                                 onPressed: onPlayersPressed,
                                 child: Text(
                                   Strings.nav3,
@@ -201,13 +210,6 @@ class _GlassHeader extends StatelessWidget {
                                 onPressed: onClubsPressed,
                                 child: Text(
                                   Strings.nav2,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: onHowItWorksPressed,
-                                child: Text(
-                                  Strings.nav1,
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ),
                               ),
@@ -572,20 +574,47 @@ class _HowItWorksSection extends StatelessWidget {
   const _HowItWorksSection({super.key, required this.isMobile});
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Container
+      (
       padding: _sectionPadding(isMobile),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
-        child: Column(
-          crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-          children: const [
-            Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
-            SizedBox(height: 16),
-            _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
-            _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
-            _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-          ],
-        ),
+        child: isMobile
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 16),
+                  const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
+                  const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
+                  const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
+                  const SizedBox(height: 16),
+                  const _HowItWorksVideo(),
+                ],
+              )
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+                        SizedBox(height: 16),
+                        _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
+                        _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
+                        _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  const Expanded(
+                    flex: 3,
+                    child: _HowItWorksVideo(),
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -616,6 +645,57 @@ class _Step extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _HowItWorksVideo extends StatefulWidget {
+  const _HowItWorksVideo();
+  @override
+  State<_HowItWorksVideo> createState() => _HowItWorksVideoState();
+}
+
+class _HowItWorksVideoState extends State<_HowItWorksVideo> {
+  late final VideoPlayerController _controller;
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset('assets/images/how_it_works.mp4')
+      ..setLooping(true)
+      ..setVolume(0.0);
+    _controller.initialize().then((_) {
+      if (!mounted) return;
+      setState(() => _initialized = true);
+      _controller.play();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final borderRadius = BorderRadius.circular(16);
+    Widget child;
+    if (_initialized) {
+      child = AspectRatio(
+        aspectRatio: _controller.value.aspectRatio == 0 ? 16 / 9 : _controller.value.aspectRatio,
+        child: VideoPlayer(_controller),
+      );
+    } else {
+      child = Container(
+        height: 200,
+        decoration: BoxDecoration(color: Colors.black12, borderRadius: borderRadius),
+      );
+    }
+    return ClipRRect(
+      borderRadius: borderRadius,
+      child: child,
     );
   }
 }
