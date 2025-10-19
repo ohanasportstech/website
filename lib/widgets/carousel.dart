@@ -342,7 +342,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
             final maxW = constraints.maxWidth;
             final baseCurrentWidth = (maxW * 0.6);
             final baseNextWidth = (baseCurrentWidth * 0.75);
-            final double? currentMaxHeight = widget.isMobile ? 460.0 : null;
+            final double? currentMaxHeight = widget.isMobile ? 360.0 : null;
             final double? peekMaxHeight = widget.isMobile ? 300.0 : null;
 
             // Fix container height on mobile so content below doesn't shift during animations
