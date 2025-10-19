@@ -263,24 +263,22 @@ class _HeroSection extends StatelessWidget {
   const _HeroSection({required this.isMobile, required this.scroll});
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: isMobile ? 420 : 640,
+    return AspectRatio(
+      aspectRatio: 16 / 9,
       child: ClipRect(
         child: Stack(
           children: [
             Positioned.fill(
-              child: Transform.translate(
-                offset: Offset(0, -scroll * 0.15),
+              // translate video to center the court in the overhead scene
+              child: FractionalTranslation(
+                translation: const Offset(-0.04, 0),
                 child: Transform.scale(
-                  scale: 1.2,
-                  child: Image.asset(
-                    'assets/images/hero.jpg',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  ),
+                  scale: 1.08,
+                  child: const LoopVideo(assetName: 'assets/images/how_it_works.mp4'),
                 ),
               ),
             ),
+            if (!isMobile) ...[
             Positioned(
               left: 0,
               right: 0,
@@ -343,6 +341,7 @@ class _HeroSection extends StatelessWidget {
                 ],
               ),
             ),
+            ],
           ],
         ),
       ),
@@ -475,33 +474,18 @@ class _HowItWorksSection extends StatelessWidget {
                 const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
                 const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
                 const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-                const SizedBox(height: 16),
-                const LoopVideo(assetName: 'assets/images/how_it_works.mp4'),
               ],
             )
-          : Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
-                      SizedBox(height: 16),
-                      _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
-                      _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
-                      _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 24),
-                const Expanded(
-                  flex: 3,
-                  child: LoopVideo(assetName: 'assets/images/how_it_works.mp4'),
-                ),
-              ],
-            ),
+          : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+              SizedBox(height: 16),
+              _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
+              _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
+              _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
+            ],
+          ),
     );
   }
 }

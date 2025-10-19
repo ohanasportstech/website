@@ -26,7 +26,8 @@ class LoopVideo extends StatelessWidget {
         ..setAttribute('autoplay', '')
         ..style.width = '100%'
         ..style.height = '100%'
-        ..style.objectFit = 'contain';
+        ..style.objectFit = 'cover'
+        ..style.objectPosition = 'center';
       // Try to start playback when ready (in case autoplay policy requires a programmatic call)
       el.onCanPlay.first.then((_) {
         el.play().toDart.catchError((_) => null);
@@ -53,12 +54,6 @@ class LoopVideo extends StatelessWidget {
     final viewType = 'loop_video_${assetName.hashCode}';
     _ensureRegistered(viewType, srcUrl);
 
-    return ClipRRect(
-      borderRadius: borderRadius,
-      child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: HtmlElementView(viewType: viewType),
-      ),
-    );
+    return HtmlElementView(viewType: viewType);
   }
 }
