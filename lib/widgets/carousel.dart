@@ -340,7 +340,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
             // Responsive sizing: scale with available width but keep reasonable bounds
             final maxW = constraints.maxWidth;
-            final baseCurrentWidth = (maxW * 0.6);
+            final baseCurrentWidth = (maxW * 0.5);
             final baseNextWidth = (baseCurrentWidth * 0.75);
             final double? currentMaxHeight = widget.isMobile ? 360.0 : null;
             final double? peekMaxHeight = widget.isMobile ? 300.0 : null;
