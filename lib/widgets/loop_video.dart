@@ -20,7 +20,7 @@ class LoopVideo extends StatelessWidget {
         ..muted = true
         ..loop = true
         ..controls = false
-        ..preload = 'auto'
+        ..preload = 'metadata'
         ..setAttribute('playsinline', 'true')
         ..setAttribute('muted', '')
         ..setAttribute('autoplay', '')
