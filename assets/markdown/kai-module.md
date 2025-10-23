@@ -2,7 +2,7 @@ The Kai SmartModule is a Bluetooth controller that allows you to interact with y
 
 Kai adds modern control and intelligence to these trusted machines, so you can bring your club’s machine to life with cutting-edge features. 
 
- - Works with Playmate® iGenie and Ace ball machines
+ - Works with Playmate® iSmash and Ace ball machines
  - Simply plug it in, launch the Kai app, and connect to get started.
  - Only available at select clubs during our Early Access period. 
  - Will be available to purchase early 2026! 

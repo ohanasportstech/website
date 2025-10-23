@@ -1,5 +1,4 @@
 **Effective Date:** July 2nd, 2025  
-**Last Updated:** July 2nd, 2025
 
 Ohana Sports ("we", "us", or "our") is committed to protecting your privacy and ensuring transparency about how we collect, use, and share data. This Privacy Policy explains how we handle your data when you use our mobile application ("the App") available on iOS and Android platforms, and our related services (collectively, the “Services”).
 

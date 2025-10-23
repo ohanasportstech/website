@@ -13,7 +13,6 @@ class _ImageCardState extends State<ImageCard> {
   bool _hovering = false;
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
     return MouseRegion(
       onEnter: (_) => setState(() => _hovering = true),
       onExit: (_) => setState(() => _hovering = false),
@@ -26,11 +25,17 @@ class _ImageCardState extends State<ImageCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(widget.image, width: double.infinity, fit: BoxFit.cover),
-            const SizedBox(height: 12),
-            Text(widget.title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.asset(widget.image, width: double.infinity, fit: BoxFit.cover),
+            ),
+            const SizedBox(height: 20),
+            Text(widget.title, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text(widget.body, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color.onSurfaceVariant)),
+            Padding(
+              padding: const EdgeInsets.only(right: 80),
+              child: Text(widget.body, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black54, fontWeight: FontWeight.bold)),
+            ),
           ],
         ),
       ),

@@ -3,7 +3,7 @@ set -e  # Exit on error
 
 # Build for production
 echo "Building web app..."
-flutter build web --release
+flutter build web --release --base-href /
 
 # Deploy to Cloudflare Pages
 echo "Deploying to Cloudflare Pages..."

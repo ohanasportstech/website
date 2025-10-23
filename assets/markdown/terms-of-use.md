@@ -1,5 +1,3 @@
-### Ohana Sports Terms of Use
-
 **Effective Date:** July 2nd, 2025
 
 Welcome to Ohana Sports! These Terms of Use (“Terms”) govern your access to and use of the Ohana Sports mobile app, website, and related services (collectively, the “Service”). By accessing or using the Service, you agree to be bound by these Terms. If you do not agree, do not use the Service. Please read them carefully.

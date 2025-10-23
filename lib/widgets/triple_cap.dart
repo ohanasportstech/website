@@ -1,26 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'loop_video.dart';
 
 class TripleCapItem {
   final String title;
   final String description;
-  final String heroImage;
+  final String? heroImage;
+  final String? videoPath;
   final VoidCallback? onTap;
 
   const TripleCapItem({
     required this.title,
     required this.description,
-    required this.heroImage,
+    this.heroImage,
+    this.videoPath,
     this.onTap,
-  });
+  }) : assert(heroImage != null || videoPath != null, 
+          'Either heroImage or videoPath must be provided');
 }
 
 class TripleCap extends StatefulWidget {
+  final String header;
+  final String subHeader;
   final List<TripleCapItem> items;
   final bool isMobile;
 
   const TripleCap({
     super.key,
+    required this.header,
+    required this.subHeader,
     required this.items,
     required this.isMobile,
   })  : assert(items.length == 3, 'Must provide exactly 3 items');
@@ -69,36 +77,52 @@ class _TripleCapState extends State<TripleCap> {
     );
   }
 
-  @override
-  void dispose() {
+  @override void dispose() {
     _swimController.dispose();
     super.dispose();
+  }
+
+  Widget _buildContent(TripleCapItem item) {
+    if (item.videoPath != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: LoopVideo(assetName: item.videoPath!),
+      );
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: Image.asset(
+        item.heroImage!,
+        fit: BoxFit.cover,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Full-width hero image at top
+        // Header
+        Text(widget.header, style: Theme.of(context).textTheme.displayLarge?.copyWith(
+          fontWeight: FontWeight.bold,
+        )),
+        const SizedBox(height: 16),
+        Text(widget.subHeader, style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.bold,
+        )),
+        const SizedBox(height: 40),
+
+        // Full-width hero content at top
         LayoutBuilder(
           builder: (context, constraints) {
-            // Define the target aspect ratio (16:9)
-            const targetAspectRatio = 16 / 9;
+            const targetAspectRatio = 2.2;
             
             return AspectRatio(
               aspectRatio: targetAspectRatio,
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 1000),
-                child: Container(
-                  key: ValueKey<int>(_selectedIndex),
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(widget.items[_selectedIndex].heroImage),
-                      fit: BoxFit.cover,
-                      alignment: Alignment.center,
-                    ),
-                  ),
-                ),
+                child: _buildContent(widget.items[_selectedIndex]),
               ),
             );
           },
@@ -161,7 +185,7 @@ class _TripleCapState extends State<TripleCap> {
         }
       },
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 300),
           opacity: isSelected ? 1.0 : 0.5,
@@ -172,21 +196,39 @@ class _TripleCapState extends State<TripleCap> {
               // Title
               Text(
                 item.title,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: widget.isMobile ? 18 : null,
                     ),
               ),
               const SizedBox(height: 8),
-              // Description
-              Text(
-                item.description,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                      fontSize: widget.isMobile ? 13 : null,
-                      height: widget.isMobile ? 1.35 : null,
-                    ),
-              ),
+              // Description with bullet points
+              ...item.description.split('\n').map((line) {
+                if (line.trim().isEmpty) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('•  ', style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.grey[600],
+                        fontSize: widget.isMobile ? 13 : null,
+                        height: widget.isMobile ? 1.35 : null,
+                      )),
+                      Expanded(
+                        child: Text(
+                          line,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Colors.grey[600],
+                            fontSize: widget.isMobile ? 13 : null,
+                            height: widget.isMobile ? 1.35 : 1.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
             ],
           ),
         ),

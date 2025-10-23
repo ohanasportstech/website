@@ -103,7 +103,7 @@ machines.
 
 Currently, the Kai Module works with:
 
-- **PlayMate iGenie** (recommended for full functionality and advanced
+- **PlayMate iSmash** (recommended for full functionality and advanced
   drills)
 
 - **PlayMate Ace** (supported for simpler feeds and remote control, but
@@ -324,7 +324,7 @@ app or for more info, see our [Subscription](/pages/subscription/) page.
 
 The Kai Module is a smart ball machine controller that allows you to control your ball machine from your phone or watch.
 
-- Compatible with **PlayMate iGenie** and **Ace**
+- Compatible with **PlayMate iSmash** and **Ace**
 
 - Adds smart phone and watch control
 
@@ -344,7 +344,7 @@ No — you can explore drills, save favorites, and track progress without
 it. The module is only needed to control a ball machine.
 
 **Does Kai work on all ball machines?**  
-Currently, Kai supports PlayMate **iGenie** and **Ace** models.
+Currently, Kai supports PlayMate **iSmash** and **Ace** models.
 
 **Can I use Kai indoors and outdoors?**  
 Yes — it’s designed for open-air courts and works within ~30 meters of

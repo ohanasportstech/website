@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/reveal.dart';
-import '../widgets/separator.dart';
 import '../widgets/card.dart';
 import '../widgets/triple_cap.dart';
 import '../widgets/carousel.dart';
@@ -56,19 +55,12 @@ class _HomePageState extends State<HomePage> {
                 slivers: [
                   SliverToBoxAdapter(child: _MaxWidth(child: _HeroSection(isMobile: isMobile, scroll: _scroll))),
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _MeetKaiSection(isMobile: isMobile)))),
-                  const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile)))),
-                  const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _CarouselSection(isMobile: isMobile)))),
-                  const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile)))),
-                  const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile)))),
-                  const SliverToBoxAdapter(child: _MaxWidth(child: Separator())),
-                  //SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 120, child: _PricingSection(isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile)))),
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _TestimonialsSection(isMobile: isMobile)))),
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _FaqSection(isMobile: isMobile)))),
-                  //SliverToBoxAdapter(child: _MaxWidth(child: Reveal(delayMs: 210, child: _ContactSection(isMobile: isMobile)))),
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _GetTheAppSection(key: _getAppKey)))) ,
                   SliverToBoxAdapter(child: _MaxWidth(child: _Footer())),
                 ],
@@ -147,84 +139,96 @@ class _GlassHeader extends StatelessWidget {
   const _GlassHeader({required this.isMobile, required this.scroll, this.onCtaPressed, this.onClubsPressed, this.onPlayersPressed, this.onHowItWorksPressed, this.onLogoPressed});
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
     return Positioned(
-      top: 0, left: 0, right: 0,
+      top: 8, left: 0, right: 0,
       child: SafeArea(
         child: Opacity(
           opacity: isMobile ? (1.0 - (scroll / 300.0)).clamp(0.0, 1.0) : 1.0,
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1200),
+              constraints: const BoxConstraints(maxWidth: 1220),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(36),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                     child: Container(
-                      height: 56,
+                      height: 72,
                       decoration: BoxDecoration(
-                        color: color.surface.withValues(alpha: 0.6),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: color.outlineVariant),
-                        boxShadow: [
-                          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 8)),
-                        ],
+                        color: Colors.black.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(36),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          children: [
-                            // crop with rounded rect and tap to scroll top
-                            GestureDetector(
-                              onTap: onLogoPressed,
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(3),
-                                    child: Image.asset('assets/icons/AppIcon.png', height: 24),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(Strings.navMain, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700)),
-                                ],
-                              ),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          // Calculate required width for navigation items
+                          final textPainter = TextPainter(
+                            text: TextSpan(
+                              text: '${Strings.nav1}  ${Strings.nav2}  ${Strings.nav3}  ${Strings.nav4}',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
                             ),
-                            const Spacer(),
-                            if (!isMobile) ...[
-                              TextButton(
-                                onPressed: onHowItWorksPressed,
-                                child: Text(
-                                  Strings.nav1,
-                                  style: Theme.of(context).textTheme.bodySmall,
+                            textDirection: TextDirection.ltr,
+                          );
+                          textPainter.layout();
+                          
+                          // Add some padding (16px per item for padding and margins)
+                          final totalWidth = textPainter.width + (4 * 16);
+                          final hasEnoughSpace = constraints.maxWidth * 0.50 > totalWidth;
+                          
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            child: Row(
+                              children: [
+                                // Logo
+                                GestureDetector(
+                                  onTap: onLogoPressed,
+                                  child: Text(
+                                    Strings.navMain, 
+                                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                              TextButton(
-                                onPressed: onPlayersPressed,
-                                child: Text(
-                                  Strings.nav3,
-                                  style: Theme.of(context).textTheme.bodySmall,
+                                const Spacer(),
+                                
+                                // Navigation items
+                                if (hasEnoughSpace) ...[
+                                  SizedBox(
+                                    width: constraints.maxWidth * 0.50,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                      TextButton(
+                                        onPressed: onHowItWorksPressed,
+                                        child: Text(Strings.nav1, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
+                                      ),
+                                      TextButton(
+                                        onPressed: onClubsPressed,
+                                        child: Text(Strings.nav2, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
+                                      ),
+                                      TextButton(
+                                        onPressed: onPlayersPressed,
+                                        child: Text(Strings.nav3, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pushNamed('/about'),
+                                        child: Text(Strings.nav4, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
+                                      ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                                
+                                // CTA button
+                                FilledButton(
+                                  onPressed: onCtaPressed, 
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 6.0),
+                                    child: Text(Strings.navCTA, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
+                                  ),
                                 ),
-                              ),
-                              TextButton(
-                                onPressed: onClubsPressed,
-                                child: Text(
-                                  Strings.nav2,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pushNamed('/about'),
-                                child: Text(
-                                  Strings.nav4,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                            ],
-                            FilledButton(onPressed: onCtaPressed, child: const Text(Strings.navCTA)),
-                          ],
-                        ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -240,7 +244,7 @@ class _GlassHeader extends StatelessWidget {
 
 
 EdgeInsets _sectionPadding(bool isMobile) =>
-    EdgeInsets.symmetric(horizontal: isMobile ? 20 : 80, vertical: isMobile ? 24 : 32);
+    EdgeInsets.symmetric(horizontal: isMobile ? 20 : 80, vertical: isMobile ? 24 : 60);
 
 class _MaxWidth extends StatelessWidget {
   final Widget child;
@@ -264,7 +268,7 @@ class _HeroSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 2,
+      aspectRatio: 16/9,
       child: ClipRect(
         child: Stack(
           children: [
@@ -274,7 +278,7 @@ class _HeroSection extends StatelessWidget {
                 translation: const Offset(-0.04, 0),
                 child: Transform.scale(
                   scale: 1.08,
-                  child: const LoopVideo(assetName: 'assets/images/how_it_works.mp4'),
+                  child: const LoopVideo(assetName: 'assets/images/hero.mp4'),
                 ),
               ),
             ),
@@ -320,19 +324,20 @@ class _HeroSection extends StatelessWidget {
                             Text(
                               Strings.heroHeader,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                              style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                     color: Colors.white,
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.bold,
                                   ),
                             ),
                             const SizedBox(height: 16),
                             Text(
                               Strings.heroDesc,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                     color: Colors.white,
                                   ),
                             ),
+                            const SizedBox(height: 24),
                           ],
                         ),
                       ),
@@ -355,7 +360,6 @@ class _MeetKaiSection extends StatelessWidget {
   const _MeetKaiSection({required this.isMobile});
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
     return Container(
       padding: _sectionPadding(isMobile),
       child: ConstrainedBox(
@@ -363,10 +367,10 @@ class _MeetKaiSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: [
-            Text(Strings.meetHeader, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: 16),
-            Text(Strings.meetDesc, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: color.onSurfaceVariant)),
-            const SizedBox(height: 24),
+            Text(Strings.meetHeader, style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 22),
+            Text(Strings.meetDesc, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 66),
             if (isMobile)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -468,24 +472,23 @@ class _HowItWorksSection extends StatelessWidget {
       child: isMobile
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 20,
               children: [
-                const Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+                Text(Strings.howHeader, style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 16),
                 const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
                 const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
                 const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-                const _Step(number: '4', title: Strings.how4Title, desc: Strings.how4Desc),
               ],
             )
           : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(Strings.howHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
-              SizedBox(height: 16),
-              _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
-              _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
-              _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-              _Step(number: '4', title: Strings.how4Title, desc: Strings.how4Desc),
+            spacing: 20,
+            children: [
+              Text(Strings.howHeader, style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w700)),
+              const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
+              const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
+              const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
             ],
           ),
     );
@@ -503,15 +506,30 @@ class _Step extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(backgroundColor: color.primary, child: Text(number, style: TextStyle(color: color.onPrimary))),
-          const SizedBox(width: 12),
+          Container(
+            width: 60, // Fixed size for the circle
+            height: 60, // Fixed size for the circle
+            decoration: BoxDecoration(
+              color: color.primary,
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              number,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                color: color.onPrimary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+                Text(title, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 4),
-                Text(desc, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color.onSurfaceVariant)),
+                Text(desc, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -573,21 +591,23 @@ class _SkillLevelsSection extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 1200),
         child: TripleCap(
           isMobile: isMobile,
+          header: Strings.skillHeader,
+          subHeader: Strings.skillSubHeader,
           items: const [
             TripleCapItem(
               title: Strings.skillTitle1,
               description: Strings.skillDesc1,
-              heroImage: 'assets/images/skill1.jpg',
+              videoPath: 'assets/images/skill_beg.mp4',
             ),
             TripleCapItem(
               title: Strings.skillTitle2,
               description: Strings.skillDesc2,
-              heroImage: 'assets/images/skill2.jpg',
+              videoPath: 'assets/images/skill_int.mp4',
             ),
             TripleCapItem(
               title: Strings.skillTitle3,
               description: Strings.skillDesc3,
-              heroImage: 'assets/images/skill3.jpg',
+              videoPath: 'assets/images/skill_adv.mp4',
             ),
           ],
         ),
@@ -713,18 +733,17 @@ class _TestimonialsSection extends StatelessWidget {
       padding: _sectionPadding(isMobile),
       decoration: BoxDecoration(
         color: color.surfaceContainer,
-        border: Border(top: BorderSide(color: color.outlineVariant)),
       ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-          children: const [
-            Text(Strings.testimonialsHeader, style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
-            SizedBox(height: 16),
+          spacing: 24,
+          children: [
+            Text(Strings.testimonialsHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
             _Quote(text: Strings.quote1, author: Strings.quote1Author),
-            SizedBox(height: 16),
             _Quote(text: Strings.quote2, author: Strings.quote2Author),
+            _Quote(text: Strings.quote3, author: Strings.quote3Author),
           ],
         ),
       ),
@@ -741,15 +760,17 @@ class _Quote extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.format_quote, color: color.primary),
+          Icon(Icons.format_quote, color: color.primary, size: 48),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8,
               children: [
-                Text(text, style: Theme.of(context).textTheme.bodyLarge),
-                Text(author, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color.onSurfaceVariant)),
+                Text(text, style: Theme.of(context).textTheme.headlineMedium),
+                Text(author, style: Theme.of(context).textTheme.titleMedium),
               ],
             ),
           ),
@@ -777,20 +798,26 @@ class _FaqSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: [
-            Text(Strings.faqHeader, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
+            Text(Strings.faqHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
             for (final f in faqs)
-              ExpansionTile(
-                title: Text(f[0]),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(f[1]),
+              Theme(
+                data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  title: Text(f[0], style: Theme.of(context).textTheme.headlineSmall),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(f[1], style: Theme.of(context).textTheme.titleMedium),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
           ],
         ),

@@ -30,7 +30,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   int _currentIndex = 0;
   int _direction = 1; // 1 = next (right to left), -1 = previous (left to right)
   int? _previousIndex;
-  bool _hadPrevBefore = false;
   bool _hadNextBefore = false;
   final double _peekOpacity = 0.3;
   late AnimationController _animationController;
@@ -42,8 +41,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   late Animation<double> _peekFadeAnimation; // fades in to 0.4
   late Animation<Offset> _peekSlideAnimation; // slides from offscreen to peek spot
   late Animation<AlignmentGeometry> _incomingAlignAnimation; // from side peek to center
-  late Animation<EdgeInsets> _incomingPadding; // side peek padding -> zero
-  late Animation<EdgeInsets> _outgoingPadding; // zero -> side peek padding
   late Animation<double> _peekOutFadeAnimation; // fades out from 0.4 -> 0
   late Animation<Offset> _peekOutSlideAnimation; // slides from peek spot to offscreen
 
@@ -88,20 +85,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       ),
     );
 
-    // Animate padding along with alignment so start/end match peek layout exactly
-    final incomingStartPadding = _direction == 1
-        ? const EdgeInsets.only(left: 20.0)   // starting from right peek (uses left padding)
-        : const EdgeInsets.only(right: 20.0); // starting from left peek (uses right padding)
-    _incomingPadding = EdgeInsetsTween(
-      begin: incomingStartPadding,
-      end: EdgeInsets.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.0, 1.0, curve: Curves.easeOutCubic),
-      ),
-    );
-
     // Incoming current image scales from peek size to full
     _scaleAnimation = Tween<double>(begin: 0.75, end: 1.0).animate(
       CurvedAnimation(
@@ -111,7 +94,10 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     );
 
     // Outgoing image animations (demote to side peek)
-    _outFadeAnimation = Tween<double>(begin: 1.0, end: _peekOpacity).animate(
+    _outFadeAnimation = Tween<double>(
+      begin: 1.0,
+      end: _direction == 1 ? 0.0 : _peekOpacity, // Fade to 0 when moving left, peekOpacity when moving right
+    ).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
@@ -127,21 +113,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
     _outgoingAlignAnimation = AlignmentTween(
       begin: Alignment.center,
-      end: _direction == 1 ? Alignment.centerLeft : Alignment.centerRight,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.0, 1.0, curve: Curves.easeOutCubic),
-      ),
-    );
-
-    // Outgoing padding animates to the destination peek padding
-    final outgoingEndPadding = _direction == 1
-        ? const EdgeInsets.only(right: 20.0)  // demoting to left peek (uses right padding)
-        : const EdgeInsets.only(left: 20.0);  // demoting to right peek (uses left padding)
-    _outgoingPadding = EdgeInsetsTween(
-      begin: EdgeInsets.zero,
-      end: outgoingEndPadding,
+      end: _direction == 1 ? Alignment.centerLeft : Alignment(1.1, 0.0), // Match static position
     ).animate(
       CurvedAnimation(
         parent: _animationController,
@@ -196,7 +168,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       _configureAnimations();
       _animationController.reset();
       setState(() {
-        _hadPrevBefore = _currentIndex > 0;
         _hadNextBefore = _currentIndex < widget.items.length - 1;
         _previousIndex = _currentIndex;
         _currentIndex++;
@@ -211,7 +182,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       _configureAnimations();
       _animationController.reset();
       setState(() {
-        _hadPrevBefore = _currentIndex > 0;
         _hadNextBefore = _currentIndex < widget.items.length - 1;
         _previousIndex = _currentIndex;
         _currentIndex--;
@@ -228,7 +198,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     return LayoutBuilder(
       builder: (context, constraints) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          padding: const EdgeInsets.symmetric(vertical: 40),
           child: widget.isMobile ? _buildMobileLayout(currentItem, color) : _buildDesktopLayout(currentItem, color),
         );
       },
@@ -236,28 +206,41 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   }
 
   Widget _buildDesktopLayout(CarouselItem currentItem, ColorScheme color) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // Left side - Text content
-        Expanded(
-          flex: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox(
+          width: constraints.maxWidth,
+          height: 600, // Fixed height for the carousel
+          child: Stack(
             children: [
-              _buildTextContent(currentItem, fixedHeight: 220),
-              const SizedBox(height: 32),
-              _buildControls(color),
+              // Phone image - positioned on the right
+              Positioned(
+                right: 0,
+                top: 0,
+                bottom: 0,
+                width: constraints.maxWidth * 0.75, // Take up 60% of width
+                child: _buildPhoneImage(currentItem),
+              ),
+              // Text content and controls - positioned on the left
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: constraints.maxWidth * 0.45, // Take up 50% of width
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildTextContent(currentItem, fixedHeight: 220),
+                    const SizedBox(height: 32),
+                    _buildControls(color),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-        // Right side - Phone image
-        Expanded(
-          flex: 3,
-          child: _buildPhoneImage(currentItem),
-        ),
-      ],
+        );
+      },
     );
   }
 
@@ -289,9 +272,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                 children: [
                   Text(
                     currentItem.title,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
                           fontWeight: FontWeight.w700,
-                          height: 1.1,
                         ),
                   ),
                   const SizedBox(height: 16),
@@ -318,9 +300,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
         return LayoutBuilder(
           builder: (context, constraints) {
             final hasNext = _currentIndex < widget.items.length - 1;
-            final hasPrev = _currentIndex > 0;
             final nextItem = hasNext ? widget.items[_currentIndex + 1] : null;
-            final prevItem = hasPrev ? widget.items[_currentIndex - 1] : null;
 
             // Determine the FORMER peek (the one that should animate OUT) based on previous index and direction
             int? outgoingPeekIndex;
@@ -340,14 +320,14 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
             // Responsive sizing: scale with available width but keep reasonable bounds
             final maxW = constraints.maxWidth;
-            final baseCurrentWidth = (maxW * 0.5);
-            final baseNextWidth = (baseCurrentWidth * 0.75);
-            final double? currentMaxHeight = widget.isMobile ? 360.0 : null;
-            final double? peekMaxHeight = widget.isMobile ? 300.0 : null;
+            final baseCurrentWidth = (maxW * 0.6); // Reduced from 0.45 to make images smaller
+            final baseNextWidth = (baseCurrentWidth * 0.6); // Reduced from 0.75 to make peek smaller
+            final double currentMaxHeight = widget.isMobile ? 360.0 : 600.0; // Added fixed height for desktop
+            final double peekMaxHeight = widget.isMobile ? 300.0 : 520.0; // Added fixed height for desktop
 
             // Fix container height on mobile so content below doesn't shift during animations
             final containerHeight = widget.isMobile
-                ? (currentMaxHeight ?? 460.0)
+                ? (currentMaxHeight)
                 : null; // desktop can be intrinsic
 
             return SizedBox(
@@ -355,79 +335,43 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                if (hasPrev)
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: _animationController.isAnimating && _direction == 1 && _hadPrevBefore && outgoingPeekImage != null
-                          // Forward: left peek is outgoing -> animate out
-                          ? Transform.translate(
-                              offset: Offset(_peekOutSlideAnimation.value.dx * constraints.maxWidth, 0),
-                              child: Opacity(
-                                opacity: _peekOutFadeAnimation.value,
-                                child: Image.asset(
-                                  outgoingPeekImage,
-                                  width: baseNextWidth,
-                                  height: peekMaxHeight,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            )
-                          : (_animationController.isAnimating && _direction == -1)
-                              // Backward: left peek is incoming -> animate in
-                              ? Transform.translate(
-                                  offset: Offset(_peekSlideAnimation.value.dx * constraints.maxWidth, 0),
-                                  child: Opacity(
-                                    opacity: _peekFadeAnimation.value,
-                                    child: Image.asset(
-                                      prevItem!.image,
-                                      width: baseNextWidth,
-                                      height: peekMaxHeight,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                )
-                              // Idle/static
-                              : (_animationController.isAnimating && _direction == 1 && !_hadPrevBefore)
-                                  // No old left peek existed; show nothing while central demotes into place
-                                  ? const SizedBox.shrink()
-                                  : Opacity(
-                                      opacity: _peekOpacity,
-                                      child: Image.asset(
-                                        prevItem!.image,
-                                        width: baseNextWidth,
-                                        height: peekMaxHeight,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                    ),
-                  ),
                 if (hasNext)
                   Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: _animationController.isAnimating && _direction == -1 && _hadNextBefore && outgoingPeekImage != null
-                          // Backward: right peek is outgoing -> animate out
-                          ? Transform.translate(
-                              offset: Offset(_peekOutSlideAnimation.value.dx * constraints.maxWidth, 0),
-                              child: Opacity(
-                                opacity: _peekOutFadeAnimation.value,
-                                child: Image.asset(
-                                  outgoingPeekImage,
-                                  width: baseNextWidth,
-                                  height: peekMaxHeight,
-                                  fit: BoxFit.contain,
-                                ),
+                    alignment: Alignment(1.1, 0.0), // Move further right than centerRight
+                    child: _animationController.isAnimating && _direction == -1 && _hadNextBefore && outgoingPeekImage != null
+                        // Backward: right peek is outgoing -> animate out
+                        ? Transform.translate(
+                            offset: Offset(_peekOutSlideAnimation.value.dx * constraints.maxWidth, 0),
+                            child: Opacity(
+                              opacity: _peekOutFadeAnimation.value,
+                              child: Image.asset(
+                                outgoingPeekImage,
+                                width: baseNextWidth,
+                                height: peekMaxHeight,
+                                fit: BoxFit.contain,
                               ),
-                            )
-                          : (_animationController.isAnimating && _direction == 1)
-                              // Forward: right peek is incoming -> animate in
-                              ? Transform.translate(
-                                  offset: Offset(_peekSlideAnimation.value.dx * constraints.maxWidth, 0),
-                                  child: Opacity(
-                                    opacity: _peekFadeAnimation.value,
+                            ),
+                          )
+                        : (_animationController.isAnimating && _direction == 1)
+                            // Forward: right peek is incoming -> animate in
+                            ? Transform.translate(
+                                offset: Offset(_peekSlideAnimation.value.dx * constraints.maxWidth, 0),
+                                child: Opacity(
+                                  opacity: _peekFadeAnimation.value,
+                                  child: Image.asset(
+                                    nextItem!.image,
+                                    width: baseNextWidth,
+                                    height: peekMaxHeight,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              )
+                            // Idle/static
+                            : (_animationController.isAnimating && _direction == -1 && !_hadNextBefore)
+                                // No old right peek existed; show nothing while central demotes into place
+                                ? const SizedBox.shrink()
+                                : Opacity(
+                                    opacity: _peekOpacity,
                                     child: Image.asset(
                                       nextItem!.image,
                                       width: baseNextWidth,
@@ -435,67 +379,34 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                                       fit: BoxFit.contain,
                                     ),
                                   ),
-                                )
-                              // Idle/static
-                              : (_animationController.isAnimating && _direction == -1 && !_hadNextBefore)
-                                  // No old right peek existed; show nothing while central demotes into place
-                                  ? const SizedBox.shrink()
-                                  : Opacity(
-                                      opacity: _peekOpacity,
-                                      child: Image.asset(
-                                        nextItem!.image,
-                                        width: baseNextWidth,
-                                        height: peekMaxHeight,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                    ),
                   ),
                 if (_previousIndex != null)
                   AlignTransition(
                     alignment: _outgoingAlignAnimation,
-                    child: AnimatedBuilder(
-                      animation: _outgoingPadding,
-                      builder: (context, child) {
-                        return Padding(
-                          padding: _outgoingPadding.value,
-                          child: child,
-                        );
-                      },
-                      child: Transform.scale(
-                        scale: _outScaleAnimation.value,
-                        child: Opacity(
-                          opacity: _outFadeAnimation.value,
-                          child: Image.asset(
-                            widget.items[_previousIndex!].image,
-                            width: baseNextWidth,
-                            height: peekMaxHeight,
-                            fit: BoxFit.contain,
-                          ),
+                    child: Transform.scale(
+                      scale: _outScaleAnimation.value,
+                      child: Opacity(
+                        opacity: _outFadeAnimation.value,
+                        child: Image.asset(
+                          widget.items[_previousIndex!].image,
+                          width: baseNextWidth,
+                          height: peekMaxHeight,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
                   ),
                 AlignTransition(
                   alignment: _incomingAlignAnimation,
-                  child: AnimatedBuilder(
-                    animation: _incomingPadding,
-                    builder: (context, child) {
-                      return Padding(
-                        padding: _incomingPadding.value,
-                        child: child,
-                      );
-                    },
-                    child: Transform.scale(
-                      scale: _scaleAnimation.value,
-                      child: Opacity(
-                        opacity: _fadeAnimation.value,
-                        child: Image.asset(
-                          currentItem.image,
-                          width: baseCurrentWidth,
-                          height: currentMaxHeight,
-                          fit: BoxFit.contain,
-                        ),
+                  child: Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: Opacity(
+                      opacity: _fadeAnimation.value,
+                      child: Image.asset(
+                        currentItem.image,
+                        width: baseCurrentWidth,
+                        height: currentMaxHeight,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),

@@ -60,7 +60,9 @@ class QuiltGrid extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _buildTextImageCard(context, items[0]),
+        const SizedBox(height: 40),
         _buildImageTextCard(context, items[1]),
+        const SizedBox(height: 40),
         _buildTextImageCard(context, items[2]),
       ],
     );
@@ -69,7 +71,7 @@ class QuiltGrid extends StatelessWidget {
   Widget _buildTextImageCard(BuildContext context, QuiltGridItem item) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final tile = (constraints.maxWidth - spacing) / 2 * 0.8;
+        final tile = (constraints.maxWidth - spacing) / 2 * 0.85;
         return GestureDetector(
           onTap: item.onTap,
           child: Row(
@@ -88,7 +90,7 @@ class QuiltGrid extends StatelessWidget {
   Widget _buildImageTextCard(BuildContext context, QuiltGridItem item) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final tile = (constraints.maxWidth - spacing) / 2 * 0.8;
+        final tile = (constraints.maxWidth - spacing) / 2 * 0.85;
         return GestureDetector(
           onTap: item.onTap,
           child: Row(
@@ -173,18 +175,16 @@ class TextCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
                   fontWeight: FontWeight.w700,
-                  height: 1.2,
                 ),
           ),
           const SizedBox(height: 12),
           Text(
             description,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  height: 1.4,
-                ),
+                  fontWeight: FontWeight.bold, 
+                  color: Colors.black54),
           ),
         ],
       ),
