@@ -18,8 +18,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final seed = const Color(0xFF0077C8); // kaiBlue
 
-    final baseTextTheme = GoogleFonts.interTextTheme();
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Kai Tennis',
@@ -29,17 +27,7 @@ class MyApp extends StatelessWidget {
           seedColor: seed,
           brightness: Brightness.light,
         ),
-        textTheme: baseTextTheme,
-        ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: seed,
-          brightness: Brightness.dark,
-        ),
-        textTheme: GoogleFonts.interTextTheme(
-          ThemeData.dark(useMaterial3: true).textTheme.merge(baseTextTheme),
-        ),
+        textTheme: GoogleFonts.interTextTheme(),
       ),
       initialRoute: '/',
       onGenerateRoute: (settings) {
