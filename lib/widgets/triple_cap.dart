@@ -144,7 +144,7 @@ class _TripleCapState extends State<TripleCap> {
         // Caption section: three columns on desktop, swimlane on mobile using single source isMobile
         if (widget.isMobile)
           SizedBox(
-            height: 180,
+            height: 220,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               controller: _swimController,

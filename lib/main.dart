@@ -14,6 +14,29 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  TextStyle? _scaleStyle(TextStyle? s, double factor) =>
+      s?.copyWith(fontSize: s.fontSize != null ? s.fontSize! * factor : null);
+
+  TextTheme _scaledTextTheme(TextTheme base, double factor) {
+    return base.copyWith(
+      displayLarge: _scaleStyle(base.displayLarge, factor),
+      displayMedium: _scaleStyle(base.displayMedium, factor),
+      displaySmall: _scaleStyle(base.displaySmall, factor),
+      headlineLarge: _scaleStyle(base.headlineLarge, factor),
+      headlineMedium: _scaleStyle(base.headlineMedium, factor),
+      headlineSmall: _scaleStyle(base.headlineSmall, factor),
+      titleLarge: _scaleStyle(base.titleLarge, factor),
+      titleMedium: _scaleStyle(base.titleMedium, factor),
+      titleSmall: _scaleStyle(base.titleSmall, factor),
+      bodyLarge: _scaleStyle(base.bodyLarge, factor),
+      bodyMedium: _scaleStyle(base.bodyMedium, factor),
+      bodySmall: _scaleStyle(base.bodySmall, factor),
+      labelLarge: _scaleStyle(base.labelLarge, factor),
+      labelMedium: _scaleStyle(base.labelMedium, factor),
+      labelSmall: _scaleStyle(base.labelSmall, factor),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final seed = const Color(0xFF0077C8); // kaiBlue
@@ -29,6 +52,17 @@ class MyApp extends StatelessWidget {
         ),
         textTheme: GoogleFonts.interTextTheme(),
       ),
+      builder: (context, child) {
+        final width = MediaQuery.sizeOf(context).width;
+        // Scale down typography when viewport is narrow
+        final scale = (width / 1000).clamp(0.8, 1.0);
+        final theme = Theme.of(context);
+        final adjustedTextTheme = _scaledTextTheme(theme.textTheme, scale);
+        return Theme(
+          data: theme.copyWith(textTheme: adjustedTextTheme),
+          child: child!,
+        );
+      },
       initialRoute: '/',
       onGenerateRoute: (settings) {
         final uri = Uri.parse(settings.name ?? '/');

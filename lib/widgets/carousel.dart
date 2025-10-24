@@ -36,7 +36,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
   late Animation<double> _outFadeAnimation;
-  late Animation<double> _outScaleAnimation;
   late Animation<AlignmentGeometry> _outgoingAlignAnimation; // center -> side peek
   late Animation<double> _peekFadeAnimation; // fades in to 0.4
   late Animation<Offset> _peekSlideAnimation; // slides from offscreen to peek spot
@@ -101,13 +100,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-      ),
-    );
-    // Keep outgoing size constant; we'll render it at the peek width to avoid rounding mismatch
-    _outScaleAnimation = Tween<double>(begin: 1.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.2, 1.0, curve: Curves.easeOutCubic),
       ),
     );
 
@@ -218,7 +210,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                 right: 0,
                 top: 0,
                 bottom: 0,
-                width: constraints.maxWidth * 0.75, // Take up 60% of width
+                width: constraints.maxWidth * 0.70, // Take up 70% of width
                 child: _buildPhoneImage(currentItem),
               ),
               // Text content and controls - positioned on the left
@@ -226,7 +218,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                 left: 0,
                 top: 0,
                 bottom: 0,
-                width: constraints.maxWidth * 0.45, // Take up 50% of width
+                width: constraints.maxWidth * 0.40, // Take up 40% of width
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -320,10 +312,10 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
             // Responsive sizing: scale with available width but keep reasonable bounds
             final maxW = constraints.maxWidth;
-            final baseCurrentWidth = (maxW * 0.6); // Reduced from 0.45 to make images smaller
-            final baseNextWidth = (baseCurrentWidth * 0.6); // Reduced from 0.75 to make peek smaller
-            final double currentMaxHeight = widget.isMobile ? 360.0 : 600.0; // Added fixed height for desktop
-            final double peekMaxHeight = widget.isMobile ? 300.0 : 520.0; // Added fixed height for desktop
+            final baseCurrentWidth = (maxW * 0.6); 
+            final baseNextWidth = (baseCurrentWidth * 0.6); 
+            final double currentMaxHeight = widget.isMobile ? 360.0 : 600.0; 
+            final double peekMaxHeight = widget.isMobile ? 300.0 : 520.0; 
 
             // Fix container height on mobile so content below doesn't shift during animations
             final containerHeight = widget.isMobile
@@ -383,16 +375,13 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                 if (_previousIndex != null)
                   AlignTransition(
                     alignment: _outgoingAlignAnimation,
-                    child: Transform.scale(
-                      scale: _outScaleAnimation.value,
-                      child: Opacity(
-                        opacity: _outFadeAnimation.value,
-                        child: Image.asset(
-                          widget.items[_previousIndex!].image,
-                          width: baseNextWidth,
-                          height: peekMaxHeight,
-                          fit: BoxFit.contain,
-                        ),
+                    child: Opacity(
+                      opacity: _outFadeAnimation.value,
+                      child: Image.asset(
+                        widget.items[_previousIndex!].image,
+                        width: baseNextWidth,
+                        height: peekMaxHeight,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),

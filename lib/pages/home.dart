@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile)))),
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _TestimonialsSection(isMobile: isMobile)))),
                   SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _FaqSection(isMobile: isMobile)))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _GetTheAppSection(key: _getAppKey)))) ,
+                  SliverToBoxAdapter(child: _MaxWidth(child: _GetTheAppSection(key: _getAppKey))),
                   SliverToBoxAdapter(child: _MaxWidth(child: _Footer())),
                 ],
               ),
@@ -365,7 +365,7 @@ class _MeetKaiSection extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Column(
-          crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(Strings.meetHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 22),
@@ -469,24 +469,11 @@ class _HowItWorksSection extends StatelessWidget {
     return Container
       (
       padding: _sectionPadding(isMobile),
-      child: isMobile
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              spacing: 20,
-              children: [
-                Text(Strings.howHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
-                const SizedBox(height: 16),
-                const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
-                const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
-                const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-              ],
-            )
-          : Column(
+      child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 30,
             children: [
               Text(Strings.howHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
-              const SizedBox(height: 2),
               const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
               const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
               const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
@@ -741,7 +728,7 @@ class _TestimonialsSection extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Column(
-          crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 24,
           children: [
             Text(Strings.testimonialsHeader, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700)),
@@ -800,7 +787,7 @@ class _FaqSection extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Column(
-          crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(Strings.faqHeader, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
