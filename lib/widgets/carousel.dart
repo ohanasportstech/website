@@ -272,7 +272,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                 children: [
                   Text(
                     currentItem.title,
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
                   ),

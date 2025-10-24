@@ -337,7 +337,7 @@ class _HeroSection extends StatelessWidget {
                                     color: Colors.white,
                                   ),
                             ),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 45),
                           ],
                         ),
                       ),
@@ -367,7 +367,7 @@ class _MeetKaiSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: [
-            Text(Strings.meetHeader, style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w700)),
+            Text(Strings.meetHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 22),
             Text(Strings.meetDesc, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 66),
@@ -474,7 +474,7 @@ class _HowItWorksSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               spacing: 20,
               children: [
-                Text(Strings.howHeader, style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w700)),
+                Text(Strings.howHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 16),
                 const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
                 const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
@@ -483,9 +483,10 @@ class _HowItWorksSection extends StatelessWidget {
             )
           : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 20,
+            spacing: 30,
             children: [
-              Text(Strings.howHeader, style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w700)),
+              Text(Strings.howHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
+              const SizedBox(height: 2),
               const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
               const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
               const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
@@ -527,9 +528,9 @@ class _Step extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
+                Text(title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 4),
-                Text(desc, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
+                Text(desc, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -593,6 +594,7 @@ class _SkillLevelsSection extends StatelessWidget {
           isMobile: isMobile,
           header: Strings.skillHeader,
           subHeader: Strings.skillSubHeader,
+          initialIndex: 1,
           items: const [
             TripleCapItem(
               title: Strings.skillTitle1,
@@ -630,6 +632,8 @@ class _ClubsCollegesSection extends StatelessWidget {
       padding: _sectionPadding(isMobile),
       child: QuiltGrid(
         isMobile: isMobile,
+        header: Strings.cncHeader,
+        subHeader: Strings.cncSubHeader,
         items: [
           QuiltGridItem(
                 title: Strings.cncTitle1,
@@ -740,7 +744,7 @@ class _TestimonialsSection extends StatelessWidget {
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           spacing: 24,
           children: [
-            Text(Strings.testimonialsHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
+            Text(Strings.testimonialsHeader, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700)),
             _Quote(text: Strings.quote1, author: Strings.quote1Author),
             _Quote(text: Strings.quote2, author: Strings.quote2Author),
             _Quote(text: Strings.quote3, author: Strings.quote3Author),
@@ -769,8 +773,8 @@ class _Quote extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 8,
               children: [
-                Text(text, style: Theme.of(context).textTheme.headlineMedium),
-                Text(author, style: Theme.of(context).textTheme.titleMedium),
+                Text(text, style: Theme.of(context).textTheme.titleLarge),
+                Text(author, style: Theme.of(context).textTheme.titleSmall),
               ],
             ),
           ),
@@ -798,20 +802,23 @@ class _FaqSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: [
-            Text(Strings.faqHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
+            Text(Strings.faqHeader, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
             for (final f in faqs)
               Theme(
                 data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
-                  title: Text(f[0], style: Theme.of(context).textTheme.headlineSmall),
+                  title: Padding(
+                    padding: const EdgeInsets.only(top: 24.0),
+                    child: Text(f[0], style: Theme.of(context).textTheme.titleLarge),
+                  ),
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Text(f[1], style: Theme.of(context).textTheme.titleMedium),
                         ),
                       ),

@@ -104,7 +104,7 @@ class _TripleCapState extends State<TripleCap> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header
-        Text(widget.header, style: Theme.of(context).textTheme.displayLarge?.copyWith(
+        Text(widget.header, style: Theme.of(context).textTheme.displayMedium?.copyWith(
           fontWeight: FontWeight.bold,
         )),
         const SizedBox(height: 16),
