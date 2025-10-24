@@ -24,6 +24,7 @@ class TripleCap extends StatefulWidget {
   final String subHeader;
   final List<TripleCapItem> items;
   final bool isMobile;
+  final int initialIndex;
 
   const TripleCap({
     super.key,
@@ -31,14 +32,26 @@ class TripleCap extends StatefulWidget {
     required this.subHeader,
     required this.items,
     required this.isMobile,
-  })  : assert(items.length == 3, 'Must provide exactly 3 items');
+    this.initialIndex = 0,
+  })  : assert(items.length == 3, 'Must provide exactly 3 items'),
+       assert(initialIndex >= 0 && initialIndex < 3, 'initialIndex must be between 0 and 2');
 
   @override
   State<TripleCap> createState() => _TripleCapState();
 }
 
 class _TripleCapState extends State<TripleCap> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
+  
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+    // Scroll to initial index after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollItemIntoView(_selectedIndex);
+    });
+  }
   final ScrollController _swimController = ScrollController();
   final List<GlobalKey> _itemKeys = List.generate(3, (_) => GlobalKey());
 
