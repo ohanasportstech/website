@@ -2,7 +2,7 @@ class Strings {
   // Header / Navigation
   static const navMain = 'Kai Tennis';
   static const nav1 = 'How It Works';
-  static const nav2 = 'For Clubs';
+  static const nav2 = 'For Coaches';
   static const nav3 = 'For Individuals';
   static const nav4 = 'About Us';
   static const navCTA = 'Get The App';
@@ -13,7 +13,7 @@ class Strings {
 
   // Meet Kai
   static const meetHeader = 'Meet Kai';
-  static const meetDesc = 'The coach that\'ll bring smarts to your ball machine';
+  static const meetDesc = 'The coach that brings smarts to your ball machine';
   static const meetCardTitle1 = 'Simple control';
   static const meetCardBody1 = 'As easy as picking a drill and pressing start to get going.';
   static const meetCardTitle2 = 'Pro-designed drills';
@@ -42,12 +42,12 @@ class Strings {
   // Carousel
   static const carouselTitle1 = 'Your stats and favorite drills in one place';
   static const carouselDesc1 = 'A personalized dashboard to get going quickly every time.';
-  static const carouselTitle2 = 'Drill Library';
-  static const carouselDesc2 = 'Browse a curated catalog of pro-designed drills to hone your skills or improve your strategy.';
-  static const carouselTitle3 = 'Drill Detail';
-  static const carouselDesc3 = 'View drill steps, targets, and parameters with visuals and tips before you start.';
-  static const carouselTitle4 = 'Custom Drills';
-  static const carouselDesc4 = 'Design your own drills by setting patterns, speeds, and sequences to fit your needs.';
+  static const carouselTitle2 = 'Work on all elements of your game';
+  static const carouselDesc2 = 'Pick from a curated catalog of pro-designed drills to hone your skills and improve your strategy.';
+  static const carouselTitle3 = 'Visualize the drill and get coaching tips';
+  static const carouselDesc3 = 'Set your level, adjust timer and shuffle options and you\'re ready to start.';
+  static const carouselTitle4 = 'Create your own custom drills';
+  static const carouselDesc4 = 'Pick the shots, speed, and level to fit your practice needs.';
 
   // Individual/team triple caption
   static const playersHeader = 'Practice for all';
@@ -59,12 +59,12 @@ class Strings {
   static const playersDesc3 = 'Description 3';
 
   // Clubs / Colleges
+  static const cncHeader = 'Your coaching assistant';
+  static const cncSubHeader = 'Let the machine feed so you can spend your time teaching';
   static const cncTitle1 = 'The ultimate tool for pros and coaches';
   static const cncDesc1 = 'Free your hands to coach, not just feed';
-  
   static const cncTitle2 = 'Your assistant coach for college programs';
   static const cncDesc2 = 'Run drills on all your courts';
-  
   static const cncTitle3 = 'Create and share custom drills';
   static const cncDesc3 = 'Focus on what your students need';
   
@@ -89,7 +89,7 @@ class Strings {
   static const quote3Author = 'Brett, college player';
 
   // FAQ
-  static const faqHeader = 'FAQ';
+  static const faqHeader = 'Frequently Asked Questions';
   static const faq1Q = 'Will it work with my ball machine?';
   static const faq1A = 'Kai has been developed to work with the most common PlayMate® ball machines. We are working at expanding to more brands and models in the future.';
   static const faq2Q = 'Is there a subscription?';
