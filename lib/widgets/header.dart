@@ -55,7 +55,7 @@ class _MobileAppBarState extends State<MobileAppBar> {
             onPressed: widget.onCtaPressed,
             child: Text(
               Strings.navCTA,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ),
