@@ -240,9 +240,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _buildPhoneImage(currentItem),
-        const SizedBox(height: 32),
         _buildTextContent(currentItem, fixedHeight: 140),
+        _buildPhoneImage(currentItem),
         const SizedBox(height: 24),
         _buildControls(color, center: true),
       ],
@@ -314,8 +313,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
             final maxW = constraints.maxWidth;
             final baseCurrentWidth = (maxW * 0.6); 
             final baseNextWidth = (baseCurrentWidth * 0.6); 
-            final double currentMaxHeight = widget.isMobile ? 360.0 : 600.0; 
-            final double peekMaxHeight = widget.isMobile ? 300.0 : 520.0; 
+            final double currentMaxHeight = widget.isMobile ? 320.0 : 600.0; 
+            final double peekMaxHeight = widget.isMobile ? 280.0 : 520.0; 
 
             // Fix container height on mobile so content below doesn't shift during animations
             final containerHeight = widget.isMobile
@@ -419,7 +418,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
           children: List.generate(
             widget.items.length,
             (index) => Container(
-              margin: const EdgeInsets.only(right: 24, bottom: 12),
+              margin: const EdgeInsets.symmetric(horizontal: 12),
               width: 12,
               height: 12,
               decoration: BoxDecoration(
