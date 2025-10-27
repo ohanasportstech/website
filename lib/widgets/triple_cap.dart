@@ -149,6 +149,7 @@ class _TripleCapState extends State<TripleCap> {
               scrollDirection: Axis.horizontal,
               controller: _swimController,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(width: 8),
                   for (int index = 0; index < widget.items.length; index++) ...[
