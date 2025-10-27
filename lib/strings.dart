@@ -5,7 +5,7 @@ class Strings {
   static const nav2 = 'For Coaches';
   static const nav3 = 'For Individuals';
   static const nav4 = 'About Us';
-  static const navCTA = 'Get The App';
+  static const navCTA = 'Get the App';
 
   // Hero
   static const heroHeader = 'Elevate the way you practice!';

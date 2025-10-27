@@ -1,8 +1,7 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../widgets/reveal.dart';
+import 'package:website/widgets/header.dart';
 import '../widgets/card.dart';
 import '../widgets/triple_cap.dart';
 import '../widgets/carousel.dart';
@@ -43,81 +42,40 @@ class _HomePageState extends State<HomePage> {
   // MARK: Section layout
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 700;
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: isMobile
+          ? MobileAppBar(onCtaPressed: () => Scrollable.ensureVisible(_getAppKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic))
+          : null,
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final isMobile = constraints.maxWidth < 700;
           return Stack(
             children: [
               CustomScrollView(
                 controller: _scrollController,
                 slivers: [
+                  if (isMobile) SliverToBoxAdapter(child: SizedBox(height: 56)),
                   SliverToBoxAdapter(child: _MaxWidth(child: _HeroSection(isMobile: isMobile, scroll: _scroll))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _MeetKaiSection(isMobile: isMobile)))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _CarouselSection(isMobile: isMobile)))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile)))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile)))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile)))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _TestimonialsSection(isMobile: isMobile)))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: Reveal(child: _FaqSection(isMobile: isMobile)))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: _MeetKaiSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: _CarouselSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: _TestimonialsSection(isMobile: isMobile))),
+                  SliverToBoxAdapter(child: _MaxWidth(child: _FaqSection(isMobile: isMobile))),
                   SliverToBoxAdapter(child: _MaxWidth(child: _GetTheAppSection(key: _getAppKey))),
                   SliverToBoxAdapter(child: _MaxWidth(child: _Footer())),
                 ],
               ),
-              _GlassHeader(
-                isMobile: isMobile,
-                scroll: _scroll,
-                onLogoPressed: () {
-                  _scrollController.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOutCubic,
-                  );
-                },
-                onCtaPressed: () {
-                  final ctx = _getAppKey.currentContext;
-                  if (ctx != null) {
-                    Scrollable.ensureVisible(
-                      ctx,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOutCubic,
-                    );
-                  }
-                },
-                onHowItWorksPressed: () {
-                  final ctx = _howItWorksKey.currentContext;
-                  if (ctx != null) {
-                    Scrollable.ensureVisible(
-                      ctx,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOutCubic,
-                      alignment: 0.2,
-                    );
-                  }
-                },
-                onClubsPressed: () {
-                  final ctx = _clubsKey.currentContext;
-                  if (ctx != null) {
-                    Scrollable.ensureVisible(
-                      ctx,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOutCubic,
-                      alignment: -0.4,
-                    );
-                  }
-                },
-                onPlayersPressed: () {
-                  final ctx = _playersKey.currentContext;
-                  if (ctx != null) {
-                    Scrollable.ensureVisible(
-                      ctx,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOutCubic,
-                      alignment: 0.4,
-                    );
-                  }
-                },
+              if (!isMobile)
+              GlassHeader(
+                onLogoPressed: () => _scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic),
+                onCtaPressed: () => Scrollable.ensureVisible(_getAppKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic),
+                onHowItWorksPressed: () => Scrollable.ensureVisible(_howItWorksKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic, alignment: 0.2),
+                onClubsPressed: () => Scrollable.ensureVisible(_clubsKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic, alignment: -0.4),
+                onPlayersPressed: () => Scrollable.ensureVisible(_playersKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic, alignment: 0.4),
               ),
             ],
           );
@@ -126,122 +84,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-// MARK: Glass Header
-class _GlassHeader extends StatelessWidget {
-  final bool isMobile;
-  final double scroll;
-  final VoidCallback? onCtaPressed;
-  final VoidCallback? onClubsPressed;
-  final VoidCallback? onPlayersPressed;
-  final VoidCallback? onHowItWorksPressed;
-  final VoidCallback? onLogoPressed;
-  const _GlassHeader({required this.isMobile, required this.scroll, this.onCtaPressed, this.onClubsPressed, this.onPlayersPressed, this.onHowItWorksPressed, this.onLogoPressed});
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: 8, left: 0, right: 0,
-      child: SafeArea(
-        child: Opacity(
-          opacity: isMobile ? (1.0 - (scroll / 300.0)).clamp(0.0, 1.0) : 1.0,
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1220),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(36),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    child: Container(
-                      height: 72,
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(36),
-                      ),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          // Calculate required width for navigation items
-                          final textPainter = TextPainter(
-                            text: TextSpan(
-                              text: '${Strings.nav1}  ${Strings.nav2}  ${Strings.nav3}  ${Strings.nav4}',
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
-                            ),
-                            textDirection: TextDirection.ltr,
-                          );
-                          textPainter.layout();
-                          
-                          // Add some padding (16px per item for padding and margins)
-                          final totalWidth = textPainter.width + (4 * 16);
-                          final hasEnoughSpace = constraints.maxWidth * 0.50 > totalWidth;
-                          
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: Row(
-                              children: [
-                                // Logo
-                                GestureDetector(
-                                  onTap: onLogoPressed,
-                                  child: Text(
-                                    Strings.navMain, 
-                                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                const Spacer(),
-                                
-                                // Navigation items
-                                if (hasEnoughSpace) ...[
-                                  SizedBox(
-                                    width: constraints.maxWidth * 0.50,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                      TextButton(
-                                        onPressed: onHowItWorksPressed,
-                                        child: Text(Strings.nav1, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-                                      ),
-                                      TextButton(
-                                        onPressed: onClubsPressed,
-                                        child: Text(Strings.nav2, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-                                      ),
-                                      TextButton(
-                                        onPressed: onPlayersPressed,
-                                        child: Text(Strings.nav3, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => Navigator.of(context).pushNamed('/about'),
-                                        child: Text(Strings.nav4, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-                                      ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                                
-                                // CTA button
-                                FilledButton(
-                                  onPressed: onCtaPressed, 
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 6.0),
-                                    child: Text(Strings.navCTA, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 
 EdgeInsets _sectionPadding(bool isMobile) =>
     EdgeInsets.symmetric(horizontal: isMobile ? 20 : 80, vertical: isMobile ? 24 : 60);
@@ -272,22 +114,12 @@ class _HeroSection extends StatelessWidget {
       child: ClipRect(
         child: Stack(
           children: [
-            Positioned.fill(
-              // translate video to center the court in the overhead scene
-              child: FractionalTranslation(
-                translation: const Offset(-0.04, 0),
-                child: Transform.scale(
-                  scale: 1.08,
-                  child: const LoopVideo(assetName: 'assets/images/hero.mp4'),
-                ),
-              ),
-            ),
-            if (!isMobile) ...[
+            const LoopVideo(assetName: 'assets/images/hero.mp4'),
             Positioned(
               left: 0,
               right: 0,
               bottom: 0,
-              height: 180,
+              height: isMobile ? 80 : 180,
               child: IgnorePointer(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -306,7 +138,7 @@ class _HeroSection extends StatelessWidget {
             Positioned(
               left: 0,
               right: 0,
-              bottom: 24,
+              bottom: isMobile ? 12 : 24,
               child: Stack(
                 children: [
                   Padding(
@@ -324,20 +156,25 @@ class _HeroSection extends StatelessWidget {
                             Text(
                               Strings.heroHeader,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                              style: isMobile ? Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ) : Theme.of(context).textTheme.displayMedium?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(height: isMobile ? 4: 16),
                             Text(
                               Strings.heroDesc,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              style: isMobile ? Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: Colors.white,
+                                  ) : Theme.of(context).textTheme.headlineSmall?.copyWith(
                                     color: Colors.white,
                                   ),
                             ),
-                            const SizedBox(height: 45),
+                            if (!isMobile) const SizedBox(height: 45),
                           ],
                         ),
                       ),
@@ -346,7 +183,6 @@ class _HeroSection extends StatelessWidget {
                 ],
               ),
             ),
-            ],
           ],
         ),
       ),
