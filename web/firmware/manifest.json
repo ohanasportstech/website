@@ -1,0 +1,14 @@
+{
+  "name": "Kai SmartModule Firmware Update 1.1101",
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "fw.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

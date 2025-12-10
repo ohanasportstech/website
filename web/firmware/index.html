@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Kai SmartModule Firmware Updater</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 24px; max-width: 720px; margin: 0 auto; }
+      h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+      p { line-height: 1.5; }
+      .card { border-radius: 12px; border: 1px solid #e0e0e0; padding: 20px; margin-top: 16px; }
+    </style>
+    <script type="module">
+      import "https://unpkg.com/esp-web-tools@9/dist/web/install-button.js?module";
+    </script>
+  </head>
+  <body>
+    <h1>Update Kai SmartModule Firmware</h1>
+    <p>
+      Use Chrome or Microsoft Edge on a desktop or laptop, then connect your Kai SmartModule
+      to this computer with a USB-C cable.
+    </p>
+
+    <div class="card">
+      <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
+      <p style="font-size: 0.9rem; color: #555; margin-top: 12px;">
+        If the button is disabled, make sure you're using Chrome or Edge and that this page
+        is loaded over HTTPS.
+      </p>
+    </div>
+
+    <p style="margin-top: 24px; font-size: 0.9rem; color: #555;">
+      During the update, do not disconnect the cable or power. When the process finishes,
+      the SmartModule will reboot automatically.
+    </p>
+  </body>
+</html>
