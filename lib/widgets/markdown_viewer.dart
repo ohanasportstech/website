@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MarkdownViewer extends StatelessWidget {
   final String assetPath;
@@ -72,6 +73,14 @@ class MarkdownViewer extends StatelessWidget {
               return Markdown(
                 data: snapshot.data ?? '',
                 padding: const EdgeInsets.fromLTRB(20, 24, 20, 96),
+                onTapLink: (text, href, title) async {
+                  if (href != null) {
+                    final uri = Uri.parse(href);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri);
+                    }
+                  }
+                },
                 styleSheet: MarkdownStyleSheet(
                   p: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         height: 1.75,
