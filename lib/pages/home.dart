@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:website/widgets/header.dart';
+import 'package:website/widgets/get_kai_popup.dart';
 import '../widgets/card.dart';
 import '../widgets/triple_cap.dart';
 import '../widgets/carousel.dart';
@@ -39,6 +40,10 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void _showGetKaiPopup(BuildContext context) {
+    showGetKaiPopup(context);
+  }
+
   // MARK: Section layout
   @override
   Widget build(BuildContext context) {
@@ -46,7 +51,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: isMobile
-          ? MobileAppBar(onCtaPressed: () => Scrollable.ensureVisible(_getAppKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic))
+          ? MobileAppBar(
+              onGetKaiPressed: () => _showGetKaiPopup(context),
+              onAccountPressed: () => Navigator.of(context).pushNamed('/account'),
+            )
           : null,
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: LayoutBuilder(
@@ -72,7 +80,8 @@ class _HomePageState extends State<HomePage> {
               if (!isMobile)
               GlassHeader(
                 onLogoPressed: () => _scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic),
-                onCtaPressed: () => Scrollable.ensureVisible(_getAppKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic),
+                onGetKaiPressed: () => _showGetKaiPopup(context),
+                onAccountPressed: () => Navigator.of(context).pushNamed('/account'),
                 onHowItWorksPressed: () => Scrollable.ensureVisible(_howItWorksKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic, alignment: 0.2),
                 onClubsPressed: () => Scrollable.ensureVisible(_clubsKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic, alignment: -0.4),
                 onPlayersPressed: () => Scrollable.ensureVisible(_playersKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic, alignment: 0.4),
