@@ -6,7 +6,7 @@ class Strings {
   static const nav3 = 'For Individuals';
   static const nav4 = 'About Us';
   static const navCTA = 'Get the App';
-  static const navGetKai = 'Get Kai';
+  static const navGetKai = 'Order Kai';
   static const navAccount = 'Account';
 
   // Hero

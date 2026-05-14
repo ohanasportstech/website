@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:website/widgets/header.dart';
 
 class OrderSuccessPage extends StatefulWidget {
   const OrderSuccessPage({super.key});
@@ -17,7 +18,7 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
   int quantity = 0;
   int hardwareTotal = 0;
   int monthlyTotal = 0;
-  String? paymentIntentId;
+  String? orderId;
   String? stripeStatus;
   DateTime? orderDate;
   String? shippingName;
@@ -27,6 +28,7 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
   String? shippingState;
   String? shippingPostalCode;
   bool _loadingDetails = true;
+  double _summaryOpacity = 0.0;
 
   @override
   void initState() {
@@ -37,16 +39,30 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
     }
   }
 
-  Future<void> _fetchOrderDetails() async {
+  Future<void> _fetchOrderDetails({int attempt = 0}) async {
+    const maxAttempts = 5;
+    const delays = [0, 1500, 3000, 5000, 8000]; // ms before each attempt
     try {
+      if (attempt > 0) {
+        await Future.delayed(Duration(milliseconds: delays[attempt]));
+      }
+      if (!mounted) return;
+
       final response = await Supabase.instance.client.functions.invoke(
         'get-order-details',
         body: {'session_id': sessionId!},
       );
       final data = response.data as Map<String, dynamic>?;
+
+      // Retry if we got no data or a clearly incomplete response (e.g. cold-start
+      // race or webhook not yet written to DB).
+      if ((data == null || data['status'] == null) && attempt < maxAttempts - 1) {
+        return _fetchOrderDetails(attempt: attempt + 1);
+      }
+
       if (data != null && mounted) {
         setState(() {
-          paymentIntentId = data['payment_intent_id'] as String?;
+          orderId = data['order_id'] as String?;
           stripeStatus = data['status'] as String?;
           final createdAt = data['created_at'] as String?;
           orderDate = createdAt != null ? DateTime.tryParse(createdAt)?.toLocal() : null;
@@ -64,9 +80,16 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
           if (monthlyTotal == 0) monthlyTotal = (((data['monthly_total_cents'] as int?) ?? 0) / 100).round();
           _loadingDetails = false;
         });
+        // Trigger fade-in on the next frame so AnimatedOpacity sees the 0→1 transition
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) setState(() => _summaryOpacity = 1.0);
+        });
       }
     } catch (_) {
-      if (mounted) setState(() => _loadingDetails = false);
+      if (attempt < maxAttempts - 1) {
+        return _fetchOrderDetails(attempt: attempt + 1);
+      }
+      if (mounted) setState(() { _loadingDetails = false; _summaryOpacity = 1.0; });
     }
   }
 
@@ -82,31 +105,31 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Order Confirmed'),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 600),
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.fromLTRB(24, 136, 24, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 32),
-                  Icon(Icons.check_circle, size: 80, color: Colors.green[600]),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: Image.asset('assets/icons/AppIcon.png', width: 80, height: 80),
+                  ),
                   const SizedBox(height: 16),
                   Text(
-                    'Order received!',
+                    'Thanks for your order!',
                     style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Check your email for admin codes to activate your modules.',
+                    'Check your email for more information and module activation codes.',
                     style: theme.textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),
@@ -115,22 +138,25 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
                   // Order summary card
                   Container(
                     width: double.infinity,
+                    height: 400,
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: _loadingDetails
-                          ? _buildLoadingCardContent(theme)
-                          : _buildSummaryCardContent(theme),
-                    ),
+                    child: _loadingDetails
+                        ? _buildLoadingCardContent(theme)
+                        : AnimatedOpacity(
+                            opacity: _summaryOpacity,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeIn,
+                            child: _buildSummaryCardContent(theme),
+                          ),
                   ),
                   const SizedBox(height: 32),
 
                   Text(
-                    'Download the Kai Tennis app and use your codes to get started.',
+                    'Download the Kai Tennis app today!',
                     style: theme.textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),
@@ -161,16 +187,20 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
                     ],
                   ),
                   const SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: () => Navigator.of(context).pushReplacementNamed('/'),
-                    child: const Text('Close'),
-                  ),
-                  const SizedBox(height: 32),
                 ],
               ),
             ),
           ),
         ),
+      ),
+          GlassHeader(
+            onLogoPressed: () => Navigator.of(context).pushReplacementNamed('/'),
+            onGetKaiPressed: () => Navigator.of(context).pushNamed('/kai-module'),
+            onHowItWorksPressed: () => Navigator.of(context).pushNamed('/?section=how-it-works'),
+            onClubsPressed: () => Navigator.of(context).pushNamed('/?section=clubs'),
+            onPlayersPressed: () => Navigator.of(context).pushNamed('/?section=players'),
+          ),
+        ],
       ),
     );
   }
@@ -213,12 +243,12 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
           const SizedBox(height: 8),
           _summaryRow(context, 'Monthly subscription', '\$$monthlyTotal/mo after 60-day trial'),
           const SizedBox(height: 8),
-          _summaryRow(
-            context,
-            'Transaction ID',
-            paymentIntentId ?? sessionId!.substring(0, 24),
-            valueStyle: theme.textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
-          ),
+          if (orderId != null)
+            _summaryRow(
+              context,
+              'Order ID',
+              orderId!.substring(0, 8).toUpperCase()
+            ),
           if (stripeStatus != null) ...[
             const SizedBox(height: 8),
             _summaryRow(context, 'Payment status', stripeStatus!.toUpperCase()),

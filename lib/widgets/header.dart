@@ -74,7 +74,9 @@ class GlassHeader extends StatelessWidget {
   final VoidCallback? onPlayersPressed;
   final VoidCallback? onHowItWorksPressed;
   final VoidCallback? onLogoPressed;
-  const GlassHeader({super.key, this.onGetKaiPressed, this.onAccountPressed, this.onClubsPressed, this.onPlayersPressed, this.onHowItWorksPressed, this.onLogoPressed});
+  final VoidCallback? onCartPressed;
+  final int cartCount;
+  const GlassHeader({super.key, this.onGetKaiPressed, this.onAccountPressed, this.onClubsPressed, this.onPlayersPressed, this.onHowItWorksPressed, this.onLogoPressed, this.onCartPressed, this.cartCount = 0});
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -161,7 +163,18 @@ class GlassHeader extends StatelessWidget {
                                   child: Text(Strings.navGetKai, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
+                              // Cart icon with badge
+                              Badge(
+                                isLabelVisible: cartCount > 0,
+                                label: Text('$cartCount'),
+                                child: IconButton(
+                                  onPressed: onCartPressed,
+                                  icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
+                                  tooltip: 'Cart',
+                                ),
+                              ),
+                              const SizedBox(width: 4),
                             ],
                           ),
                         );

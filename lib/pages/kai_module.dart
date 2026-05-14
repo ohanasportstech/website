@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:website/widgets/header.dart';
+import 'package:website/widgets/cart.dart';
 
 class KaiModulePage extends StatefulWidget {
   const KaiModulePage({super.key});
@@ -10,111 +13,141 @@ class KaiModulePage extends StatefulWidget {
 class _KaiModulePageState extends State<KaiModulePage> {
   int _currentImageIndex = 0;
   final int _imageCount = 4;
+  bool _cartOpen = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('KAI Module'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800),
+            constraints: const BoxConstraints(maxWidth: 1200),
             child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
+              padding: const EdgeInsets.fromLTRB(24, 136, 24, 48),
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Image carousel
-                  AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Stack(
-                        children: [
-                          // Placeholder for product images
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                  // Left column: image carousel + thumbnail swimlane
+                  Expanded(
+                    child: Column(
+                      children: [
+                        // Hero carousel — 4:3
+                        AspectRatio(
+                          aspectRatio: 4 / 3,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Stack(
                               children: [
-                                Icon(
-                                  Icons.sports_tennis,
-                                  size: 100,
-                                  color: Colors.grey[400],
+                                // Placeholder for product images
+                                Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.sports_tennis,
+                                        size: 100,
+                                        color: Colors.grey[400],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'Product Image ${_currentImageIndex + 1} of $_imageCount',
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'Product Image ${_currentImageIndex + 1} of $_imageCount',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 16,
+                                // Navigation arrows
+                                Positioned(
+                                  left: 16,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: IconButton(
+                                      onPressed: _currentImageIndex > 0
+                                          ? () => setState(() => _currentImageIndex--)
+                                          : null,
+                                      icon: const Icon(Icons.chevron_left),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 16,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: IconButton(
+                                      onPressed: _currentImageIndex < _imageCount - 1
+                                          ? () => setState(() => _currentImageIndex++)
+                                          : null,
+                                      icon: const Icon(Icons.chevron_right),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          // Navigation arrows
-                          Positioned(
-                            left: 16,
-                            top: 0,
-                            bottom: 0,
-                            child: IconButton(
-                              onPressed: _currentImageIndex > 0
-                                  ? () => setState(() => _currentImageIndex--)
-                                  : null,
-                              icon: const Icon(Icons.chevron_left),
-                              style: IconButton.styleFrom(
-                                backgroundColor: Colors.white.withValues(alpha: 0.8),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            right: 16,
-                            top: 0,
-                            bottom: 0,
-                            child: IconButton(
-                              onPressed: _currentImageIndex < _imageCount - 1
-                                  ? () => setState(() => _currentImageIndex++)
-                                  : null,
-                              icon: const Icon(Icons.chevron_right),
-                              style: IconButton.styleFrom(
-                                backgroundColor: Colors.white.withValues(alpha: 0.8),
-                              ),
-                            ),
-                          ),
-                          // Dots indicator
-                          Positioned(
-                            bottom: 16,
-                            left: 0,
-                            right: 0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(
-                                _imageCount,
-                                (index) => Container(
-                                  width: 8,
-                                  height: 8,
-                                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: index == _currentImageIndex
-                                        ? Theme.of(context).colorScheme.primary
-                                        : Colors.grey[400],
+                        ),
+                        const SizedBox(height: 12),
+                        // Thumbnail swimlane
+                        SizedBox(
+                          height: 72,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _imageCount,
+                            separatorBuilder: (_, __) => const SizedBox(width: 8),
+                            itemBuilder: (context, index) {
+                              final selected = index == _currentImageIndex;
+                              return GestureDetector(
+                                onTap: () => setState(() => _currentImageIndex = index),
+                                child: AspectRatio(
+                                  aspectRatio: 4 / 3,
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 150),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: selected
+                                            ? Theme.of(context).colorScheme.primary
+                                            : Colors.transparent,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.sports_tennis,
+                                        size: 28,
+                                        color: selected
+                                            ? Theme.of(context).colorScheme.primary
+                                            : Colors.grey[400],
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(width: 56),
+
+                  // Right column: details
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
                   // Product name
                   Text(
@@ -220,9 +253,12 @@ class _KaiModulePageState extends State<KaiModulePage> {
                     width: double.infinity,
                     height: 56,
                     child: FilledButton(
-                      onPressed: () => Navigator.of(context).pushNamed('/order'),
+                      onPressed: () {
+                        context.read<CartModel>().addOne();
+                        setState(() => _cartOpen = true);
+                      },
                       child: const Text(
-                        'Order Now',
+                        'Add to Cart',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -232,9 +268,25 @@ class _KaiModulePageState extends State<KaiModulePage> {
                   ),
                 ],
               ),
+            ),  // end right column Expanded
+                ],
+              ),  // end Row
             ),
           ),
         ),
+      ),
+          GlassHeader(
+            onLogoPressed: () => Navigator.of(context).pushNamed('/'),
+            onGetKaiPressed: () => Navigator.of(context).pushNamed('/kai-module'),
+            onHowItWorksPressed: () => Navigator.of(context).pushNamed('/?section=how-it-works'),
+            onClubsPressed: () => Navigator.of(context).pushNamed('/?section=clubs'),
+            onPlayersPressed: () => Navigator.of(context).pushNamed('/?section=players'),
+            onCartPressed: () => setState(() => _cartOpen = true),
+            cartCount: context.watch<CartModel>().quantity,
+          ),
+          if (_cartOpen)
+            CartDrawer(onClose: () => setState(() => _cartOpen = false)),
+        ],
       ),
     );
   }

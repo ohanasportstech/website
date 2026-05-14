@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:website/pages/app_link_fallback.dart';
 import 'pages/home.dart';
 import 'pages/about.dart';
 import 'pages/kai_module.dart';
-import 'pages/order.dart';
 import 'pages/order_success.dart';
 import 'pages/account.dart';
 import 'pages/auth_callback.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'widgets/markdown_viewer.dart';
+import 'widgets/cart.dart';
 
 // Environment configuration for Supabase
 // Set the environment via dart-define: --dart-define=SUPABASE_ENV=local|staging|production
@@ -79,7 +80,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final seed = const Color(0xFF0077C8); // kaiBlue
 
-    return MaterialApp(
+    return ChangeNotifierProvider(
+      create: (_) => CartModel(),
+      child: MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Kai Tennis',
       theme: ThemeData(
@@ -138,7 +141,6 @@ class MyApp extends StatelessWidget {
           '/pages/data-deletion': (context) => const MarkdownViewer(assetPath: 'assets/markdown/data-deletion.md', title: 'Ohana Sports Data Deletion', errorMessage: 'Failed to load Data Deletion'),
           '/pages/help': (context) => const MarkdownViewer(assetPath: 'assets/markdown/help.md', title: 'Ohana Sports Help', errorMessage: 'Failed to load Help'),
           '/kai-module': (context) => const KaiModulePage(),
-          '/order': (context) => const OrderPage(),
           '/order/success': (context) => const OrderSuccessPage(),
           '/account': (context) => const AccountPage(),
           '/auth/callback': (context) => const AuthCallbackPage(),
@@ -158,6 +160,7 @@ class MyApp extends StatelessWidget {
           settings: settings,
         );
       },
+      ),
     );
   }
 }

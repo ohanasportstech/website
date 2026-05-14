@@ -68,11 +68,6 @@ class AboutPage extends StatelessWidget {
                       'Have feedback or want to collaborate? Email info@ohanasports.com',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color.onSurfaceVariant),
                     ),
-                    const SizedBox(height: 12),
-                    FilledButton(
-                      onPressed: () => Navigator.of(context).maybePop(),
-                      child: const Text('Back'),
-                    ),
                   ],
                 ),
               ),
