@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AppLinkFallbackPage extends StatelessWidget {
-  final String contentType; // 'playlist' or 'drill'
+  final String contentType; // 'playlist', 'drill', or 'invite'
   final String? contentId;
 
   const AppLinkFallbackPage({
@@ -19,14 +19,21 @@ class AppLinkFallbackPage extends StatelessWidget {
     final playUrl = Uri.parse('https://play.google.com/store/apps/details?id=net.OhanaSports.Kai');
 
     // Customize messages based on content type
-    final String titleText = 'Open in Kai Tennis';
-    final String descriptionWithId = contentType == 'playlist'
-        ? 'This playlist is best viewed in the Kai Tennis app.'
-        : 'This drill is best viewed in the Kai Tennis app.';
-    final String descriptionWithoutId = contentType == 'playlist'
-        ? 'View playlists and training content in the Kai Tennis app.'
-        : 'View drills and training content in the Kai Tennis app.';
-    final String idLabel = contentType == 'playlist' ? 'Playlist ID' : 'Drill ID';
+    final bool isInvite = contentType == 'invite';
+    final String titleText = isInvite
+        ? 'Club Admin Invite'
+        : 'Open in Kai Tennis';
+    final String descriptionWithId = isInvite
+        ? 'You\'ve been invited to join a tennis club as an admin. Open this link on your phone to accept.'
+        : contentType == 'playlist'
+            ? 'This playlist is best viewed in the Kai Tennis app.'
+            : 'This drill is best viewed in the Kai Tennis app.';
+    final String descriptionWithoutId = isInvite
+        ? 'This invite link is designed to be opened on a mobile device with the Kai Tennis app installed.'
+        : contentType == 'playlist'
+            ? 'View playlists and training content in the Kai Tennis app.'
+            : 'View drills and training content in the Kai Tennis app.';
+    final String idLabel = isInvite ? 'Invite Code' : contentType == 'playlist' ? 'Playlist ID' : 'Drill ID';
 
     return Scaffold(
       backgroundColor: Colors.white,

@@ -90,6 +90,17 @@ class MyApp extends StatelessWidget {
             settings: settings,
           );
         }
+
+        if (path == '/invite') {
+          final code = uri.queryParameters['code'];
+          return MaterialPageRoute(
+            builder: (context) => AppLinkFallbackPage(
+              contentType: 'invite',
+              contentId: code,
+            ),
+            settings: settings,
+          );
+        }
         
         // Handle static routes
         final routes = {
