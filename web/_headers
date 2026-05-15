@@ -1,6 +1,9 @@
 /invite
   Content-Type: text/html; charset=utf-8
 
+/invite/*
+  Content-Type: text/html; charset=utf-8
+
 /drill
   Content-Type: text/html; charset=utf-8
 

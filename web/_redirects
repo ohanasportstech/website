@@ -2,4 +2,5 @@
 /drill        /_og/drill             200
 /playlist     /_og/playlist          200
 /invite       /_og/invite            200
+/invite/*     /_og/invite            200
 /*            /index.html            200
