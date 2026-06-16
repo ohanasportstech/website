@@ -130,17 +130,18 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    'Check your email for more information and module activation codes.',
-                    style: theme.textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
+                  if (quantity > 0)
+                    Text(
+                      'Check your email for more information and module activation codes.',
+                      style: theme.textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
                   const SizedBox(height: 32),
 
                   // Order summary card
                   Container(
                     width: double.infinity,
-                    height: 400,
+                    height: quantity > 0 ? 400 : 300,
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHighest,
@@ -236,14 +237,18 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
           _summaryRow(context, 'Organization', orgName.isNotEmpty ? orgName : '—'),
           const SizedBox(height: 8),
           _summaryRow(context, 'Contact Email', email.isNotEmpty ? email : '—'),
+          if (quantity > 0) ...[
+            const SizedBox(height: 8),
+            _summaryRow(context, 'Modules', '$quantity'),
+            const SizedBox(height: 8),
+            _summaryRow(context, 'Ship to', _formatShippingAddress()),
+            const Divider(height: 24),
+            _summaryRow(context, 'Hardware total', '\$$hardwareTotal'),
+          ] else ...[
+            const Divider(height: 24),
+          ],
           const SizedBox(height: 8),
-          _summaryRow(context, 'Modules', quantity > 0 ? '$quantity' : '—'),
-          const SizedBox(height: 8),
-          _summaryRow(context, 'Ship to', _formatShippingAddress()),
-          const Divider(height: 24),
-          _summaryRow(context, 'Hardware total', '\$$hardwareTotal'),
-          const SizedBox(height: 8),
-          _summaryRow(context, 'Monthly subscription', isAdditionalModules ? '\$$monthlyTotal/mo' : '\$$monthlyTotal/mo after 60-day trial'),
+          _summaryRow(context, 'Monthly subscription', quantity > 0 && !isAdditionalModules ? '\$$monthlyTotal/mo after 60-day trial' : '\$$monthlyTotal/mo'),
           const SizedBox(height: 8),
           if (orderId != null)
             _summaryRow(
