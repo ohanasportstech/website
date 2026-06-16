@@ -6,7 +6,6 @@ import 'pages/home.dart';
 import 'pages/about.dart';
 import 'pages/kai_module.dart';
 import 'pages/order_success.dart';
-import 'pages/account.dart';
 import 'pages/auth_callback.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'widgets/markdown_viewer.dart';
@@ -142,7 +141,6 @@ class MyApp extends StatelessWidget {
           '/pages/help': (context) => const MarkdownViewer(assetPath: 'assets/markdown/help.md', title: 'Ohana Sports Help', errorMessage: 'Failed to load Help'),
           '/kai-module': (context) => const KaiModulePage(),
           '/order/success': (context) => const OrderSuccessPage(),
-          '/account': (context) => const AccountPage(),
           '/auth/callback': (context) => const AuthCallbackPage(),
           '/pages/subscription': (context) => const MarkdownViewer(assetPath: 'assets/markdown/subscription.md', title: 'Ohana Sports Subscription', errorMessage: 'Failed to load Subscription'),
         };

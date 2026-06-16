@@ -27,6 +27,7 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
   String? shippingCity;
   String? shippingState;
   String? shippingPostalCode;
+  bool isAdditionalModules = false;
   bool _loadingDetails = true;
   double _summaryOpacity = 0.0;
 
@@ -78,6 +79,7 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
           if (quantity == 0) quantity = (data['module_qty'] as int?) ?? 0;
           if (hardwareTotal == 0) hardwareTotal = (((data['hardware_total_cents'] as int?) ?? 0) / 100).round();
           if (monthlyTotal == 0) monthlyTotal = (((data['monthly_total_cents'] as int?) ?? 0) / 100).round();
+          isAdditionalModules = data['is_additional_modules'] as bool? ?? false;
           _loadingDetails = false;
         });
         // Trigger fade-in on the next frame so AnimatedOpacity sees the 0→1 transition
@@ -241,7 +243,7 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
           const Divider(height: 24),
           _summaryRow(context, 'Hardware total', '\$$hardwareTotal'),
           const SizedBox(height: 8),
-          _summaryRow(context, 'Monthly subscription', '\$$monthlyTotal/mo after 60-day trial'),
+          _summaryRow(context, 'Monthly subscription', isAdditionalModules ? '\$$monthlyTotal/mo' : '\$$monthlyTotal/mo after 60-day trial'),
           const SizedBox(height: 8),
           if (orderId != null)
             _summaryRow(
