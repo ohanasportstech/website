@@ -37,13 +37,28 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
 
-  // Get config for current environment
-  final config = _supabaseConfig[_supabaseEnv] ?? _supabaseConfig['local']!;
+  // Check for explicit dart-defines first (for local development flexibility)
+  const String dartDefineUrl = String.fromEnvironment('SUPABASE_URL');
+  const String dartDefineKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+
+  final String supabaseUrl;
+  final String supabaseAnonKey;
+
+  if (dartDefineUrl.isNotEmpty && dartDefineKey.isNotEmpty) {
+    // Use dart-defines if provided
+    supabaseUrl = dartDefineUrl;
+    supabaseAnonKey = dartDefineKey;
+  } else {
+    // Fall back to config map based on SUPABASE_ENV
+    final config = _supabaseConfig[_supabaseEnv] ?? _supabaseConfig['local']!;
+    supabaseUrl = config['url']!;
+    supabaseAnonKey = config['anonKey']!;
+  }
 
   // Initialize Supabase
   await Supabase.initialize(
-    url: config['url']!,
-    anonKey: config['anonKey']!,
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
   );
 
   runApp(const MyApp());
