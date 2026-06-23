@@ -10,6 +10,7 @@ import '../widgets/carousel.dart';
 import '../widgets/quilt_grid.dart';
 import '../widgets/loop_video.dart';
 import '../strings.dart';
+import '../utils/beta_access.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -68,6 +69,14 @@ class _HomePageState extends State<HomePage> {
     if (key != null) _scrollToKey(key);
   }
 
+  void _handleGetKaiPressed(BuildContext context) {
+    if (BetaAccess.enabled) {
+      Navigator.of(context).pushNamed('/kai-module');
+    } else {
+      _scrollToKey(_getAppKey);
+    }
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -82,7 +91,7 @@ class _HomePageState extends State<HomePage> {
       extendBodyBehindAppBar: true,
       appBar: isMobile
           ? MobileAppBar(
-              onGetKaiPressed: () => Navigator.of(context).pushNamed('/kai-module'),
+              onGetKaiPressed: () => _handleGetKaiPressed(context),
             )
           : null,
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -109,7 +118,7 @@ class _HomePageState extends State<HomePage> {
               if (!isMobile)
               GlassHeader(
                 onLogoPressed: () => _scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic),
-                onGetKaiPressed: () => Navigator.of(context).pushNamed('/kai-module'),
+                onGetKaiPressed: () => _handleGetKaiPressed(context),
                 onHowItWorksPressed: () => _scrollToKey(_howItWorksKey),
                 onClubsPressed: () => _scrollToKey(_clubsKey),
                 onPlayersPressed: () => _scrollToKey(_playersKey),

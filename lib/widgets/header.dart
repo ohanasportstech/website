@@ -1,7 +1,9 @@
 // MARK: Mobile AppBar
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:website/strings.dart';
+import 'package:website/utils/beta_access.dart';
 
 class MobileAppBar extends StatefulWidget implements PreferredSizeWidget {
   final VoidCallback? onGetKaiPressed;
@@ -56,7 +58,7 @@ class _MobileAppBarState extends State<MobileAppBar> {
           child: FilledButton(
             onPressed: widget.onGetKaiPressed,
             child: Text(
-              Strings.navGetKai,
+              context.watch<BetaAccess>().isEnabled ? Strings.navOrderKai : Strings.navGetKai,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
@@ -160,21 +162,22 @@ class GlassHeader extends StatelessWidget {
                                 onPressed: onGetKaiPressed,
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-                                  child: Text(Strings.navGetKai, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
+                                  child: Text(context.watch<BetaAccess>().isEnabled ? Strings.navOrderKai : Strings.navGetKai, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              // Cart icon with badge
-                              Badge(
-                                isLabelVisible: cartCount > 0,
-                                label: Text('$cartCount'),
-                                child: IconButton(
-                                  onPressed: onCartPressed,
-                                  icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
-                                  tooltip: 'Cart',
+                              // Cart icon with badge (beta-only)
+                              if (context.watch<BetaAccess>().isEnabled)
+                                Badge(
+                                  isLabelVisible: cartCount > 0,
+                                  label: Text('$cartCount'),
+                                  child: IconButton(
+                                    onPressed: onCartPressed,
+                                    icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
+                                    tooltip: 'Cart',
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 4),
+                              if (context.watch<BetaAccess>().isEnabled) const SizedBox(width: 4),
                             ],
                           ),
                         );

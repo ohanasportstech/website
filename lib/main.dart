@@ -10,49 +10,45 @@ import 'pages/auth_callback.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'widgets/markdown_viewer.dart';
 import 'widgets/cart.dart';
+import 'utils/beta_access.dart';
 
 // Environment configuration for Supabase
 // Set the environment via dart-define: --dart-define=SUPABASE_ENV=local|staging|production
-// Default is 'local' for development
+// Default is 'local' for development.
+//
+// Production credentials are hardcoded below (Supabase publishable keys are public
+// and safe to ship in client code). Local and staging credentials must be
+// supplied via --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_PUB_KEY=...
 
 const String _supabaseEnv = String.fromEnvironment('SUPABASE_ENV', defaultValue: 'local');
 
-// Supabase configuration per environment
-const Map<String, Map<String, String>> _supabaseConfig = {
-  'local': {
-    'url': 'http://localhost:54321',
-    'publishableKey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0',
-  },
-  'staging': {
-    'url': 'https://kawtsuhiogeszsvgyyld.supabase.co',
-    'publishableKey': 'sb_publishable_yBAZIbXqjquvOegsVG85tg_6SXCqxm4',
-  },
-  'production': {
-    'url': 'https://tzjjzybkbkbsnoxxizfx.supabase.co',
-    'publishableKey': 'sb_publishable_5k2gWvaKSIGHgZJjdelUtw_FgHx_fW1',
-  },
-};
+const String _productionSupabaseUrl = 'https://tzjjzybkbkbsnoxxizfx.supabase.co';
+const String _productionSupabaseKey = 'sb_publishable_5k2gWvaKSIGHgZJjdelUtw_FgHx_fW1';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
 
-  // Check for explicit dart-defines first (for local development flexibility)
   const String dartDefineUrl = String.fromEnvironment('SUPABASE_URL');
   const String dartDefineKey = String.fromEnvironment('SUPABASE_PUB_KEY');
 
   final String supabaseUrl;
   final String supabasePublishableKey;
 
-  if (dartDefineUrl.isNotEmpty && dartDefineKey.isNotEmpty) {
-    // Use dart-defines if provided
+  if (_supabaseEnv == 'production') {
+    // Production is hardcoded so deployments don't need dart-define values.
+    // dart-define can still override it if needed.
+    supabaseUrl = dartDefineUrl.isNotEmpty ? dartDefineUrl : _productionSupabaseUrl;
+    supabasePublishableKey = dartDefineKey.isNotEmpty ? dartDefineKey : _productionSupabaseKey;
+  } else {
+    // Local and staging values must be supplied at build time so they are not
+    // committed to source control.
+    assert(
+      dartDefineUrl.isNotEmpty && dartDefineKey.isNotEmpty,
+      'SUPABASE_URL and SUPABASE_PUB_KEY must be provided via --dart-define for environment: $_supabaseEnv',
+    );
     supabaseUrl = dartDefineUrl;
     supabasePublishableKey = dartDefineKey;
-  } else {
-    // Fall back to config map based on SUPABASE_ENV
-    final config = _supabaseConfig[_supabaseEnv] ?? _supabaseConfig['local']!;
-    supabaseUrl = config['url']!;
-    supabasePublishableKey = config['publishableKey']!;
   }
 
   // Initialize Supabase
@@ -60,6 +56,9 @@ void main() async {
     url: supabaseUrl,
     publishableKey: supabasePublishableKey,
   );
+
+  // Validate any beta secret in the URL against the Cloudflare Pages Function.
+  await BetaAccess.init();
 
   runApp(const MyApp());
 }
@@ -94,8 +93,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final seed = const Color(0xFF0077C8); // kaiBlue
 
-    return ChangeNotifierProvider(
-      create: (_) => CartModel(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartModel()),
+        ChangeNotifierProvider(create: (_) => BetaAccess.instance),
+      ],
       child: MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Kai Tennis',
@@ -147,6 +149,15 @@ class MyApp extends StatelessWidget {
         }
         
         // Handle static routes
+        // Ordering routes are gated behind the beta feature flag in production.
+        final orderingRoutes = {'/order/success'};
+        if (orderingRoutes.contains(path) && !BetaAccess.enabled) {
+          return MaterialPageRoute(
+            builder: (context) => const HomePage(),
+            settings: settings,
+          );
+        }
+
         final routes = {
           '/': (context) => const HomePage(),
           '/about': (context) => const AboutPage(),

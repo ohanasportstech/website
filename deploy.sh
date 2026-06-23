@@ -13,7 +13,7 @@ if [ -z "$1" ]; then
   echo ""
   echo "Examples:"
   echo "  $0 ohanasports             # Deploy to production"
-  echo "  $0 ohanasports-order-test  # Deploy to staging"
+  echo "  $0 ohanasports-staging     # Deploy to staging"
   echo ""
   exit 1
 fi
@@ -28,7 +28,17 @@ else
 fi
 
 echo "Building web app for project: $PROJECT_NAME (Supabase env: $SUPABASE_ENV)..."
-flutter build web --release --base-href / --dart-define=SUPABASE_ENV="$SUPABASE_ENV"
+
+if [ "$SUPABASE_ENV" = "production" ]; then
+  # Production credentials are hardcoded in lib/main.dart; only the env flag is needed.
+  flutter build web --release --base-href / --dart-define=SUPABASE_ENV="$SUPABASE_ENV"
+else
+  # Staging credentials are no longer in source; pass them via dart-define.
+  flutter build web --release --base-href / \
+    --dart-define=SUPABASE_ENV="$SUPABASE_ENV" \
+    --dart-define=SUPABASE_URL="https://kawtsuhiogeszsvgyyld.supabase.co" \
+    --dart-define=SUPABASE_PUB_KEY="sb_publishable_yBAZIbXqjquvOegsVG85tg_6SXCqxm4"
+fi
 
 echo "Deploying to Cloudflare Pages..."
 npx wrangler pages deploy build/web --project-name="$PROJECT_NAME"
