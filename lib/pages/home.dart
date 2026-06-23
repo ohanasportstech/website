@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:website/widgets/header.dart';
+import 'package:website/widgets/cart.dart';
 import '../widgets/card.dart';
 import '../widgets/triple_cap.dart';
 import '../widgets/carousel.dart';
 import '../widgets/quilt_grid.dart';
 import '../widgets/loop_video.dart';
 import '../strings.dart';
+import '../utils/beta_access.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,6 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final ScrollController _scrollController;
   double _scroll = 0;
+  bool _cartOpen = false;
   final GlobalKey _getAppKey = GlobalKey();
   final GlobalKey _clubsKey = GlobalKey();
   final GlobalKey _playersKey = GlobalKey();
@@ -31,6 +35,46 @@ class _HomePageState extends State<HomePage> {
       ..addListener(() {
         setState(() => _scroll = _scrollController.position.pixels);
       });
+    // Scroll to a section if a ?section= query param was passed on navigation.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToSectionFromUri());
+  }
+
+  // Height of the glass header + comfortable breathing room below it.
+  static const double _headerClearance = 100.0;
+
+  void _scrollToKey(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return;
+    final offset = box.localToGlobal(Offset.zero).dy
+        + _scrollController.offset
+        - _headerClearance;
+    _scrollController.animateTo(
+      offset.clamp(0.0, _scrollController.position.maxScrollExtent),
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOutCubic,
+    );
+  }
+
+  void _scrollToSectionFromUri() {
+    final section = Uri.base.queryParameters['section'];
+    if (section == null) return;
+    final key = switch (section) {
+      'how-it-works' => _howItWorksKey,
+      'clubs'        => _clubsKey,
+      'players'      => _playersKey,
+      _              => null,
+    };
+    if (key != null) _scrollToKey(key);
+  }
+
+  void _handleGetKaiPressed(BuildContext context) {
+    if (BetaAccess.enabled) {
+      Navigator.of(context).pushNamed('/kai-module');
+    } else {
+      _scrollToKey(_getAppKey);
+    }
   }
 
   @override
@@ -46,7 +90,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: isMobile
-          ? MobileAppBar(onCtaPressed: () => Scrollable.ensureVisible(_getAppKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic))
+          ? MobileAppBar(
+              onGetKaiPressed: () => _handleGetKaiPressed(context),
+            )
           : null,
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: LayoutBuilder(
@@ -72,11 +118,15 @@ class _HomePageState extends State<HomePage> {
               if (!isMobile)
               GlassHeader(
                 onLogoPressed: () => _scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic),
-                onCtaPressed: () => Scrollable.ensureVisible(_getAppKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic),
-                onHowItWorksPressed: () => Scrollable.ensureVisible(_howItWorksKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic, alignment: 0.2),
-                onClubsPressed: () => Scrollable.ensureVisible(_clubsKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic, alignment: -0.4),
-                onPlayersPressed: () => Scrollable.ensureVisible(_playersKey.currentContext!, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic, alignment: 0.4),
+                onGetKaiPressed: () => _handleGetKaiPressed(context),
+                onHowItWorksPressed: () => _scrollToKey(_howItWorksKey),
+                onClubsPressed: () => _scrollToKey(_clubsKey),
+                onPlayersPressed: () => _scrollToKey(_playersKey),
+                onCartPressed: () => setState(() => _cartOpen = true),
+                cartCount: context.watch<CartModel>().quantity,
               ),
+              if (_cartOpen)
+                CartDrawer(onClose: () => setState(() => _cartOpen = false)),
             ],
           );
         },
