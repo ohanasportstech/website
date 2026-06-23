@@ -287,7 +287,7 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
     try {
       final pricingResponse = await Supabase.instance.client
           .schema('ost_admin_public')
-          .rpc('get_pricing');
+          .rpc('config_get_pricing');
       final pricingList = pricingResponse as List?;
       if (pricingList != null && pricingList.isNotEmpty) {
         cart.setPricing(PricingConfig.fromJson(pricingList.first as Map<String, dynamic>));
@@ -302,7 +302,7 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
       // Load admin orgs from Supabase for authenticated users
       final orgsResponse = await Supabase.instance.client
           .schema('ost_admin_public')
-          .rpc('get_user_admin_orgs');
+          .rpc('user_get_admin_orgs');
 
       if (orgsResponse != null) {
         final orgs = (orgsResponse as List)

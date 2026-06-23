@@ -21,15 +21,15 @@ const String _supabaseEnv = String.fromEnvironment('SUPABASE_ENV', defaultValue:
 const Map<String, Map<String, String>> _supabaseConfig = {
   'local': {
     'url': 'http://localhost:54321',
-    'anonKey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0',
+    'publishableKey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0',
   },
   'staging': {
-    'url': 'https://lultlorrajvmeaxjmqpy.supabase.co',
-    'anonKey': 'sb_publishable_JwpdVXcH3xMlxVEZi5xe0A_LEw72SO8',
+    'url': 'https://kawtsuhiogeszsvgyyld.supabase.co',
+    'publishableKey': 'sb_publishable_yBAZIbXqjquvOegsVG85tg_6SXCqxm4',
   },
   'production': {
-    'url': 'https://your-production-project.supabase.co',
-    'anonKey': 'your-production-anon-key',
+    'url': 'https://tzjjzybkbkbsnoxxizfx.supabase.co',
+    'publishableKey': 'sb_publishable_5k2gWvaKSIGHgZJjdelUtw_FgHx_fW1',
   },
 };
 
@@ -39,26 +39,26 @@ void main() async {
 
   // Check for explicit dart-defines first (for local development flexibility)
   const String dartDefineUrl = String.fromEnvironment('SUPABASE_URL');
-  const String dartDefineKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+  const String dartDefineKey = String.fromEnvironment('SUPABASE_PUB_KEY');
 
   final String supabaseUrl;
-  final String supabaseAnonKey;
+  final String supabasePublishableKey;
 
   if (dartDefineUrl.isNotEmpty && dartDefineKey.isNotEmpty) {
     // Use dart-defines if provided
     supabaseUrl = dartDefineUrl;
-    supabaseAnonKey = dartDefineKey;
+    supabasePublishableKey = dartDefineKey;
   } else {
     // Fall back to config map based on SUPABASE_ENV
     final config = _supabaseConfig[_supabaseEnv] ?? _supabaseConfig['local']!;
     supabaseUrl = config['url']!;
-    supabaseAnonKey = config['anonKey']!;
+    supabasePublishableKey = config['publishableKey']!;
   }
 
   // Initialize Supabase
   await Supabase.initialize(
     url: supabaseUrl,
-    anonKey: supabaseAnonKey,
+    publishableKey: supabasePublishableKey,
   );
 
   runApp(const MyApp());
