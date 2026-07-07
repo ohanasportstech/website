@@ -14,7 +14,20 @@ class KaiModulePage extends StatefulWidget {
 
 class _KaiModulePageState extends State<KaiModulePage> {
   int _currentImageIndex = 0;
-  final int _imageCount = 4;
+  final List<String> _productImages = [
+    'assets/images/product_1.jpg',
+    'assets/images/product_2.jpg',
+    'assets/images/product_3.jpg',
+    'assets/images/product_4.jpg',
+    'assets/images/product_5.jpg',
+  ];
+
+  String _thumbPath(String productPath) {
+    final dotIndex = productPath.lastIndexOf('.');
+    if (dotIndex == -1) return '${productPath}_thumb';
+    return '${productPath.substring(0, dotIndex)}_thumb${productPath.substring(dotIndex)}';
+  }
+
   bool _cartOpen = false;
   bool _processingTransfer = false;
 
@@ -78,13 +91,18 @@ class _KaiModulePageState extends State<KaiModulePage> {
     return Scaffold(
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1200),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 136, 24, 48),
-                  child: LayoutBuilder(
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 96,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: SingleChildScrollView(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1200),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 40, 24, 48),
+                    child: LayoutBuilder(
                     builder: (context, constraints) {
                       final isMobile = constraints.maxWidth < 800;
 
@@ -115,6 +133,7 @@ class _KaiModulePageState extends State<KaiModulePage> {
                 ),
               ),
             ),
+            ),
           ),
           GlassHeader(
             onLogoPressed: () => Navigator.of(context).pushNamed('/'),
@@ -141,11 +160,11 @@ class _KaiModulePageState extends State<KaiModulePage> {
 
   Widget _buildBulletItem(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
-          Icon(Icons.check_circle, size: 20, color: Colors.green[600]),
-          const SizedBox(width: 12),
+          Icon(Icons.circle, size: 8, color: Colors.black87),
+          const SizedBox(width: 8),
           Text(text, style: Theme.of(context).textTheme.bodyLarge),
         ],
       ),
@@ -159,36 +178,23 @@ class _KaiModulePageState extends State<KaiModulePage> {
         AspectRatio(
           aspectRatio: 4 / 3,
           child: Container(
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(12),
             ),
             child: Stack(
               children: [
-                // Placeholder for product images
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.sports_tennis,
-                        size: 100,
-                        color: Colors.grey[400],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Product Image ${_currentImageIndex + 1} of $_imageCount',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
+                // Product image carousel
+                Positioned.fill(
+                  child: Image.asset(
+                    _productImages[_currentImageIndex],
+                    fit: BoxFit.cover,
                   ),
                 ),
                 // Navigation arrows
                 Positioned(
-                  left: 16,
+                  left: 12,
                   top: 0,
                   bottom: 0,
                   child: Align(
@@ -202,13 +208,13 @@ class _KaiModulePageState extends State<KaiModulePage> {
                   ),
                 ),
                 Positioned(
-                  right: 16,
+                  right: 12,
                   top: 0,
                   bottom: 0,
                   child: Align(
                     alignment: Alignment.center,
                     child: IconButton(
-                      onPressed: _currentImageIndex < _imageCount - 1
+                      onPressed: _currentImageIndex < _productImages.length - 1
                           ? () => setState(() => _currentImageIndex++)
                           : null,
                       icon: const Icon(Icons.chevron_right),
@@ -225,7 +231,7 @@ class _KaiModulePageState extends State<KaiModulePage> {
           height: 72,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: _imageCount,
+            itemCount: _productImages.length,
             separatorBuilder: (_, __) => const SizedBox(width: 8),
             itemBuilder: (context, index) {
               final selected = index == _currentImageIndex;
@@ -235,9 +241,9 @@ class _KaiModulePageState extends State<KaiModulePage> {
                   aspectRatio: 4 / 3,
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 150),
+                    clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(6),
                       border: Border.all(
                         color: selected
                             ? Theme.of(context).colorScheme.primary
@@ -245,13 +251,12 @@ class _KaiModulePageState extends State<KaiModulePage> {
                         width: 2,
                       ),
                     ),
-                    child: Center(
-                      child: Icon(
-                        Icons.sports_tennis,
-                        size: 28,
-                        color: selected
-                            ? Theme.of(context).colorScheme.primary
-                            : Colors.grey[400],
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Image.asset(
+                        _thumbPath(_productImages[index]),
+                        fit: BoxFit.cover,
+                        filterQuality: FilterQuality.medium,
                       ),
                     ),
                   ),
@@ -277,25 +282,35 @@ class _KaiModulePageState extends State<KaiModulePage> {
         ),
         const SizedBox(height: 16),
 
+        // Price
+        Text(
+          '\$399',
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+        ),
+        const SizedBox(height: 16),
+
         // Description
         Text(
-          'Lorum ipsum dolor sit amet consectetur adipiscing elit ut et massa mi. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.',
+          'Kai turns your tennis ball machine into a powerful training partner. Compatible with PLAYMATE iSMASH and iGENIE.',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 24),
 
         // What's included
         Text(
-          "What's included",
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          'How it works',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
         const SizedBox(height: 12),
-        _buildBulletItem('KAI Module unit'),
-        _buildBulletItem('Mounting bracket'),
-        _buildBulletItem('Connection cable'),
-        _buildBulletItem('Quick start guide'),
+        _buildBulletItem('Install the KAI Module on your ball machine'),
+        _buildBulletItem('Download the app and connect via Bluetooth'),
+        _buildBulletItem('Train with over 60 drills and exercises'),
+        _buildBulletItem('Track your progress and improve your game'),
         const SizedBox(height: 32),
 
         // Pricing and ordering UI (beta-only)
