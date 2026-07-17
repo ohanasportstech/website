@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:website/widgets/header.dart';
 import 'package:website/widgets/cart.dart';
 import '../widgets/card.dart';
 import '../widgets/triple_cap.dart';
 import '../widgets/carousel.dart';
 import '../widgets/quilt_grid.dart';
+import '../widgets/feature_section.dart';
 import '../widgets/loop_video.dart';
 import '../strings.dart';
 import '../utils/beta_access.dart';
+import '../utils/turnstile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   late final ScrollController _scrollController;
   double _scroll = 0;
   bool _cartOpen = false;
+  final GlobalKey _contactKey = GlobalKey();
   final GlobalKey _getAppKey = GlobalKey();
   final GlobalKey _clubsKey = GlobalKey();
   final GlobalKey _playersKey = GlobalKey();
@@ -47,9 +51,7 @@ class _HomePageState extends State<HomePage> {
     if (ctx == null) return;
     final box = ctx.findRenderObject() as RenderBox?;
     if (box == null) return;
-    final offset = box.localToGlobal(Offset.zero).dy
-        + _scrollController.offset
-        - _headerClearance;
+    final offset = box.localToGlobal(Offset.zero).dy + _scrollController.offset - _headerClearance;
     _scrollController.animateTo(
       offset.clamp(0.0, _scrollController.position.maxScrollExtent),
       duration: const Duration(milliseconds: 500),
@@ -62,9 +64,9 @@ class _HomePageState extends State<HomePage> {
     if (section == null) return;
     final key = switch (section) {
       'how-it-works' => _howItWorksKey,
-      'clubs'        => _clubsKey,
-      'players'      => _playersKey,
-      _              => null,
+      'clubs' => _clubsKey,
+      'players' => _playersKey,
+      _ => null,
     };
     if (key != null) _scrollToKey(key);
   }
@@ -73,7 +75,7 @@ class _HomePageState extends State<HomePage> {
     if (BetaAccess.enabled) {
       Navigator.of(context).pushNamed('/kai-module');
     } else {
-      _scrollToKey(_getAppKey);
+      _scrollToKey(_contactKey);
     }
   }
 
@@ -89,11 +91,7 @@ class _HomePageState extends State<HomePage> {
     final isMobile = MediaQuery.of(context).size.width < 700;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: isMobile
-          ? MobileAppBar(
-              onGetKaiPressed: () => _handleGetKaiPressed(context),
-            )
-          : null,
+      appBar: isMobile ? MobileAppBar(onGetKaiPressed: () => _handleGetKaiPressed(context)) : null,
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -103,30 +101,67 @@ class _HomePageState extends State<HomePage> {
                 controller: _scrollController,
                 slivers: [
                   if (isMobile) SliverToBoxAdapter(child: SizedBox(height: 56)),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _HeroSection(isMobile: isMobile, scroll: _scroll))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _MeetKaiSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _CarouselSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _TestimonialsSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _FaqSection(isMobile: isMobile))),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _GetTheAppSection(key: _getAppKey))),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(
+                      child: _HeroSection(isMobile: isMobile, scroll: _scroll),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(child: _MeetKaiSection(isMobile: isMobile)),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(
+                      child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(child: _CarouselSection(isMobile: isMobile)),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(child: _AdvancedTechnologySection(isMobile: isMobile)),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(
+                      child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(
+                      child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(child: _TestimonialsSection(isMobile: isMobile)),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(child: _FaqSection(isMobile: isMobile)),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(
+                      child: _ContactSection(key: _contactKey, isMobile: isMobile),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _MaxWidth(child: _GetTheAppSection(key: _getAppKey)),
+                  ),
                   SliverToBoxAdapter(child: _MaxWidth(child: _Footer())),
                 ],
               ),
               if (!isMobile)
-              GlassHeader(
-                onLogoPressed: () => _scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic),
-                onGetKaiPressed: () => _handleGetKaiPressed(context),
-                onHowItWorksPressed: () => _scrollToKey(_howItWorksKey),
-                onClubsPressed: () => _scrollToKey(_clubsKey),
-                onPlayersPressed: () => _scrollToKey(_playersKey),
-                onCartPressed: () => setState(() => _cartOpen = true),
-                cartCount: context.watch<CartModel>().quantity,
-              ),
-              if (_cartOpen)
-                CartDrawer(onClose: () => setState(() => _cartOpen = false)),
+                GlassHeader(
+                  onLogoPressed: () => _scrollController.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOutCubic,
+                  ),
+                  onGetKaiPressed: () => _handleGetKaiPressed(context),
+                  onHowItWorksPressed: () => _scrollToKey(_howItWorksKey),
+                  onClubsPressed: () => _scrollToKey(_clubsKey),
+                  onPlayersPressed: () => _scrollToKey(_playersKey),
+                  onCartPressed: () => setState(() => _cartOpen = true),
+                  cartCount: context.watch<CartModel>().quantity,
+                ),
+              if (_cartOpen) CartDrawer(onClose: () => setState(() => _cartOpen = false)),
             ],
           );
         },
@@ -144,10 +179,7 @@ class _MaxWidth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1440),
-        child: child,
-      ),
+      child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 1440), child: child),
     );
   }
 }
@@ -160,7 +192,7 @@ class _HeroSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 16/9,
+      aspectRatio: 16 / 9,
       child: ClipRect(
         child: Stack(
           children: [
@@ -176,10 +208,7 @@ class _HeroSection extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black,
-                      ],
+                      colors: [Colors.transparent, Colors.black],
                     ),
                   ),
                 ),
@@ -192,37 +221,34 @@ class _HeroSection extends StatelessWidget {
               child: Stack(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: _sectionPadding(isMobile).left,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: _sectionPadding(isMobile).left),
                     child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1200),
+                      constraints: const BoxConstraints(maxWidth: 1200),
                       child: Align(
-                        alignment: Alignment.bottomCenter,
+                        alignment: Alignment.bottomLeft,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               Strings.heroHeader,
-                              textAlign: TextAlign.center,
-                              style: isMobile ? Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ) : Theme.of(context).textTheme.displayMedium?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              textAlign: TextAlign.start,
+                              style: isMobile
+                                  ? Theme.of(
+                                      context,
+                                    ).textTheme.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)
+                                  : Theme.of(context).textTheme.displayMedium?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                             ),
-                            SizedBox(height: isMobile ? 4: 16),
+                            SizedBox(height: isMobile ? 4 : 16),
                             Text(
                               Strings.heroDesc,
-                              textAlign: TextAlign.center,
-                              style: isMobile ? Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Colors.white,
-                                  ) : Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                    color: Colors.white,
-                                  ),
+                              textAlign: TextAlign.start,
+                              style: isMobile
+                                  ? Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)
+                                  : Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white),
                             ),
                             if (!isMobile) const SizedBox(height: 45),
                           ],
@@ -253,9 +279,15 @@ class _MeetKaiSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Strings.meetHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
+            Text(
+              Strings.meetHeader,
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 22),
-            Text(Strings.meetDesc, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text(
+              Strings.meetDesc,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 66),
             if (isMobile)
               Column(
@@ -338,8 +370,32 @@ class _MeetKaiSection extends StatelessWidget {
                     ),
                   ),
                 ],
-              )
+              ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// MARK: Advanced Technology
+class _AdvancedTechnologySection extends StatelessWidget {
+  final bool isMobile;
+  const _AdvancedTechnologySection({required this.isMobile});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: _sectionPadding(isMobile),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainer),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: FeatureSection(
+          header: Strings.advancedTechnologyHeader,
+          subHeader: Strings.advancedTechnologySubHeader,
+          bullets: Strings.advancedTechnologyBullets,
+          image: 'assets/images/module.png',
+          isMobile: isMobile,
         ),
       ),
     );
@@ -352,19 +408,22 @@ class _HowItWorksSection extends StatelessWidget {
   const _HowItWorksSection({super.key, required this.isMobile});
   @override
   Widget build(BuildContext context) {
-    return Container
-      (
+    return Container(
       padding: _sectionPadding(isMobile),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainer),
       child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 30,
-            children: [
-              Text(Strings.howHeader, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
-              const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
-              const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
-              const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
-            ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 30,
+        children: [
+          Text(
+            Strings.howHeader,
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
+          const _Step(number: '1', title: Strings.how1Title, desc: Strings.how1Desc),
+          const _Step(number: '2', title: Strings.how2Title, desc: Strings.how2Desc),
+          const _Step(number: '3', title: Strings.how3Title, desc: Strings.how3Desc),
+        ],
+      ),
     );
   }
 }
@@ -383,17 +442,13 @@ class _Step extends StatelessWidget {
           Container(
             width: 60, // Fixed size for the circle
             height: 60, // Fixed size for the circle
-            decoration: BoxDecoration(
-              color: color.primary,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color.primary, shape: BoxShape.circle),
             alignment: Alignment.center,
             child: Text(
               number,
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                color: color.onPrimary,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.displaySmall?.copyWith(color: color.onPrimary, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(width: 20),
@@ -424,6 +479,8 @@ class _CarouselSection extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Carousel(
+          header: Strings.carouselHeader,
+          subHeader: Strings.carouselSubHeader,
           isMobile: isMobile,
           items: const [
             CarouselItem(
@@ -491,7 +548,6 @@ class _SkillLevelsSection extends StatelessWidget {
   }
 }
 
-
 // MARK: Clubs / Colleges
 
 class _ClubsCollegesSection extends StatelessWidget {
@@ -503,28 +559,17 @@ class _ClubsCollegesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: _sectionPadding(isMobile),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainer),
       child: QuiltGrid(
         isMobile: isMobile,
         header: Strings.cncHeader,
         subHeader: Strings.cncSubHeader,
         items: [
-          QuiltGridItem(
-                title: Strings.cncTitle1,
-                description: Strings.cncDesc1,
-                image: 'assets/images/cnc1.jpg',
-              ),
-              QuiltGridItem(
-                title: Strings.cncTitle2,
-                description: Strings.cncDesc2,
-                image: 'assets/images/cnc2.jpg',
-              ),
-              QuiltGridItem(
-                title: Strings.cncTitle3,
-                description: Strings.cncDesc3,
-                image: 'assets/images/cnc3.jpg',
-              ),
-            ],
-          ),
+          QuiltGridItem(title: Strings.cncTitle1, description: Strings.cncDesc1, image: 'assets/images/cnc1.jpg'),
+          QuiltGridItem(title: Strings.cncTitle2, description: Strings.cncDesc2, image: 'assets/images/cnc2.jpg'),
+          QuiltGridItem(title: Strings.cncTitle3, description: Strings.cncDesc3, image: 'assets/images/cnc3.jpg'),
+        ],
+      ),
     );
   }
 }
@@ -605,19 +650,18 @@ class _TestimonialsSection extends StatelessWidget {
   const _TestimonialsSection({required this.isMobile});
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
     return Container(
       padding: _sectionPadding(isMobile),
-      decoration: BoxDecoration(
-        color: color.surfaceContainer,
-      ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 24,
           children: [
-            Text(Strings.testimonialsHeader, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700)),
+            Text(
+              Strings.testimonialsHeader,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700),
+            ),
             _Quote(text: Strings.quote1, author: Strings.quote1Author),
             _Quote(text: Strings.quote2, author: Strings.quote2Author),
             _Quote(text: Strings.quote3, author: Strings.quote3Author),
@@ -670,12 +714,16 @@ class _FaqSection extends StatelessWidget {
     ];
     return Container(
       padding: _sectionPadding(isMobile),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainer),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Strings.faqHeader, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700)),
+            Text(
+              Strings.faqHeader,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 8),
             for (final f in faqs)
               Theme(
@@ -706,66 +754,250 @@ class _FaqSection extends StatelessWidget {
   }
 }
 
-/*
 // MARK: Contact
-class _ContactSection extends StatelessWidget {
+class _ContactSection extends StatefulWidget {
   final bool isMobile;
-  const _ContactSection({required this.isMobile});
+  const _ContactSection({super.key, required this.isMobile});
+
+  @override
+  State<_ContactSection> createState() => _ContactSectionState();
+}
+
+class _ContactSectionState extends State<_ContactSection> {
+  static const String _turnstileSiteKey = String.fromEnvironment('TURNSTILE_SITE_KEY');
+
+  final _nameController = TextEditingController();
+  final _organizationController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _zipController = TextEditingController();
+  final _messageController = TextEditingController();
+  bool _loading = false;
+  String? _error;
+  bool _sent = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _organizationController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _zipController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    setState(() => _error = null);
+
+    final name = _nameController.text.trim();
+    final organization = _organizationController.text.trim();
+    final email = _emailController.text.trim();
+    final phone = _phoneController.text.trim();
+    final zip = _zipController.text.trim();
+    final message = _messageController.text.trim();
+
+    if (name.isEmpty || email.isEmpty) {
+      setState(() => _error = Strings.contactValidationNameEmail);
+      return;
+    }
+
+    if (!email.contains('@') || !email.contains('.')) {
+      setState(() => _error = Strings.contactValidationEmail);
+      return;
+    }
+
+    if (_turnstileSiteKey.isEmpty) {
+      setState(() => _error = Strings.contactNotConfigured);
+      return;
+    }
+
+    setState(() => _loading = true);
+
+    try {
+      final token = await requestContactTurnstileToken(_turnstileSiteKey);
+
+      final response = await Supabase.instance.client.functions.invoke(
+        'contact-submission',
+        body: {
+          'name': name,
+          'organization_name': organization,
+          'email': email,
+          'phone': phone,
+          'zip_code': zip,
+          'message': message,
+          'turnstile_token': token,
+        },
+      );
+
+      if (response.status != 200) {
+        final data = response.data;
+        final msg = data is Map<String, dynamic>
+            ? data['error'] ?? Strings.contactSubmitError
+            : Strings.contactSubmitError;
+        throw Exception(msg);
+      }
+
+      setState(() {
+        _sent = true;
+        _nameController.clear();
+        _organizationController.clear();
+        _emailController.clear();
+        _phoneController.clear();
+        _zipController.clear();
+        _messageController.clear();
+      });
+    } catch (e) {
+      setState(() => _error = e.toString());
+    } finally {
+      setState(() => _loading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
+    final isMobile = widget.isMobile;
     return Container(
       padding: _sectionPadding(isMobile),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 900),
-          child: Column(
-            crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-            children: [
-              Text(Strings.contactHeader, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
-              const SizedBox(height: 8),
-              Text(Strings.contactLead,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: color.onSurfaceVariant)),
+      alignment: Alignment.centerLeft,
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: color.outlineVariant)),
+      ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Strings.contactHeader,
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              Strings.contactLead,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: color.onSurfaceVariant),
+            ),
+            const SizedBox(height: 16),
+            if (_sent) ...[
+              Text(
+                Strings.contactSubmitSuccess,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: color.primary),
+              ),
               const SizedBox(height: 16),
-              Wrap(
-                spacing: 24,
-                runSpacing: 16,
+            ] else ...[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 12,
                 children: [
-                  SizedBox(
-                    width: isMobile ? double.infinity : 360,
-                    child: TextField(
-                      decoration: InputDecoration(labelText: Strings.contactName, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 12,
+                    children: [
+                      _buildField(_nameController, Strings.contactName, TextInputType.name, isMobile),
+                      _buildField(
+                        _organizationController,
+                        Strings.contactOrganizationName,
+                        TextInputType.text,
+                        isMobile,
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: isMobile ? double.infinity : 360,
-                    child: TextField(
-                      decoration: InputDecoration(labelText: Strings.contactEmail, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
+                  if (isMobile)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 12,
+                      children: [
+                        _buildField(_emailController, Strings.contactEmail, TextInputType.emailAddress, isMobile),
+                        _buildField(_phoneController, Strings.contactPhone, TextInputType.phone, isMobile),
+                        _buildField(_zipController, Strings.contactZip, TextInputType.text, isMobile),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildField(
+                            _emailController,
+                            Strings.contactEmail,
+                            TextInputType.emailAddress,
+                            isMobile,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildField(_phoneController, Strings.contactPhone, TextInputType.phone, isMobile),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(child: _buildField(_zipController, Strings.contactZip, TextInputType.text, isMobile)),
+                      ],
                     ),
+                  _buildField(
+                    _messageController,
+                    Strings.contactMessage,
+                    TextInputType.multiline,
+                    isMobile,
+                    maxLines: 5,
+                    minLines: 3,
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 20),
+              if (_error != null) ...[Text(_error!, style: TextStyle(color: color.error)), const SizedBox(height: 12)],
               SizedBox(
-                width: isMobile ? double.infinity : 744,
-                child: TextField(
-                  maxLines: 4,
-                  decoration: InputDecoration(labelText: Strings.contactMessage, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
+                width: isMobile ? double.infinity : 180,
+                child: FilledButton(
+                  onPressed: _loading ? null : _submit,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                    child: _loading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          )
+                        : const Text(Strings.contactSend),
+                  ),
                 ),
               ),
-              const SizedBox(height: 12),
-              FilledButton(onPressed: () {}, child: const Text(Strings.contactSend)),
-              const SizedBox(height: 8),
-              Text(Strings.contactAlt, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color.onSurfaceVariant)),
             ],
-          ),
+            const SizedBox(height: 8),
+            Text(
+              Strings.contactAlt,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color.onSurfaceVariant),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildField(
+    TextEditingController controller,
+    String label,
+    TextInputType type,
+    bool isMobile, {
+    int? maxLines,
+    int? minLines,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: TextField(
+        controller: controller,
+        keyboardType: type,
+        maxLines: maxLines,
+        minLines: minLines,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+          alignLabelWithHint: true,
         ),
       ),
     );
   }
 }
 
-
+/*
 // MARK: CTA
 class _CtaSection extends StatelessWidget {
   final bool isMobile;
@@ -827,7 +1059,10 @@ class _GetTheAppSection extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(Strings.ctaGetApp, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
+              Text(
+                Strings.ctaGetApp,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 24),
               Wrap(
                 alignment: WrapAlignment.center,
@@ -869,6 +1104,9 @@ class _Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
+      ),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
@@ -887,4 +1125,3 @@ class _Footer extends StatelessWidget {
     );
   }
 }
-

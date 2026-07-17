@@ -8,11 +8,7 @@ class AboutPage extends StatelessWidget {
     final color = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: color.surface,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: color.surface,
-        title: const Text('About Us'),
-      ),
+      appBar: AppBar(elevation: 0, backgroundColor: color.surface, title: const Text('About Us')),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1000),
@@ -37,12 +33,12 @@ class AboutPage extends StatelessWidget {
               const SizedBox(height: 12),
               _ValueBullet(title: 'Warm coaching', desc: 'Encouraging guidance that meets you where you are.'),
               _ValueBullet(title: 'Sporty energy', desc: 'A product that feels alive, clear, and motivating.'),
-              _ValueBullet(title: 'Trustworthy tech', desc: 'Reliable hardware and software that stay out of your way.'),
-              const SizedBox(height: 32),
-              Text(
-                'The Team',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+              _ValueBullet(
+                title: 'Trustworthy tech',
+                desc: 'Reliable hardware and software that stay out of your way.',
               ),
+              const SizedBox(height: 32),
+              Text('The Team', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
               const SizedBox(height: 12),
               Text(
                 'We are designers, engineers, and tennis lovers. We listen closely to players to build what truly helps on court.',
@@ -65,7 +61,7 @@ class AboutPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Have feedback or want to collaborate? Email info@ohanasports.com',
+                      'Have feedback or want to collaborate? Email info@ohanasports.net',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color.onSurfaceVariant),
                     ),
                   ],

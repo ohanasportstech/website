@@ -6,12 +6,7 @@ class QuiltGridItem {
   final String image;
   final VoidCallback? onTap;
 
-  const QuiltGridItem({
-    required this.title,
-    required this.description,
-    required this.image,
-    this.onTap,
-  });
+  const QuiltGridItem({required this.title, required this.description, required this.image, this.onTap});
 }
 
 class QuiltGrid extends StatelessWidget {
@@ -54,64 +49,49 @@ class QuiltGrid extends StatelessWidget {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // header and subheader
-          Text(
-            header,
-            style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            subHeader,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black54,
-                ),
-          ),
-          const SizedBox(height: 24),
-          ...items.map((item) => Padding(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // header and subheader
+        Text(header, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 12),
+        Text(
+          subHeader,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.black54),
+        ),
+        const SizedBox(height: 24),
+        ...items.map(
+          (item) => Padding(
             padding: EdgeInsets.only(bottom: spacing),
             child: _buildCard(context, item, true),
-          )),
-        ],
-      ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildQuiltLayout(BuildContext context, BoxConstraints constraints) {
     // Create a staggered/masonry layout matching the reference design
-    
+
     if (items.isEmpty) return const SizedBox.shrink();
-    
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // header and subheader
-          Text(
-            header,
-            style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            subHeader,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.black54),
-          ),
-          const SizedBox(height: 40),
-          _buildTextImageCard(context, items[0]),
-          const SizedBox(height: 40),
-          _buildImageTextCard(context, items[1]),
-          const SizedBox(height: 40),
-          _buildTextImageCard(context, items[2]),
-        ],
-      ),
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // header and subheader
+        Text(header, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 12),
+        Text(
+          subHeader,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.black54),
+        ),
+        const SizedBox(height: 40),
+        _buildTextImageCard(context, items[0]),
+        const SizedBox(height: 40),
+        _buildImageTextCard(context, items[1]),
+        const SizedBox(height: 40),
+        _buildTextImageCard(context, items[2]),
+      ],
     );
   }
 
@@ -125,11 +105,7 @@ class QuiltGrid extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _withTextScale(
-                context,
-                scale,
-                TextCard(size: tile, title: item.title, description: item.description),
-              ),
+              _withTextScale(context, scale, TextCard(size: tile, title: item.title, description: item.description)),
               SizedBox(width: spacing),
               _SquareImage(size: tile, image: item.image),
             ],
@@ -151,11 +127,7 @@ class QuiltGrid extends StatelessWidget {
             children: [
               _SquareImage(size: tile, image: item.image),
               SizedBox(width: spacing),
-              _withTextScale(
-                context,
-                scale,
-                TextCard(size: tile, title: item.title, description: item.description),
-              ),
+              _withTextScale(context, scale, TextCard(size: tile, title: item.title, description: item.description)),
             ],
           ),
         );
@@ -175,11 +147,8 @@ class QuiltGrid extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: AspectRatio(
-              aspectRatio: 4/3,
-              child: Image.asset(
-                item.image,
-                fit: BoxFit.cover,
-              ),
+              aspectRatio: 4 / 3,
+              child: Image.asset(item.image, fit: BoxFit.cover),
             ),
           ),
           Padding(
@@ -189,16 +158,14 @@ class QuiltGrid extends StatelessWidget {
               children: [
                 Text(
                   item.title,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   item.description,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ],
             ),
@@ -213,12 +180,7 @@ class TextCard extends StatelessWidget {
   final String title;
   final String description;
   final double size;
-  const TextCard({
-    required this.size,
-    required this.title,
-    required this.description,
-    super.key,
-  });
+  const TextCard({required this.size, required this.title, required this.description, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -230,18 +192,11 @@ class TextCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-          ),
+          Text(title, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: 12),
           Text(
             description,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.bold, 
-                  color: Colors.black54),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.black54),
           ),
         ],
       ),
@@ -261,10 +216,7 @@ class _SquareImage extends StatelessWidget {
       child: SizedBox(
         width: size,
         height: size,
-        child: Image.asset(
-          image,
-          fit: BoxFit.cover,
-        ),
+        child: Image.asset(image, fit: BoxFit.cover),
       ),
     );
   }

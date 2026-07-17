@@ -5,19 +5,19 @@ class CarouselItem {
   final String description;
   final String image;
 
-  const CarouselItem({
-    required this.title,
-    required this.description,
-    required this.image,
-  });
+  const CarouselItem({required this.title, required this.description, required this.image});
 }
 
 class Carousel extends StatefulWidget {
+  final String header;
+  final String subHeader;
   final List<CarouselItem> items;
   final bool isMobile;
 
   const Carousel({
     super.key,
+    required this.header,
+    required this.subHeader,
     required this.items,
     required this.isMobile,
   }) : assert(items.length > 0, 'Must provide at least one carousel item');
@@ -46,10 +46,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
+    _animationController = AnimationController(duration: const Duration(milliseconds: 600), vsync: this);
 
     _configureAnimations();
     _animationController.addStatusListener((status) {
@@ -74,15 +71,16 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     );
 
     // Incoming current image aligns from the side peek to center
-    _incomingAlignAnimation = AlignmentTween(
-      begin: _direction == 1 ? Alignment.centerRight : Alignment.centerLeft,
-      end: Alignment.center,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.0, 1.0, curve: Curves.easeOutCubic),
-      ),
-    );
+    _incomingAlignAnimation =
+        AlignmentTween(
+          begin: _direction == 1 ? Alignment.centerRight : Alignment.centerLeft,
+          end: Alignment.center,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0.0, 1.0, curve: Curves.easeOutCubic),
+          ),
+        );
 
     // Incoming current image scales from peek size to full
     _scaleAnimation = Tween<double>(begin: 0.75, end: 1.0).animate(
@@ -93,25 +91,27 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     );
 
     // Outgoing image animations (demote to side peek)
-    _outFadeAnimation = Tween<double>(
-      begin: 1.0,
-      end: _direction == 1 ? 0.0 : _peekOpacity, // Fade to 0 when moving left, peekOpacity when moving right
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-      ),
-    );
+    _outFadeAnimation =
+        Tween<double>(
+          begin: 1.0,
+          end: _direction == 1 ? 0.0 : _peekOpacity, // Fade to 0 when moving left, peekOpacity when moving right
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+          ),
+        );
 
-    _outgoingAlignAnimation = AlignmentTween(
-      begin: Alignment.center,
-      end: _direction == 1 ? Alignment.centerLeft : Alignment(1.1, 0.0), // Match static position
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.0, 1.0, curve: Curves.easeOutCubic),
-      ),
-    );
+    _outgoingAlignAnimation =
+        AlignmentTween(
+          begin: Alignment.center,
+          end: _direction == 1 ? Alignment.centerLeft : Alignment(1.1, 0.0), // Match static position
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0.0, 1.0, curve: Curves.easeOutCubic),
+          ),
+        );
 
     // Incoming side peek animation (element 2 when moving forward, element 0 when moving back)
     _peekFadeAnimation = Tween<double>(begin: 0.0, end: _peekOpacity).animate(
@@ -120,10 +120,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
         curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
       ),
     );
-    _peekSlideAnimation = Tween<Offset>(
-      begin: Offset(0.6 * _direction, 0.0),
-      end: Offset.zero,
-    ).animate(
+    _peekSlideAnimation = Tween<Offset>(begin: Offset(0.6 * _direction, 0.0), end: Offset.zero).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.0, 0.9, curve: Curves.easeOutCubic),
@@ -137,15 +134,16 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
         curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
       ),
     );
-    _peekOutSlideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset(-0.6 * _direction, 0.0), // move opposite to incoming
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.0, 0.9, curve: Curves.easeOutCubic),
-      ),
-    );
+    _peekOutSlideAnimation =
+        Tween<Offset>(
+          begin: Offset.zero,
+          end: Offset(-0.6 * _direction, 0.0), // move opposite to incoming
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0.0, 0.9, curve: Curves.easeOutCubic),
+          ),
+        );
   }
 
   @override
@@ -187,13 +185,34 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     final color = Theme.of(context).colorScheme;
     final currentItem = widget.items[_currentIndex];
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40),
-          child: widget.isMobile ? _buildMobileLayout(currentItem, color) : _buildDesktopLayout(currentItem, color),
-        );
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildHeader(context),
+        const SizedBox(height: 24),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              child: widget.isMobile ? _buildMobileLayout(currentItem, color) : _buildDesktopLayout(currentItem, color),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.header, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 12),
+        Text(
+          widget.subHeader,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.black54),
+        ),
+      ],
     );
   }
 
@@ -263,17 +282,14 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                 children: [
                   Text(
                     currentItem.title,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     currentItem.description,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          height: 1.5,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
                   ),
                 ],
               ),
@@ -306,100 +322,101 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
                 outgoingPeekIndex = idx < widget.items.length ? idx : null;
               }
             }
-            final String? outgoingPeekImage =
-                outgoingPeekIndex != null ? widget.items[outgoingPeekIndex].image : null;
+            final String? outgoingPeekImage = outgoingPeekIndex != null ? widget.items[outgoingPeekIndex].image : null;
 
             // Responsive sizing: scale with available width but keep reasonable bounds
             final maxW = constraints.maxWidth;
-            final baseCurrentWidth = (maxW * 0.6); 
-            final baseNextWidth = (baseCurrentWidth * 0.6); 
-            final double currentMaxHeight = widget.isMobile ? 320.0 : 600.0; 
-            final double peekMaxHeight = widget.isMobile ? 280.0 : 520.0; 
+            final baseCurrentWidth = (maxW * 0.6);
+            final baseNextWidth = (baseCurrentWidth * 0.6);
+            final double currentMaxHeight = widget.isMobile ? 320.0 : 600.0;
+            final double peekMaxHeight = widget.isMobile ? 280.0 : 520.0;
 
             // Fix container height on mobile so content below doesn't shift during animations
-            final containerHeight = widget.isMobile
-                ? (currentMaxHeight)
-                : null; // desktop can be intrinsic
+            final containerHeight = widget.isMobile ? (currentMaxHeight) : null; // desktop can be intrinsic
 
             return SizedBox(
               height: containerHeight,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                if (hasNext)
-                  Align(
-                    alignment: Alignment(1.1, 0.0), // Move further right than centerRight
-                    child: _animationController.isAnimating && _direction == -1 && _hadNextBefore && outgoingPeekImage != null
-                        // Backward: right peek is outgoing -> animate out
-                        ? Transform.translate(
-                            offset: Offset(_peekOutSlideAnimation.value.dx * constraints.maxWidth, 0),
-                            child: Opacity(
-                              opacity: _peekOutFadeAnimation.value,
+                  if (hasNext)
+                    Align(
+                      alignment: Alignment(1.1, 0.0), // Move further right than centerRight
+                      child:
+                          _animationController.isAnimating &&
+                              _direction == -1 &&
+                              _hadNextBefore &&
+                              outgoingPeekImage != null
+                          // Backward: right peek is outgoing -> animate out
+                          ? Transform.translate(
+                              offset: Offset(_peekOutSlideAnimation.value.dx * constraints.maxWidth, 0),
+                              child: Opacity(
+                                opacity: _peekOutFadeAnimation.value,
+                                child: Image.asset(
+                                  outgoingPeekImage,
+                                  width: baseNextWidth,
+                                  height: peekMaxHeight,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            )
+                          : (_animationController.isAnimating && _direction == 1)
+                          // Forward: right peek is incoming -> animate in
+                          ? Transform.translate(
+                              offset: Offset(_peekSlideAnimation.value.dx * constraints.maxWidth, 0),
+                              child: Opacity(
+                                opacity: _peekFadeAnimation.value,
+                                child: Image.asset(
+                                  nextItem!.image,
+                                  width: baseNextWidth,
+                                  height: peekMaxHeight,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            )
+                          // Idle/static
+                          : (_animationController.isAnimating && _direction == -1 && !_hadNextBefore)
+                          // No old right peek existed; show nothing while central demotes into place
+                          ? const SizedBox.shrink()
+                          : Opacity(
+                              opacity: _peekOpacity,
                               child: Image.asset(
-                                outgoingPeekImage,
+                                nextItem!.image,
                                 width: baseNextWidth,
                                 height: peekMaxHeight,
                                 fit: BoxFit.contain,
                               ),
                             ),
-                          )
-                        : (_animationController.isAnimating && _direction == 1)
-                            // Forward: right peek is incoming -> animate in
-                            ? Transform.translate(
-                                offset: Offset(_peekSlideAnimation.value.dx * constraints.maxWidth, 0),
-                                child: Opacity(
-                                  opacity: _peekFadeAnimation.value,
-                                  child: Image.asset(
-                                    nextItem!.image,
-                                    width: baseNextWidth,
-                                    height: peekMaxHeight,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              )
-                            // Idle/static
-                            : (_animationController.isAnimating && _direction == -1 && !_hadNextBefore)
-                                // No old right peek existed; show nothing while central demotes into place
-                                ? const SizedBox.shrink()
-                                : Opacity(
-                                    opacity: _peekOpacity,
-                                    child: Image.asset(
-                                      nextItem!.image,
-                                      width: baseNextWidth,
-                                      height: peekMaxHeight,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                  ),
-                if (_previousIndex != null)
+                    ),
+                  if (_previousIndex != null)
+                    AlignTransition(
+                      alignment: _outgoingAlignAnimation,
+                      child: Opacity(
+                        opacity: _outFadeAnimation.value,
+                        child: Image.asset(
+                          widget.items[_previousIndex!].image,
+                          width: baseNextWidth,
+                          height: peekMaxHeight,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
                   AlignTransition(
-                    alignment: _outgoingAlignAnimation,
-                    child: Opacity(
-                      opacity: _outFadeAnimation.value,
-                      child: Image.asset(
-                        widget.items[_previousIndex!].image,
-                        width: baseNextWidth,
-                        height: peekMaxHeight,
-                        fit: BoxFit.contain,
+                    alignment: _incomingAlignAnimation,
+                    child: Transform.scale(
+                      scale: _scaleAnimation.value,
+                      child: Opacity(
+                        opacity: _fadeAnimation.value,
+                        child: Image.asset(
+                          currentItem.image,
+                          width: baseCurrentWidth,
+                          height: currentMaxHeight,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),
-                AlignTransition(
-                  alignment: _incomingAlignAnimation,
-                  child: Transform.scale(
-                    scale: _scaleAnimation.value,
-                    child: Opacity(
-                      opacity: _fadeAnimation.value,
-                      child: Image.asset(
-                        currentItem.image,
-                        width: baseCurrentWidth,
-                        height: currentMaxHeight,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                ],
               ),
             );
           },
@@ -423,9 +440,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
               height: 12,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _currentIndex == index
-                    ? color.onSurface
-                    : color.onSurface.withValues(alpha: _peekOpacity),
+                color: _currentIndex == index ? color.onSurface : color.onSurface.withValues(alpha: _peekOpacity),
               ),
             ),
           ),
@@ -452,11 +467,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _buildArrowButton({
-    required IconData icon,
-    required VoidCallback? onPressed,
-    required ColorScheme color,
-  }) {
+  Widget _buildArrowButton({required IconData icon, required VoidCallback? onPressed, required ColorScheme color}) {
     final isEnabled = onPressed != null;
 
     return InkWell(
@@ -467,19 +478,9 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
         height: 48,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(
-            color: isEnabled
-                ? color.onSurface
-                : color.onSurface.withValues(alpha: 0.2),
-            width: 2,
-          ),
+          border: Border.all(color: isEnabled ? color.onSurface : color.onSurface.withValues(alpha: 0.2), width: 2),
         ),
-        child: Icon(
-          icon,
-          color: isEnabled
-              ? color.onSurface
-              : color.onSurface.withValues(alpha: _peekOpacity),
-        ),
+        child: Icon(icon, color: isEnabled ? color.onSurface : color.onSurface.withValues(alpha: _peekOpacity)),
       ),
     );
   }
