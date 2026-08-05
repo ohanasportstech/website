@@ -302,7 +302,7 @@ class _MeetKaiSection extends StatelessWidget {
                           child: const ImageCard(
                             title: Strings.meetCardTitle1,
                             body: Strings.meetCardBody1,
-                            image: 'assets/images/meet_kai1.jpg',
+                            image: 'assets/images/upgrade1.jpg',
                           ),
                         );
                       },
@@ -318,7 +318,7 @@ class _MeetKaiSection extends StatelessWidget {
                           child: const ImageCard(
                             title: Strings.meetCardTitle2,
                             body: Strings.meetCardBody2,
-                            image: 'assets/images/meet_kai2.jpg',
+                            image: 'assets/images/upgrade2.jpg',
                           ),
                         );
                       },
@@ -334,7 +334,7 @@ class _MeetKaiSection extends StatelessWidget {
                           child: const ImageCard(
                             title: Strings.meetCardTitle3,
                             body: Strings.meetCardBody3,
-                            image: 'assets/images/meet_kai3.jpg',
+                            image: 'assets/images/upgrade3.jpg',
                           ),
                         );
                       },
@@ -350,7 +350,7 @@ class _MeetKaiSection extends StatelessWidget {
                     child: ImageCard(
                       title: Strings.meetCardTitle1,
                       body: Strings.meetCardBody1,
-                      image: 'assets/images/meet_kai1.jpg',
+                      image: 'assets/images/upgrade1.jpg',
                     ),
                   ),
                   SizedBox(width: 24),
@@ -358,7 +358,7 @@ class _MeetKaiSection extends StatelessWidget {
                     child: ImageCard(
                       title: Strings.meetCardTitle2,
                       body: Strings.meetCardBody2,
-                      image: 'assets/images/meet_kai2.jpg',
+                      image: 'assets/images/upgrade2.jpg',
                     ),
                   ),
                   SizedBox(width: 24),
@@ -366,7 +366,7 @@ class _MeetKaiSection extends StatelessWidget {
                     child: ImageCard(
                       title: Strings.meetCardTitle3,
                       body: Strings.meetCardBody3,
-                      image: 'assets/images/meet_kai3.jpg',
+                      image: 'assets/images/upgrade3.jpg',
                     ),
                   ),
                 ],
@@ -394,7 +394,7 @@ class _AdvancedTechnologySection extends StatelessWidget {
           header: Strings.advancedTechnologyHeader,
           subHeader: Strings.advancedTechnologySubHeader,
           bullets: Strings.advancedTechnologyBullets,
-          image: 'assets/images/module.png',
+          image: 'assets/images/module1.jpg',
           isMobile: isMobile,
         ),
       ),
@@ -565,9 +565,9 @@ class _ClubsCollegesSection extends StatelessWidget {
         header: Strings.cncHeader,
         subHeader: Strings.cncSubHeader,
         items: [
-          QuiltGridItem(title: Strings.cncTitle1, description: Strings.cncDesc1, image: 'assets/images/cnc1.jpg'),
-          QuiltGridItem(title: Strings.cncTitle2, description: Strings.cncDesc2, image: 'assets/images/cnc2.jpg'),
-          QuiltGridItem(title: Strings.cncTitle3, description: Strings.cncDesc3, image: 'assets/images/cnc3.jpg'),
+          QuiltGridItem(title: Strings.cncTitle1, description: Strings.cncDesc1, image: 'assets/images/nextgen1.jpg'),
+          QuiltGridItem(title: Strings.cncTitle2, description: Strings.cncDesc2, image: 'assets/images/nextgen2.jpg'),
+          QuiltGridItem(title: Strings.cncTitle3, description: Strings.cncDesc3, image: 'assets/images/nextgen3.jpg'),
         ],
       ),
     );

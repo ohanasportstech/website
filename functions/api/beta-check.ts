@@ -4,9 +4,10 @@ interface Env {
 
 export const onRequest = async (context: { request: Request; env: Env }) => {
   const url = new URL(context.request.url);
-  const secret = url.searchParams.get('secret');
+  const secret = url.searchParams.get('secret')?.trim();
+  const expected = context.env.BETA_SECRET?.trim();
 
-  if (secret && secret === context.env.BETA_SECRET) {
+  if (secret && expected && secret === expected) {
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: {

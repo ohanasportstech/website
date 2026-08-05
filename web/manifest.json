@@ -5,7 +5,7 @@
     "display": "standalone",
     "background_color": "#0077C8",
     "theme_color": "#0077C8",
-    "description": "Kai Tennis pairs a friendly app with a SmartModule to control your tennis ball machine—set drills, adjust on the fly, and track progress.",
+    "description": "Kai Tennis brings smart, app-based control to your club's ball machine - choose drills for every level, create custom workouts for yourself or your students, and track progress over time.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

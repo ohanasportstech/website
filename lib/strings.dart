@@ -117,9 +117,9 @@ class Strings {
   static const faq2Q = 'Is there a subscription?';
   static const faq2A =
       'Kai is currently in an Early Access stage of development and free for select tennis clubs and players. We plan to have a subscription model to help us keep developing and expanding Kai early in 2026.';
-  static const faq3Q = 'When can I get a Kai SmartModule?';
+  static const faq3Q = 'When can I get a Kai Module?';
   static const faq3A =
-      'Kai will launch early in 2026 and you\'ll be able to order one through our website. In the meantime you can install the Kai Tennis App and look around, or contact us to get your name on the waitlist or potentially join our Early Access program.';
+      'Kai will launch in 2026 and you\'ll be able to order one through our website. In the meantime you can install the Kai Tennis App and look around, or contact us to get your name on the waitlist or potentially join our Early Access program.';
 
   // Contact
   static const contactHeader = 'Try Kai';

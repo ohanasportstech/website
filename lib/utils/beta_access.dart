@@ -37,7 +37,7 @@ class BetaAccess extends ChangeNotifier {
   /// If valid, enables ordering mode and persists it.
   static Future<void> init() async {
     final uri = Uri.parse(web.window.location.href);
-    final betaParam = uri.queryParameters[_betaParam];
+    final betaParam = uri.queryParameters[_betaParam]?.trim();
     if (betaParam == null || betaParam.isEmpty) return;
 
     final valid = await validateSecret(betaParam);
@@ -47,9 +47,7 @@ class BetaAccess extends ChangeNotifier {
   /// Validates a beta secret against the Cloudflare Pages Function.
   static Future<bool> validateSecret(String secret) async {
     try {
-      final response = await http.get(
-        Uri.parse('/api/beta-check?secret=${Uri.encodeComponent(secret)}'),
-      );
+      final response = await http.get(Uri.parse('/api/beta-check?secret=${Uri.encodeComponent(secret)}'));
       return response.statusCode == 200;
     } catch (e) {
       debugPrint('Beta secret validation failed: $e');
