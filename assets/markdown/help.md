@@ -1,359 +1,596 @@
-Kai makes your training sessions smarter, easier, and more
-fun. Whether you’re running drills, customizing shots, or building your
-own custom drills, this guide walks you through everything you need to
-know.
+<!-- lede -->
+Kai turns your club's ball machine into a smart training partner. Run pro-designed
+drills, dial in single shots, build your own drills and playlists, and share them
+with friends, students, or teammates. Here's everything you need to know.
 
-<br>
+## What is Kai?
+<!-- icon: info | audience: all -->
 
-## **Getting Started**
+Kai comprises of a **hardware module** that upgrades the ball machine your
+club already owns, and a **mobile app** that puts full control in your pocket.
 
-#### **Install the App**
+### The Kai Module
+<!-- icon: memory -->
 
-Download **Kai - Tennis Training** to your phone from the iOS App Store or Google Play.
-Once installed, open the app and follow the on-screen instructions.
+The Kai Module is a small, rugged controller that is permanently attached to the
+ball machine. It replaces walking back and forth to turn dials — the app tells the
+machine what to do, shot by shot.
 
-<br>
+- **Advanced onboard processing** for smarter, shot-by-shot control.
 
-#### **First Run Setup**
+- **Bluetooth LE** for a reliable, battery-friendly court-side connection.
 
-- **Create your account**: Sign up with your email to run the latest
-  drills, track progress, and manage your subscription. You can use your
-  email, Google account, or Apple ID.
+- **Smart circuitry** supports both manual and app-based operation.
 
-- **Pick your skill level**: This helps Kai to recommend drills tailored
-  to your game.
+- **Precision calibration** for more consistent feeds.
 
-- **Left or right-handed selection**: Kai will adjust drills based on
-  what hand you play with so a forehand is always a forehand and
-  backhand is always a backhand.
+- **Over-the-air updates** delivered through the Kai Tennis app.
 
-<br>
+It's powered by the ball machine itself, simply turn the machine on and the 
+module wakes up with it.
 
-#### **App Layout & Navigation**
+### The Kai Tennis app
+<!-- icon: phone_iphone -->
 
-The navigation bar at the bottom of the screen gives you quick access to
-all the main sections of the app:
+**Kai Tennis** is a free download for iPhone and Android. Open it near a
+Kai-equipped machine and it connects automatically — no pairing, no cables, no
+remote to lose.
 
-🏠 **Home Tab**
+- Choose a drill, set your level, and press start.
 
-- At first, you’ll see a list of drills for **Getting Started** recommended by Coach
-  Kai.
-  
-- After you’ve played a few sessions, your **Recent Drills** are displayed for quick access.
+- Preview every drill in 3D before the first ball comes out.
 
-- See your **personal stats**: total shots hit, time spent training, and
-  number of drills completed.
+- Track your practice time, shots, recent drills, and favorites.
 
-- You’ll also have a spot for all your **Favorite Drills**.
+- Create personalized drills and playlists, and share them with others.
 
-- Pro subscribers unlock **Custom Drills**, where you
-  can access drills you’ve built for yourself, your students, or your
-  family.
+### What you can do with it
+<!-- icon: sports_tennis -->
 
-**📚 Drill Library Tab**
+- **Practice with purpose** — a catalog of pro-designed drills for groundstrokes,
+  volleys, movement, and point play, at four difficulty levels.
 
-- This is the heart of the Kai app where you can browse all
-  professionally created drills, organized by skill focus and type.
+- **Work one shot at a time** — the **Shots** tab feeds a single shot type on repeat,
+  or one ball at a time on demand.
 
-- Simply pick a drill, choose your level, and get started. (See the
-  Drills section below for full details.)
+- **Coach better** — **Coach Mode** turns the app into a feeding assistant so pros can
+  run lessons and clinics hands free.
 
-**🎯 Shot Studio Tab**
+- **Make it yours** — build custom drills and playlists in **Studio**, then share them
+  with friends, students, or teammates.
 
-- Quickly set up a **single shot feed**.
+## Getting Started
+<!-- icon: rocket_launch | audience: player | layout: steps -->
 
-- Pick the shot type, direction, and skill level to start instantly.
+New to Kai? These seven steps take you from an empty court to your first drill.
 
-- Advanced users can fine-tune height, speed, and spin.
+### Download the app
 
-- Perfect for focused practice or for coaches who want **one-ball
-  feeds** during lessons.
+Get **Kai Tennis** from the iOS App Store or Google Play, then open it
+and follow the on-screen instructions.
 
-**👤 User Tile (top right corner)**
+### Create your account
 
-- Tap to open your **account and settings**:
+Sign up with your email, Google account, or Apple ID. Your account keeps your
+drills, favorites, playlists, and stats in sync across devices.
 
-  - Change account settings or log out
+### Tell Kai about your game
 
-  - Calibrate your ball machine
+Set your dominant hand, whether you play men's or women's, and your tennis
+ability (Beginner, Intermediate, Advanced, or Expert). Kai uses this so a forehand
+is always a forehand, and so drill recommendations fit your level.
 
-  - Update profile settings
+### Turn on the ball machine
 
-  - Manage your subscription
+The Kai Module is already installed on your club's machine, so there is nothing to
+plug in. Center the machine's wheels on the baseline, flip the power switch, 
+and the module powers up with it.
 
-<br>
-<br>
+> **Tip:** on some machines, set the machine's own controller to **REMOTE** so it
+> doesn't feed balls while you're getting connected.
 
-## **Connecting to Your Ball Machine**
+### Let the app connect
 
-To control a ball machine, Kai requires the **Kai Module**. This
-is a Bluetooth receiver that can be plugged into supported PlayMate ball
-machines.
+Open the app and stay within about 30 meters of the machine. Kai finds the module
+over Bluetooth automatically — no pairing needed. When the **Start** button on a
+drill page turns blue, you're connected.
 
-- You can purchase your own Kai Module, or your club may already provide
-  one that is plugged into the machine or available at the front desk.
+### Pick a drill and hit
 
-- Without the Kai Module, Kai cannot control a PlayMate ball machine.
+Start in the **Drills** tab (or the Getting Started row on **Home**). Choose your
+level, optionally set a duration, then press **Start**. Balls begin after a short
+countdown so you have time to put your phone away and get into position.
 
-- The Kai Module will be available for purchase in **2026**.  
-  👉 [Visit this page](/pages/kai-module/) for more details.
+### Check your progress
 
-<br>
-#### **Supported Machines**
+When the drill finishes you'll see your shot count and time. Tap the heart on any
+drill to save it to **Favorites** on the Home tab, and your **Recent Drills** row
+keeps your last sessions one tap away.
 
-Currently, the Kai Module works with:
+## Around the App
+<!-- icon: grid_view | audience: player -->
 
-- **PlayMate iSmash** (recommended for full functionality and advanced
-  drills)
+The navigation bar at the bottom of the screen gives you quick access to the four
+main sections of the app. Each one has its own section below.
 
-- **PlayMate Ace** (supported for simpler feeds and remote control, but
-  with limited drill options)
+### Home
+<!-- icon: nav_home -->
 
-<br>
+Your dashboard: a greeting from Coach Kai, your practice stats, and quick rows for
+Getting Started, Recent Drills, and Favorites.
 
-#### **Setup & Power**
+### Drills
+<!-- icon: nav_drills -->
 
-- Plug the Kai Module into the **jack next to the power switch** on a
-  supported PlayMate machine, using the provided cable.
+The heart of the app: every pro-designed drill, organized by what you want to work
+on. Pick a category, pick a drill, choose your level, and start.
 
-- Turn on your ball machine.
+### Shots
+<!-- icon: nav_shots -->
 
-- The Kai Module will power on automatically. Its LED will **blink
-  red**, indicating it’s ready to connect.
+Set up a **single shot feed** in seconds — ideal for warm-ups,
+focused repetition, and one-ball feeds during a lesson.
 
-<br>
+### Studio
+<!-- icon: nav_studio -->
 
-### **Connection Process**
+Your workshop: **custom drills**, **playlists**, and everything **shared with you**.
 
-- The Kai app uses **Bluetooth Low Energy** to maximize your phone's battery life and ensure a smooth connection. No
-  manual pairing is required.
+### User tile (top right)
+<!-- icon: person -->
 
-- Simply open the app, and it will automatically search for and connect
-  to a nearby Kai Module.
+Tap your initials in the top right corner to reach your account and settings:
 
-- The range is about **30 meters**, so you can connect from anywhere on
-  the court.
+- User Profile — hand, play type, ability, password, log out
 
-<br>
+- Drill Preferences — drill start delay, speed and height overrides
 
-#### **Connection Status**
+- KAI Module Settings — module name, ball machine model, module overrides
 
-- **Blinking red LED**: Kai Module is ready to connect.
+- Manage Club — club administrators only
 
-- **Solid red LED**: Kai Module is successfully connected to the app.
+- Help & Support
 
-- In the app:
+## Home
+<!-- icon: nav_home | audience: player -->
 
-  - The **Start button** on the drill page will be **blue** if
-    connected.
+Home is where every session starts. It keeps your recent work, your favorites, and
+a nudge in the right direction all on one screen.
 
-  - If not connected, it will display "Searching..."
+### Coach Kai
 
-  - You can also check status by clicking on the User Tile at the top
-    right.
+The banner at the top greets you by name and rotates through training tips, drill
+suggestions, and news about what's new in the app.
 
-⚠️ Only **one phone** can connect to a Kai Module at a time. If someone
-else is connected, you won’t be able to take control until they shut down
-their app.
+### Your stats
 
-<br>
+The stats strip totals up your practice: **Time** on court, **Drills** completed, and
+**Shots** hit. Every drill you finish while connected to a module rolls into it, so
+the numbers grow as you train.
 
-#### **Troubleshooting Your Connection**
+### Getting Started
 
-If you can’t connect, try these steps:
+New accounts see a **Getting Started** row — a selection of hand-picked drills that are
+a good first hit for any level. Once you've found your footing, the row steps aside
+and Recent Drills takes its place.
 
-1.  **Check the hardware**
+### Recent Drills
 
-    - Make sure the Kai Module is properly plugged into the PlayMate
-        machine.
+The last drills you ran, newest first. This is the fastest way to repeat yesterday's
+session or pick up a routine where you left off.
 
-    - Verify the ball machine is powered on.
+### Favorites
 
-    - If the LED is off → Module is not receiving power.
+Tap the **heart** on any drill — Kai library drill or one of your own — and it lands
+here. Build a list of the drills you come back to every week and start them in
+two taps.
 
-    - If the LED is solid red → Another phone is already connected.
+## Drills
+<!-- icon: nav_drills | audience: player -->
 
-2.  **Check app permissions**
+Drills are the heart of **Kai Tennis**, organized so you can groove
+consistency or practice real match situations.
 
-    - Ensure you granted the Kai app permission to use **Bluetooth**
-        during setup.
+### Rhythm and Reps
 
-    - If not, go to your phone’s **Settings → Kai App → Permissions**,
-        and enable Bluetooth.
+Develop consistency through repetition. These drills mimic a coach feeding balls
+to help you build reliable mechanics.
 
-3.  **Check in-app status**
+- **Pick a shot to work on** — ground stroke, volley, overhead, and more.
 
-    - Open any drill page.
+- **Select the type of feed** — forehand, backhand, alternating, and others.
 
-    - If connected, the **Start button** will be blue.
+### Tactical Point Play
 
-    - If not, it will display “Searching...”
+Offense, defense, and everything in between. Pattern-based drills that simulate
+situations you'll face in real singles or doubles play.
 
-4.  **Still stuck?**
+- **Approach & finish** — deep ball → neutral ball → volley, with recovery time
+  built in.
 
-    - Restart the ball machine.
+- **Cardio movement & footwork** — side-to-side and forward/back movement to train
+  hitting on the run, balance, and endurance.
 
-    - Close and reopen the Kai app.
+- **Doubles situations** — practice alone or with a partner in drills that reflect
+  common doubles points.
+
+### Two Person & Groups
+
+Train with friends, your team, and in clinics. Feeds are timed so players can
+alternate quickly and maximize reps on a shared machine.
+
+### Drill Start
+
+Once you've chosen what to work on, the drill start page shows details, tips, and every
+option for the session you're about to run.
+
+- **3D visualization** — the animation at the top shows how the drill works. Spin
+  it with your finger to view the court from any angle.
+
+- **Kai tips** — coaching notes for the drill: what to focus on and how to make it
+  harder.
+
+- **Level** — **Easy**, **Med**, **Hard**, and **Adv** set the pace, spin, and net
+  clearance of every feed. Warm up easy and work up; you can change level before you
+  start or while the drill is running, and the machine adapts on the next ball.
+
+- **Random** — shuffles the shot order so you have to read the ball instead of
+  memorizing the pattern, which trains reaction, recovery, and footwork. Tap the
+  shuffle button on the court view to turn it on or off; it glows blue when active.
+  Some drills open with it already on, and drills with a single shot don't offer it.
+
+- **Duration** — set the drill length in minutes. Leave it unset and the machine
+  runs until you stop it or the hopper is empty.
+
+- **Favorite** — save the drill to the Home tab for quick access later.
+
+- **Fine-tune** — the sliders button in the top bar nudges this drill's height,
+  speed, and feed rate. The button turns blue while an adjustment is saved.
+
+- **Coach Mode** — the Coach's Clipboard button turns the app into a feeding assistant for
+  lessons and clinics: 
+    - Drills start instantly instead of counting down
+    - **Height**, **Speed**, and **Feed Rate** gain +/- controls on the running drill screen
+    - You can feed one ball at a time
+  It stays on for every drill until you turn it off, so switch it back off for your own practice to get the countdown back.
+
+- **Start** — the button at the bottom kicks off the drill. It's blue when you're
+  connected to a module and reads **Searching...** while the app is still looking for
+  one.
+
+### While the drill is running
+
+The active drill screen shows time elapsed or remaining, your shot count, and the
+current level. You can change level on the fly, pause and resume, or finish early.
+Kai also tells you when the basket runs empty or the connection drops.
+
+## Shots
+<!-- icon: nav_shots | audience: player -->
+
+The **Shots** tab is where you work on one shot at a time:
+pick a shot, point it where you want it, and hit it until it feels right.
+
+Leaving the Shots tab stops the machine automatically, so you never walk away from
+a running feed.
+### Set up a shot
+
+- **Pick a shot type** — warm-up feeds, ground strokes, volleys, overheads, and more.
+
+- **Choose the direction** — down the middle, or out to either side of the court.
+
+- **Set the level** — Easy, Med, Hard, or Adv, exactly like a drill.
+
+- **Start the feed** — press start and the machine feeds that shot continuously at
+  the chosen rhythm.
+
+### Feed one ball at a time
+
+Use **Single Shot** to send exactly one ball. It's the fastest way to check a
+correction, warm somebody up, or feed a student between pieces of advice — and it
+pairs naturally with **Coach Mode** on the drill side.
+
+### Fine-tune controls
+
+Flip the panel over with the round button to dial the shot in yourself, just like
+the knobs on the machine:
+
+- **Height** — net clearance
+
+- **Speed** — pace of the ball
+
+- **Spin** — topspin through backspin
+
+- **Slice** — sidespin, on machines that support it
+
+- **Feed** — how quickly balls come out
+
+- **Delay** — pause before the next ball
+
+## Studio
+<!-- icon: nav_studio | audience: player -->
+
+The **Studio** tab is where you create your own custom drills and playlists
+and pick up anything others have shared with you.
+
+### Build a custom drill
+
+Tap **+** next to *My Custom Drills* to open the drill editor.
+
+- Create any practice sequence of **up to 16 shots**.
+
+- Use the **sliders** button to fine-tune each shot's height, speed, spin, and
+  direction.
+
+- Add a **delay** after any shot to build in recovery or coaching time.
+
+- Give the drill a name and a short description, then save it. It will appear in the
+  *My Custom Drills* section of the Studio tab.
+
+### Create a playlist
+
+Tap **+** next to *My Playlists* to string drills together into a session.
+
+- Add any mix of Kai drills and your own custom drills.
+
+- Name the playlist and give it an icon and color so it's easy to spot.
+
+- Open a playlist and press play to run the drills back to back — ideal for a
+  warm-up routine, a lesson plan, or a team practice.
+
+### Share with friends and students
+
+- Choose **Share** from the ••• menu on any custom drill or playlist. Kai creates a
+  link you can send by text, email, or post to your club's website.
+
+- When someone opens the link, the drill or playlist lands in their **Shared With
+  Me** section in the Studio tab.
+
+- They can play it as-is, choose **Save a copy** to edit their own version, or
+  **Remove** it from their list.
+
+- The lock and globe icons on each tile show whether an item is private or shared.
+
+### Shared With Me
+
+Everything sent to you shows up here, with the newest at the top. Coaches often use
+this to assign homework: share a playlist after a lesson and your students can run
+the exact same session on their own.
+
+## Connecting to the Ball Machine
+<!-- icon: bluetooth_connected | audience: player -->
+
+### The Kai Module
+
+The **Kai Module** is a small Bluetooth controller that is permanently installed on
+the ball machine at participating clubs. There is nothing for you to plug in,
+carry, or pick up at the front desk — if the machine has a module, the app will find
+it.
+
+Supported machines: **PlayMate iSmash** and **PlayMate iGenie**.
+
+### Power on
+
+- Turn on the ball machine at its own power switch. The Kai Module powers on with
+  the machine.
+
+- On some machines, setting the machine's controller to **REMOTE** prevents
+  unwanted feeds while you get connected.
+
+### Connect
+
+- Kai uses **Bluetooth LE** to save your phone's battery, and no manual pairing is
+  required.
+
+- Open the app and it automatically searches for and connects to the nearby module.
+
+- The range is about **30 meters**, so you can connect from anywhere on the court.
+
+- If your club has more than one machine, the app asks which module you want to
+  use, listed by the name your club gave it.
+
+### Connection status
+
+- On a drill page, the **Start** button is **blue** when you're connected and shows
+  **Searching...** when you're not.
+
+- The status icon next to your user tile shows the current Bluetooth state and any
+  action needed, such as allowing Bluetooth or updating the module.
+
+⚠️ Only one phone can control a module at a time. If somebody else is connected,
+you won't be able to take control until they disconnect via the app or if the
+machine is turned off and back on.
+
+### Firmware updates
+
+From time to time the module needs new firmware. The app tells you when an update is
+available and walks you through it: it downloads, updates, and verifies the
+firmware, and the module restarts on its own. Keep the app open and stay near the
+machine until it finishes.
+
+### Troubleshooting
+
+1. **Check the machine**
+
+    - Make sure the ball machine is powered on — the module has no power of its own.
+
+    - Check that the cables connecting the module to the machine are secure.
+
+    - If nothing happens at all, tell your club's front desk; the module may need
+      service.
+
+2. **Check app permissions**
+
+    - Make sure you granted the Kai app permission to use **Bluetooth**.
+
+    - If not, go to your phone's **Settings → Kai → Bluetooth** and enable it.
+
+3. **Check in-app status**
+
+    - Open any drill page. If connected, the **Start** button is blue.
+
+    - Otherwise it displays **Searching...**
+
+4. **Still stuck?**
 
     - Make sure no other phone nearby is currently connected.
 
-✅ With these steps, your Kai Module should connect reliably so you can
-start training.
+    - Restart the ball machine, then close and reopen the Kai app.
 
-<br>
-<br>
+    - Reach out to us at [support@ohanasports.net](mailto:support@ohanasports.net).
 
-## **Drills**
+## Plans & Subscriptions
+<!-- icon: workspace_premium | audience: all -->
 
-Drills are the heart of **Kai - Tennis Training**. They’re organized into two main groups so you can groove consistency or practice real match scenarios.
+### How Kai is licensed
 
-#### **Rhythm and Reps (Simple Patterns)**
+Kai is subscribed per module by the club, and there are no additional fees for players. 
+When you connect, the app checks which plan that machine is on and unlocks the features for you.
 
-These drills mimic a coach feeding balls to help you build reliable
-mechanics through repetition.
+### What the plans unlock
 
-- **Pick a shot to work on**. E.g. ground stroke, volley, overheads.
+- **Basic** — everyday practice: basic drills and shots, levels, and your stats.
 
-- **Select Type of Feed**: Forehand, backhand, alternating, etc.
+- **Premium** — everything Kai does: the complete drill catalog, including Tactical
+  Point Play and group drills, plus **Studio** custom drills, playlists, and sharing.
 
-- **Buddy Practice**: This category is designed for two players to share
-  the machine. Feeds are sped up, so players alternate quickly and
-  maximize reps.
+If a drill or feature is greyed out with **Subscription required**, that machine's
+plan doesn't include it yet — talk to your club.
 
-#### **Tactical Point Play (Match Scenarios)**
+### Managing your club's plan
 
-Pattern-based drills that simulate situations you’ll face in real
-singles or doubles play.
+Club administrators manage everything from **Manage Club** in the app. See the
+[Subscription](/pages/subscription) page for current plans and pricing.
 
-- **Approach & Finish**: deep ball → neutral ball → volley, with
-  recovery time built in.
+## For Club Administrators
+<!-- icon: admin_panel_settings | audience: admin -->
 
-- **Cardio Movement & Footwork**: side-to-side and forward/back movement
-  to train hitting on the run, balance, and endurance.
+Club administrators activate modules, choose which machines are subscribed, and
+manage billing and other admins — all from the Kai app.
 
-- **Doubles Situations**: practice alone or with your partner in drills
-  that reflect common doubles points.
+### Activate a new module
 
-These advanced patterns unlock the next level of ball machine training
-and directly improve your match play. They are included with the Premium
-Subscription, and will be updated and expanded regularly.
+1. Stand near the machine and open the Kai app while signed in to your account.
 
-<br>
+2. When the app finds an unactivated module, it prompts for the **activation code**
+   supplied with the module, in the format `XXXXXX-XXXXXX-XXXXXX` (case-sensitive).
 
-#### **Drill Start Page**
+3. After activation, choose the **ball machine model** (iSmash or iGenie) and give
+   the module a **name** of up to 16 characters, such as *Court 3 Machine*. Members
+   see this name when they connect, so make it obvious.
 
-Once you've decided what to work on, you'll see drill details and tips and can set
-session options before starting.
+The module is now attached to your club and appears under **Manage Club**.
 
-**3D Visualization**  
-At the top of the page is a 3D animation that shows you how the drill works. 
-Spin the animation with your finger to view the drill from different angles.
+### Tune a module for its machine
 
-**Quick Controls**  
-Quick controls allow you to set session options.
+Every machine is a little different. Open **KAI Module Settings** from the user tile
+while connected to set **Speed**, **Height**, and **Spin** overrides for that module.
+These apply to every player who uses that machine, so a "medium" drill feels the
+same on every court.
 
-- **⏱ Duration** — set drill length in minutes. The drill will stop
-  automatically when the time runs out. If not set, the duration is
-  unlimited and the ball machine will run till you stop it or the hopper
-  is empty.
+### Manage your club's subscription
 
-- **🔀 Shuffle** — randomize the shot order. This helps you work on reaction times and readiness. Shuffle is only
-  available on selected drills.
+Open the user tile → **Manage Club**:
 
-- **❤️ Favorite** — save drills in the Home tab so you can quickly access them later.
+- **Club Information** — name, address, and contact email, used for billing.
 
-**Level Selector**  
-Choose Easy, Medium, Hard, or Advanced. Adjust before starting or while
-the drill is running — the ball machine adapts instantly.
+- **Subscription** — shows your plan (*KAI Club Subscription* × the number of paid
+  slots), status, and renewal date.
 
-- *Easy*: slower, lighter spin, higher net clearance.
+- **Subscribed Modules** — assign your paid slots to specific modules. Tap the edit
+  icon to change which machines are subscribed; the app shows the old and new monthly
+  totals and the prorated difference before you confirm.
 
-- *Medium*: standard pace/spin.
+- **Manage Subscription** — opens the secure Stripe billing portal to update payment
+  details, invoices, or cancel. If a subscription has lapsed, **Reactivate
+  Subscription** brings it back.
 
-- *Hard*: faster pace, heavier spin, lower net clearance.
+Modules without a slot still connect, but members see limited features on them.
 
-- *Advanced*: most challenging feeds for advanced players.
+### Add another administrator
 
-This allows you to warm up easy, then raise the challenge as you go.
+In **Manage Club → Administrators**, choose **Add an Administrator** and share the
+generated invite link with another Kai user. When they tap the link they're asked to
+accept, and they gain the same club management rights. Anyone you invite needs a Kai
+account first.
 
-<br>
-<br>
+### Order more modules
 
-## **Shot Studio**
+Additional modules can be ordered from the [Kai Module](/kai-module) page, or from
+**Buy a KAI Module** in the app's settings menu. Email
+[info@ohanasports.net](mailto:info@ohanasports.net) if you'd like a quote for
+multiple courts.
 
-The Shot Studio is where you can focus on **single-shot feeds**.
+## FAQ
+<!-- icon: help_outline | audience: all | layout: faq -->
 
-#### **Shot Selection**
+### Do I need to bring or borrow a Kai Module?
 
-- **Pick a shot type** – ground stroke, warm-up, volley, etc.
+No. The module is permanently installed on the ball machine at participating clubs.
+Just turn the machine on and open the app.
 
-- **Choose the direction** – down the middle, left, right.
+### Which ball machines work with Kai?
 
-- **Set the level** – easy, medium, hard, advanced.
+PlayMate **iSmash** and **iGenie**. We're working on support for more machines and
+brands.
 
-- **Control the feed** – run the shot continuously or feed one ball at a
-  time. One-ball feeds are perfect for coaches running lessons.
+### Do I have to pay for Kai?
 
-#### **Fine-Tune Controls**
+Not as a player. Your club subscribes each machine, and the features unlock
+automatically when you connect.
 
-Press the **round grey button** to open the fine-tune controls that let you dial 
-in shot details just like you would on the ball machine itself.
+### Can I use the app without a ball machine?
 
-- **Height**
+Yes — you can browse drills, build custom drills and playlists, save favorites, and
+review your stats anywhere. You need to be near a module to make a machine feed balls.
 
-- **Speed**
+### What does the shuffle button do?
 
-- **Spin**
+It turns on **Random**, which mixes up the order of the shots in a drill so you have
+to react instead of anticipate. Tap it again to go back to the set pattern.
 
-- **Feed Rate**
+### I'm coaching — can I feed balls one at a time?
 
+Yes. Turn on **Coach Mode** on any drill page for instant starts, live height, speed,
+and feed-rate adjustments, and one-ball feeding. The **Shots** tab has a **Single
+Shot** button that does the same for a single shot type.
 
-<br>
-<br>
+### Can two people use the same machine at once?
 
-## **Subscriptions**
+Two players can absolutely share a session — pick a drill from **Two Person & Groups**.
+But only one phone can be *connected* to a module at a time; the other player joins
+in on court.
 
-Kai offers flexible subscription options, managed
-securely through our online checkout. Tap “Manage Subscription” in the
-app or for more info, see our [Subscription](/pages/subscription/) page.
+### Why is a drill greyed out?
 
-<br>
-<br>
+The machine you're connected to is on a plan that doesn't include that drill. Talk to
+your club about upgrading.
 
-## **Kai Module (Coming Soon)**
+### Do I need to pair Bluetooth in my phone's settings?
 
-The Kai Module is a smart ball machine controller that allows you to control your ball machine from your phone or watch.
+No. Kai uses Bluetooth LE and connects automatically. You only need to allow the app
+to use Bluetooth.
 
-- Compatible with **PlayMate iSmash** and **Ace**
+### Can I use Kai indoors and outdoors?
 
-- Adds smart phone and watch control
-
-- Enables drills, Shot Studio, partner drills, and team training modes
-
-👉 Interested? Email
-[**support@ohanasports.net**](mailto:support@ohanasports.net) to join
-the early interest list.
-
-<br>
-<br>
-
-## **FAQ**
-
-**Do I need the Kai Module to use the app?**  
-No — you can explore drills, save favorites, and track progress without
-it. The module is only needed to control a ball machine.
-
-**Does Kai work on all ball machines?**  
-Currently, Kai supports PlayMate **iSmash** and **Ace** models.
-
-**Can I use Kai indoors and outdoors?**  
-Yes — it’s designed for open-air courts and works within ~30 meters of
+Yes. It's designed for open-air and indoor courts and works within about 30 meters of
 the machine.
 
-<br>
-<br>
+### How do I share a drill with my students?
 
-## **Support**
+Open the drill or playlist in the Studio tab, choose **Share** from the ••• menu, and
+send the link. It appears in their **Shared With Me** section.
 
-Need help? Contact us anytime at
-[**support@ohanasports.net**](mailto:support@ohanasports.net).
+### Who do I contact if the module on court seems broken?
+
+Tell your club's front desk first — they can check the machine — then email
+[support@ohanasports.net](mailto:support@ohanasports.net) with the module name and
+what you saw.
+
+## Still Need Help?
+<!-- icon: support_agent | audience: all | layout: plain -->
+
+We're a small team and we read every message.
+
+- Email us at [support@ohanasports.net](mailto:support@ohanasports.net).
+
+- Club and ordering questions: [info@ohanasports.net](mailto:info@ohanasports.net).

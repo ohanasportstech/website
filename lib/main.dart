@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:website/pages/app_link_fallback.dart';
+import 'pages/help.dart';
 import 'pages/home.dart';
 import 'pages/about.dart';
 import 'pages/kai_module.dart';
@@ -175,7 +176,7 @@ class MyApp extends StatelessWidget {
           '/docs/privacy-policy': (context) => const MarkdownViewer(assetPath: 'assets/markdown/privacy-policy.md', title: 'Ohana Sports Privacy Policy', errorMessage: 'Failed to load Privacy Policy'),
           '/docs/terms-of-use': (context) => const MarkdownViewer(assetPath: 'assets/markdown/terms-of-use.md', title: 'Ohana Sports Terms of Use', errorMessage: 'Failed to load Terms of Use'),
           '/pages/data-deletion': (context) => const MarkdownViewer(assetPath: 'assets/markdown/data-deletion.md', title: 'Ohana Sports Data Deletion', errorMessage: 'Failed to load Data Deletion'),
-          '/pages/help': (context) => const MarkdownViewer(assetPath: 'assets/markdown/help.md', title: 'Ohana Sports Help', errorMessage: 'Failed to load Help'),
+          '/pages/help': (context) => const HelpPage(),
           '/kai-module': (context) => const KaiModulePage(),
           '/order/success': (context) => const OrderSuccessPage(),
           '/auth/callback': (context) => const AuthCallbackPage(),
