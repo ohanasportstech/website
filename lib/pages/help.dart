@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:website/utils/help_doc.dart';
 
@@ -21,7 +22,34 @@ const Map<String, IconData> _sectionIcons = {
   'admin_panel_settings': Icons.admin_panel_settings_outlined,
   'help_outline': Icons.help_outline,
   'support_agent': Icons.support_agent_outlined,
+  'info': Icons.info_outline,
+  'memory': Icons.memory_outlined,
+  'shuffle': Icons.shuffle,
+  'person': Icons.person_outline,
+  'timer': Icons.timer_outlined,
+  'favorite': Icons.favorite_border,
+  'tune': Icons.tune,
+  'share': Icons.ios_share_outlined,
+  'inbox': Icons.inbox_outlined,
+  'phone_iphone': Icons.phone_iphone,
 };
+
+/// Icons taken straight from the Kai app, so the help page and the app agree.
+const Map<String, String> _appIcons = {
+  'nav_home': 'assets/icons/navHome.svg',
+  'nav_drills': 'assets/icons/navDrills.svg',
+  'nav_shots': 'assets/icons/navShots.svg',
+  'nav_studio': 'assets/icons/navStudio.svg',
+  'coach_mode': 'assets/icons/coach_mode.svg',
+};
+
+Widget _helpIcon(String name, {double size = 24, Color color = _kaiBlue}) {
+  final asset = _appIcons[name];
+  if (asset != null) {
+    return SvgPicture.asset(asset, width: size, height: size, colorFilter: ColorFilter.mode(color, BlendMode.srcIn));
+  }
+  return Icon(_sectionIcons[name] ?? Icons.article_outlined, size: size, color: color);
+}
 
 class HelpPage extends StatefulWidget {
   const HelpPage({super.key});
@@ -367,7 +395,7 @@ class _TableOfContents extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                 child: Row(
                   children: [
-                    Icon(_sectionIcons[section.iconName] ?? Icons.article_outlined, size: 18, color: _kaiBlue),
+                    SizedBox(width: 20, child: Center(child: _helpIcon(section.iconName, size: 18))),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(section.title, style: const TextStyle(fontWeight: FontWeight.w600, height: 1.3)),
@@ -413,7 +441,7 @@ class _SectionCard extends StatelessWidget {
                   color: _kaiBlue.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(_sectionIcons[section.iconName] ?? Icons.article_outlined, color: _kaiBlue),
+                child: Center(child: _helpIcon(section.iconName)),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -476,6 +504,10 @@ class _ExpanderTile extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
                 child: Row(
                   children: [
+                    if (panel.iconName.isNotEmpty) ...[
+                      SizedBox(width: 24, child: Center(child: _helpIcon(panel.iconName, size: 22))),
+                      const SizedBox(width: 12),
+                    ],
                     Expanded(
                       child: Text(
                         panel.title,

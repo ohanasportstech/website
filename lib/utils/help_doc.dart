@@ -5,6 +5,7 @@
 ///   * `## Heading` starts a section, `### Heading` starts a panel inside it.
 ///   * An HTML comment directly under a section heading carries its metadata,
 ///     e.g. `<!-- icon: rocket_launch | audience: player | layout: steps -->`.
+///     A comment under a panel heading sets that panel's icon.
 ///
 /// Comments are invisible in any other markdown renderer, so the file stays
 /// readable and editable on its own.
@@ -64,8 +65,9 @@ enum HelpLayout {
 class HelpPanel {
   final String title;
   final String body;
+  final String iconName;
 
-  const HelpPanel({required this.title, required this.body});
+  const HelpPanel({required this.title, required this.body, this.iconName = ''});
 
   bool matches(String query) => title.toLowerCase().contains(query) || body.toLowerCase().contains(query);
 }
@@ -114,12 +116,14 @@ HelpDoc parseHelpDoc(String source) {
   final sectionLede = StringBuffer();
   var panels = <HelpPanel>[];
   String? panelTitle;
+  var panelIcon = '';
   final panelBody = StringBuffer();
 
   void closePanel() {
     if (panelTitle == null) return;
-    panels.add(HelpPanel(title: panelTitle!, body: panelBody.toString().trim()));
+    panels.add(HelpPanel(title: panelTitle!, body: panelBody.toString().trim(), iconName: panelIcon));
     panelTitle = null;
+    panelIcon = '';
     panelBody.clear();
   }
 
@@ -147,12 +151,18 @@ HelpDoc parseHelpDoc(String source) {
   for (final line in source.split('\n')) {
     final comment = _commentPattern.firstMatch(line);
     if (comment != null) {
-      if (sectionTitle != null && panelTitle == null && sectionLede.isEmpty) {
+      final onSectionHeading = sectionTitle != null && panelTitle == null && sectionLede.isEmpty;
+      final onPanelHeading = panelTitle != null && panelBody.toString().trim().isEmpty;
+      if (onSectionHeading || onPanelHeading) {
         for (final attribute in comment.group(1)!.split('|')) {
           final parts = attribute.split(':');
           if (parts.length < 2) continue;
           final key = parts[0].trim().toLowerCase();
           final value = parts.sublist(1).join(':').trim();
+          if (onPanelHeading) {
+            if (key == 'icon') panelIcon = value;
+            continue;
+          }
           switch (key) {
             case 'icon':
               iconName = value;

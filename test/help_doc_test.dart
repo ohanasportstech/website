@@ -26,6 +26,7 @@ Do the other thing.
 <!-- icon: admin_panel_settings | audience: admin -->
 
 ### Only panel
+<!-- icon: nav_home -->
 
 Admin copy.
 ''';
@@ -62,6 +63,14 @@ Admin copy.
       }
     });
 
+    test('panel icons come from a comment under the panel heading', () {
+      final doc = parseHelpDoc(source);
+
+      expect(doc.sections.last.panels.single.iconName, 'nav_home');
+      expect(doc.sections.last.panels.single.body, 'Admin copy.');
+      expect(doc.sections.first.panels.first.iconName, isEmpty);
+    });
+
     test('audience filtering', () {
       final doc = parseHelpDoc(source);
       final admin = doc.sections.last;
@@ -91,6 +100,12 @@ Admin copy.
         doc.sections.any((s) => s.layout == HelpLayout.faq),
         isTrue,
         reason: 'help.md should contain an FAQ section',
+      );
+
+      final aroundTheApp = doc.sections.firstWhere((s) => s.title == 'Around the App');
+      expect(
+        aroundTheApp.panels.map((p) => p.iconName),
+        containsAll(<String>['nav_home', 'nav_drills', 'nav_shots', 'nav_studio']),
       );
     });
   });

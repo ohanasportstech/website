@@ -3,6 +3,63 @@ Kai turns your club's ball machine into a smart training partner. Run pro-design
 drills, dial in single shots, build your own drills and playlists, and share them
 with friends, students, or teammates. Here's everything you need to know.
 
+## What Is Kai?
+<!-- icon: info | audience: all -->
+
+Kai is two things working together: a **module** that upgrades the ball machine your
+club already owns, and an **app** that puts that machine in your pocket.
+
+### The Kai Module
+<!-- icon: memory -->
+
+The Kai Module is a small, rugged controller that is **permanently attached to the
+ball machine**. It replaces walking back and forth to turn dials — the app tells the
+machine what to do, shot by shot.
+
+- **Advanced onboard processing** for smarter, shot-by-shot control.
+
+- **Bluetooth LE** for a reliable, battery-friendly court-side connection.
+
+- **Smart circuitry** so the machine still works the old-fashioned way when nobody
+  is using the app.
+
+- **Precision calibration** for more consistent feeds, court after court.
+
+- **Over-the-air updates** delivered through the Kai Tennis app.
+
+It's powered by the ball machine itself, so there's nothing to charge, carry, or
+check out at the front desk. Turn the machine on and the module wakes up with it.
+
+### The Kai Tennis app
+<!-- icon: phone_iphone -->
+
+**Kai - Tennis Training** is a free download for iPhone and Android. Open it near a
+Kai-equipped machine and it connects automatically — no pairing, no cables, no
+remote to lose.
+
+- Choose a drill, set your level, and press start.
+
+- Preview every drill in 3D before the first ball comes out.
+
+- Track your practice time, shots, recent drills, and favorites.
+
+- Chat with **Coach Kai** for training ideas and quick answers.
+
+### What you can do with it
+<!-- icon: sports_tennis -->
+
+- **Practice with purpose** — a catalog of pro-designed drills for groundstrokes,
+  volleys, movement, and point play, at four difficulty levels.
+
+- **Work one shot at a time** — the **Shots** tab feeds a single shot type on repeat,
+  or one ball at a time on demand.
+
+- **Coach better** — **Coach Mode** turns the app into a feeding assistant so pros can
+  run lessons and clinics from beside the machine.
+
+- **Make it yours** — build custom drills and playlists in **Studio**, then share them
+  with friends, students, or teammates.
+
 ## My First Kai Session
 <!-- icon: rocket_launch | audience: player | layout: steps -->
 
@@ -80,40 +137,33 @@ you can start, stop, and adjust without walking back to your bag.
 <!-- icon: grid_view | audience: player -->
 
 The navigation bar at the bottom of the screen gives you quick access to the four
-main sections of the app.
+main sections of the app. Each one has its own section below.
 
-### 🏠 Home
+### Home
+<!-- icon: nav_home -->
 
-- **Coach Kai** greets you at the top with tips and what's new.
+Your dashboard: a greeting from Coach Kai, your practice stats, and quick rows for
+Getting Started, Recent Drills, and Favorites.
 
-- **Getting Started** suggests a handful of drills when you're new.
+### Drills
+<!-- icon: nav_drills -->
 
-- **Recent Drills** puts your last sessions one tap away.
+The heart of the app: every pro-designed drill, organized by what you want to work
+on. Pick a category, pick a drill, choose your level, and start.
 
-- **Favorites** collects every drill you've tapped the heart on.
+### Shots
+<!-- icon: nav_shots -->
 
-### 📚 Drills
+Formerly Shot Studio. Set up a **single shot feed** in seconds — ideal for warm-ups,
+focused repetition, and one-ball feeds during a lesson.
 
-- The heart of the app: every professionally created drill, organized by skill
-  focus and type.
+### Studio
+<!-- icon: nav_studio -->
 
-- Browse a category, pick a drill, choose your level, and start. See
-  **Drills & Levels** below for the full tour.
+Your workshop: **custom drills**, **playlists**, and everything **shared with you**.
 
-### 🎯 Shots
-
-- Formerly called Shot Studio. Set up a **single shot feed** in seconds.
-
-- Perfect for focused practice, warm-ups, and one-ball feeds during lessons.
-
-### 🎬 Studio
-
-- Your workshop: **custom drills**, **playlists**, and everything **shared with you**.
-
-- Build a sequence of up to 16 shots, group drills into a playlist, and send them
-  to friends, students, or teammates with a link.
-
-### 👤 User tile (top right)
+### User tile (top right)
+<!-- icon: person -->
 
 Tap your initials in the top right corner to reach your account and settings:
 
@@ -127,8 +177,43 @@ Tap your initials in the top right corner to reach your account and settings:
 
 - Help & Support and app diagnostics
 
-## Drills & Levels
-<!-- icon: sports_tennis | audience: player -->
+## Home
+<!-- icon: nav_home | audience: player -->
+
+Home is where every session starts. It keeps your recent work, your favorites, and
+a nudge in the right direction all on one screen.
+
+### Coach Kai
+
+The banner at the top greets you by name and rotates through training tips, drill
+suggestions, and news about what's new in the app. Tap it to chat with **Coach Kai**
+about drills, technique, or how to get more out of a session.
+
+### Your stats
+
+The stats strip totals up your practice: **Time** on court, **Drills** completed, and
+**Shots** hit. Every drill you finish while connected to a module rolls into it, so
+the numbers grow as you train.
+
+### Getting Started
+
+New accounts see a **Getting Started** row — a handful of hand-picked drills that are
+a good first hit for any level. Once you've found your footing, the row steps aside
+and Recent Drills takes its place.
+
+### Recent Drills
+
+The last drills you ran, newest first. This is the fastest way to repeat yesterday's
+session or pick up a routine where you left off.
+
+### Favorites
+
+Tap the **heart** on any drill — Kai library drill or one of your own — and it lands
+here. Build a short list of the drills you come back to every week and start them in
+two taps.
+
+## Drills
+<!-- icon: nav_drills | audience: player -->
 
 Drills are the heart of **Kai - Tennis Training**, organized so you can groove
 consistency or practice real match situations.
@@ -169,28 +254,34 @@ session options.
 - **3D visualization** — the animation at the top shows how the drill works. Spin
   it with your finger to view the court from any angle.
 
+- **Kai tips** — coaching notes for the drill: what to focus on and how to make it
+  harder.
+
 - **⏱ Duration** — set the drill length in minutes. Leave it unset and the machine
   runs until you stop it or the hopper is empty.
 
-- **🔀 Shuffle** — randomize the shot order to work on reaction time and readiness.
-  Available on selected drills.
+- **🔀 Random** — mix up the shot order. See **Random Shot Order** below.
 
 - **❤️ Favorite** — save the drill to the Home tab for quick access later.
 
-- **Level selector** — choose Easy, Medium, Hard, or Advanced before you start or
-  while the drill is running; the machine adapts instantly.
+- **Fine-tune** — the sliders button in the top bar nudges this drill's height,
+  speed, and feed rate for the machine you're on. The button turns blue while an
+  adjustment is saved.
 
 ### Choosing a level
 
+The level selector sets the pace, spin, and net clearance of every feed:
+
 - **Easy** — slower, lighter spin, higher net clearance.
 
-- **Medium** — standard pace and spin.
+- **Med** — standard pace and spin.
 
 - **Hard** — faster pace, heavier spin, lower net clearance.
 
-- **Advanced** — the most challenging feeds, for advanced players.
+- **Adv** — the most challenging feeds, for advanced players.
 
-Warm up easy, then raise the challenge as you go.
+Warm up easy, then raise the challenge as you go — you can change level before you
+start or while the drill is running, and the machine adapts on the next ball.
 
 ### While the drill is running
 
@@ -198,64 +289,110 @@ The active drill screen shows time elapsed or remaining, your shot count, and th
 current level. You can change level on the fly, pause and resume, or finish early.
 Kai also tells you when the basket runs empty or the connection drops.
 
-## Coaching Mode
-<!-- icon: sports | audience: player -->
+## Random Shot Order
+<!-- icon: shuffle | audience: player -->
 
-Coaching Mode gives pros, parents, and team captains more control over every drill.
-Toggle it from the button on any drill page — it stays on until you turn it off.
+Most drills feed their shots in a set pattern, which is perfect when you're grooving
+technique. Turn **Random** on and Kai shuffles the order instead, so you never know
+which ball is coming next.
+
+### Turning it on
+
+Tap the **🔀 shuffle** button on the lower right of the drill's 3D court view. It
+glows blue when random is active, and you can flip it on or off before you start or
+between points. Some drills open with random already on — that's the way they were
+designed to be played.
+
+### Why use it
+
+- **Train reaction and recovery** — you have to read the ball instead of memorizing
+  the pattern, which is much closer to a real point.
+
+- **Sharpen footwork** — split step, recover, and adjust for whatever comes next.
+
+- **Keep it interesting** — the same drill feels new every time you run it.
+
+Random needs a drill with more than one shot in it, so single-shot drills don't
+offer the button.
+
+### Doubles randomization
+
+Some doubles drills use a smarter shuffle that keeps each ball plausible for the
+point being simulated — you'll still be moved around, but the feeds stay true to
+the pattern the drill is teaching.
+
+## Coach Mode
+<!-- icon: coach_mode | audience: player -->
+
+Coach Mode gives pros, parents, and team captains hands-on control of the machine.
+Toggle it with the whistle button in the drill page top bar — it stays on until you
+turn it off, on every drill.
 
 ### What it changes
 
-- **Instant start** — drills begin immediately instead of after the usual countdown.
+- **Instant start** — drills begin right away instead of after the usual countdown,
+  because you're already standing at the machine.
 
-- **Adjust on the fly** — change level and settings mid-drill without stopping.
+- **Adjust on the fly** — **Height**, **Speed**, and **Feed Rate** get +/- controls on
+  the running drill screen, so you can nudge a feed without stopping the session.
 
-- **Single Shot** — feed one ball at a time, exactly when you want it, so you can
-  talk between balls during a lesson.
+- **Feed one ball at a time** — send a single ball exactly when you want it, so you
+  can talk between balls, reset a student, or demonstrate.
 
 ### When to use it
 
-Use Coaching Mode for lessons, clinics, and any session where you're standing next
-to the machine rather than on the other side of the net. Turn it off for your own
-practice to get the countdown back.
+Use Coach Mode for lessons, clinics, and team practices where you're beside the
+machine rather than on the other side of the net. Turn it off for your own practice
+to get the countdown back and give yourself time to reach the baseline.
 
 ## Shots
-<!-- icon: my_location | audience: player -->
+<!-- icon: nav_shots | audience: player -->
 
-The **Shots** tab (previously Shot Studio) is where you focus on single-shot feeds.
+The **Shots** tab (previously Shot Studio) is where you work on one shot at a time:
+pick a shot, point it where you want it, and hit it until it feels right.
 
 ### Set up a shot
 
-- **Pick a shot type** — ground stroke, warm-up, volley, and more.
+- **Pick a shot type** — warm-up feeds, ground strokes, volleys, overheads, and more.
 
-- **Choose the direction** — down the middle, left, or right.
+- **Choose the direction** — down the middle, or out to either side of the court.
 
-- **Set the level** — easy, medium, hard, or advanced.
+- **Set the level** — Easy, Med, Hard, or Adv, exactly like a drill.
 
-- **Control the feed** — run the shot continuously, or use **Single Shot** to feed
-  one ball at a time. One-ball feeds are perfect for coaches running lessons.
+- **Start the feed** — press start and the machine feeds that shot continuously at
+  the chosen rhythm.
+
+### Feed one ball at a time
+
+Use **Single Shot** to send exactly one ball. It's the fastest way to check a
+correction, warm somebody up, or feed a student between pieces of advice — and it
+pairs naturally with **Coach Mode** on the drill side.
 
 ### Fine-tune controls
 
-Press the round grey button to open the fine-tune controls and dial in the shot
-just like you would on the ball machine itself:
+Flip the panel over with the round button to dial the shot in yourself, just like
+the knobs on the machine:
 
-- Height
+- **Height** — net clearance
 
-- Speed
+- **Speed** — pace of the ball
 
-- Spin
+- **Spin** — topspin through backspin
 
-- Feed rate
+- **Slice** — sidespin, on machines that support it
+
+- **Feed** — how quickly balls come out
+
+- **Delay** — pause before the next ball
 
 Leaving the Shots tab stops the machine automatically, so you never walk away from
 a running feed.
 
 ## Studio: Custom Drills, Playlists & Sharing
-<!-- icon: movie_filter | audience: player -->
+<!-- icon: nav_studio | audience: player -->
 
 The **Studio** tab is where you create your own content and pick up anything others
-have shared with you. Custom drills and playlists are part of the **Pro** plan.
+have shared with you. Custom drills and playlists are part of the **Premium** plan.
 
 ### Build a custom drill
 
@@ -306,12 +443,12 @@ the exact same session on their own.
 
 ### The Kai Module
 
-The **Kai Module** is a small Bluetooth controller that is now **permanently
-installed on the ball machine** at participating clubs. There is nothing for you to
-plug in, carry, or pick up at the front desk — if the machine has a module, the app
-will find it.
+The **Kai Module** is a small Bluetooth controller that is **permanently installed on
+the ball machine** at participating clubs. There is nothing for you to plug in,
+carry, or pick up at the front desk — if the machine has a module, the app will find
+it.
 
-Supported machines: **PlayMate iSmash**, **Ace**, **iGenie**, and **Grand Slam**.
+Supported machines: **PlayMate iSmash** and **PlayMate iGenie**.
 
 ### Power on
 
@@ -323,8 +460,8 @@ Supported machines: **PlayMate iSmash**, **Ace**, **iGenie**, and **Grand Slam**
 
 ### Connect
 
-- Kai uses **Bluetooth Low Energy** to save your phone's battery, and no manual
-  pairing is required.
+- Kai uses **Bluetooth LE** to save your phone's battery, and no manual pairing is
+  required.
 
 - Open the app and it automatically searches for and connects to the nearby module.
 
@@ -392,13 +529,11 @@ there is nothing for members to buy.
 
 ### What the plans unlock
 
-- **Starter** — remote control of the machine and the basic shot feeds.
+- **Basic** — everyday practice: pro-designed drills, the **Shots** tab, levels,
+  Random, and your stats and favorites.
 
-- **Essentials** — the core drill library for everyday practice.
-
-- **Premium** — the full library, including Tactical Point Play and group drills.
-
-- **Pro** — everything, plus the Studio: custom drills, playlists, and sharing.
+- **Premium** — everything Kai does: the complete drill catalog, including Tactical
+  Point Play and group drills, plus **Studio** custom drills, playlists, and sharing.
 
 If a drill or feature is greyed out with **Subscription required**, that machine's
 plan doesn't include it yet — talk to your club.
@@ -421,9 +556,9 @@ manage billing and other admins — all from the Kai app.
 2. When the app finds an unactivated module, it prompts for the **activation code**
    supplied with the module, in the format `XXXXXX-XXXXXX-XXXXXX` (case-sensitive).
 
-3. After activation, choose the **ball machine model** (Ace, iSmash, iGenie, or
-   Grand Slam) and give the module a **name** of up to 16 characters, such as
-   *Court 3 Machine*. Members see this name when they connect, so make it obvious.
+3. After activation, choose the **ball machine model** (iSmash or iGenie) and give
+   the module a **name** of up to 16 characters, such as *Court 3 Machine*. Members
+   see this name when they connect, so make it obvious.
 
 The module is now attached to your club and appears under **Manage Club**.
 
@@ -477,8 +612,8 @@ Just turn the machine on and open the app.
 
 ### Which ball machines work with Kai?
 
-PlayMate **iSmash**, **Ace**, **iGenie**, and **Grand Slam**. iSmash gives you the
-full drill library; simpler machines support fewer drill options.
+PlayMate **iSmash** and **iGenie**. We're working on support for more machines and
+brands.
 
 ### Do I have to pay for Kai?
 
@@ -489,6 +624,17 @@ automatically when you connect.
 
 Yes — you can browse drills, build custom drills and playlists, save favorites, and
 review your stats anywhere. You need to be near a module to make a machine feed balls.
+
+### What does the shuffle button do?
+
+It turns on **Random**, which mixes up the order of the shots in a drill so you have
+to react instead of anticipate. Tap it again to go back to the set pattern.
+
+### I'm coaching — can I feed balls one at a time?
+
+Yes. Turn on **Coach Mode** on any drill page for instant starts, live height, speed,
+and feed-rate adjustments, and one-ball feeding. The **Shots** tab has a **Single
+Shot** button that does the same for a single shot type.
 
 ### Can two people use the same machine at once?
 
@@ -503,8 +649,8 @@ your club about upgrading.
 
 ### Do I need to pair Bluetooth in my phone's settings?
 
-No. Kai uses Bluetooth Low Energy and connects automatically. You only need to allow
-the app to use Bluetooth.
+No. Kai uses Bluetooth LE and connects automatically. You only need to allow the app
+to use Bluetooth.
 
 ### Can I use Kai indoors and outdoors?
 
