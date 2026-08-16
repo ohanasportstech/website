@@ -36,7 +36,7 @@ enum HelpAudience {
 
 /// How the panels of a section are presented.
 enum HelpLayout {
-  /// Collapsible panels, the first one open.
+  /// Collapsible panels, all closed by default.
   cards,
 
   /// Numbered walkthrough, all steps visible.

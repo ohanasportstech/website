@@ -94,14 +94,14 @@ class _HelpPageState extends State<HelpPage> {
   String _panelId(HelpSection section, int index) => '${section.title}#$index';
 
   /// A panel is open when the reader last opened it, and otherwise falls back
-  /// to the default for its layout: steps are always open, panels open on a
-  /// search match, and card sections lead with their first panel.
+  /// to the default for its layout: steps are always open, and other panels
+  /// open only on a search match.
   bool _isExpanded(HelpSection section, int index) {
     final override = _overrides[_panelId(section, index)];
     if (override != null) return override;
     if (section.layout == HelpLayout.steps) return true;
     if (_query.isNotEmpty) return section.panels[index].matches(_query);
-    return section.layout == HelpLayout.cards && index == 0;
+    return false;
   }
 
   void _togglePanel(HelpSection section, int index) {
