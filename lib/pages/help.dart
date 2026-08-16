@@ -40,7 +40,6 @@ const Map<String, String> _appIcons = {
   'nav_drills': 'assets/icons/navDrills.svg',
   'nav_shots': 'assets/icons/navShots.svg',
   'nav_studio': 'assets/icons/navStudio.svg',
-  'coach_mode': 'assets/icons/coach_mode.svg',
 };
 
 Widget _helpIcon(String name, {double size = 24, Color color = _kaiBlue}) {

@@ -248,8 +248,8 @@ alternate quickly and maximize reps on a shared machine.
 
 ### The drill page
 
-Once you've chosen what to work on, the drill page shows details, tips, and your
-session options.
+Once you've chosen what to work on, the drill page shows details, tips, and every
+option for the session you're about to run.
 
 - **3D visualization** — the animation at the top shows how the drill works. Spin
   it with your finger to view the court from any angle.
@@ -257,10 +257,17 @@ session options.
 - **Kai tips** — coaching notes for the drill: what to focus on and how to make it
   harder.
 
+- **Level** — **Easy**, **Med**, **Hard**, and **Adv** set the pace, spin, and net
+  clearance of every feed. Warm up easy and work up; you can change level before you
+  start or while the drill is running, and the machine adapts on the next ball.
+
+- **🔀 Random** — shuffles the shot order so you have to read the ball instead of
+  memorizing the pattern, which trains reaction, recovery, and footwork. Tap the
+  shuffle button on the court view to turn it on or off; it glows blue when active.
+  Some drills open with it already on, and drills with a single shot don't offer it.
+
 - **⏱ Duration** — set the drill length in minutes. Leave it unset and the machine
   runs until you stop it or the hopper is empty.
-
-- **🔀 Random** — mix up the shot order. See **Random Shot Order** below.
 
 - **❤️ Favorite** — save the drill to the Home tab for quick access later.
 
@@ -268,82 +275,21 @@ session options.
   speed, and feed rate for the machine you're on. The button turns blue while an
   adjustment is saved.
 
-### Choosing a level
+- **Coach Mode** — the whistle button turns the app into a feeding assistant for
+  lessons and clinics: drills start instantly instead of counting down, **Height**,
+  **Speed**, and **Feed Rate** gain +/- controls on the running drill screen, and you
+  can feed one ball at a time. It stays on for every drill until you turn it off, so
+  switch it back off for your own practice to get the countdown back.
 
-The level selector sets the pace, spin, and net clearance of every feed:
-
-- **Easy** — slower, lighter spin, higher net clearance.
-
-- **Med** — standard pace and spin.
-
-- **Hard** — faster pace, heavier spin, lower net clearance.
-
-- **Adv** — the most challenging feeds, for advanced players.
-
-Warm up easy, then raise the challenge as you go — you can change level before you
-start or while the drill is running, and the machine adapts on the next ball.
+- **Start** — the button at the bottom kicks off the drill. It's blue when you're
+  connected to a module and reads **Searching...** while the app is still looking for
+  one. Press it again to stop the machine at any time.
 
 ### While the drill is running
 
 The active drill screen shows time elapsed or remaining, your shot count, and the
 current level. You can change level on the fly, pause and resume, or finish early.
 Kai also tells you when the basket runs empty or the connection drops.
-
-## Random Shot Order
-<!-- icon: shuffle | audience: player -->
-
-Most drills feed their shots in a set pattern, which is perfect when you're grooving
-technique. Turn **Random** on and Kai shuffles the order instead, so you never know
-which ball is coming next.
-
-### Turning it on
-
-Tap the **🔀 shuffle** button on the lower right of the drill's 3D court view. It
-glows blue when random is active, and you can flip it on or off before you start or
-between points. Some drills open with random already on — that's the way they were
-designed to be played.
-
-### Why use it
-
-- **Train reaction and recovery** — you have to read the ball instead of memorizing
-  the pattern, which is much closer to a real point.
-
-- **Sharpen footwork** — split step, recover, and adjust for whatever comes next.
-
-- **Keep it interesting** — the same drill feels new every time you run it.
-
-Random needs a drill with more than one shot in it, so single-shot drills don't
-offer the button.
-
-### Doubles randomization
-
-Some doubles drills use a smarter shuffle that keeps each ball plausible for the
-point being simulated — you'll still be moved around, but the feeds stay true to
-the pattern the drill is teaching.
-
-## Coach Mode
-<!-- icon: coach_mode | audience: player -->
-
-Coach Mode gives pros, parents, and team captains hands-on control of the machine.
-Toggle it with the whistle button in the drill page top bar — it stays on until you
-turn it off, on every drill.
-
-### What it changes
-
-- **Instant start** — drills begin right away instead of after the usual countdown,
-  because you're already standing at the machine.
-
-- **Adjust on the fly** — **Height**, **Speed**, and **Feed Rate** get +/- controls on
-  the running drill screen, so you can nudge a feed without stopping the session.
-
-- **Feed one ball at a time** — send a single ball exactly when you want it, so you
-  can talk between balls, reset a student, or demonstrate.
-
-### When to use it
-
-Use Coach Mode for lessons, clinics, and team practices where you're beside the
-machine rather than on the other side of the net. Turn it off for your own practice
-to get the countdown back and give yourself time to reach the baseline.
 
 ## Shots
 <!-- icon: nav_shots | audience: player -->
