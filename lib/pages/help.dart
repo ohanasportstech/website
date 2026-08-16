@@ -34,7 +34,7 @@ class _HelpPageState extends State<HelpPage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
   final Map<String, GlobalKey> _sectionKeys = {};
-  final Set<String> _expanded = {};
+  final Map<String, bool> _overrides = {};
 
   late final Future<HelpDoc> _doc = _loadDoc();
   HelpAudience _audience = HelpAudience.all;
@@ -66,24 +66,27 @@ class _HelpPageState extends State<HelpPage> {
 
   String _panelId(HelpSection section, int index) => '${section.title}#$index';
 
+  /// A panel is open when the reader last opened it, and otherwise falls back
+  /// to the default for its layout: steps are always open, panels open on a
+  /// search match, and card sections lead with their first panel.
   bool _isExpanded(HelpSection section, int index) {
-    if (_query.isNotEmpty) return section.panels[index].matches(_query);
+    final override = _overrides[_panelId(section, index)];
+    if (override != null) return override;
     if (section.layout == HelpLayout.steps) return true;
-    final id = _panelId(section, index);
-    if (_expanded.contains(id)) return true;
-    return section.layout == HelpLayout.cards && index == 0 && !_expanded.contains('!$id');
+    if (_query.isNotEmpty) return section.panels[index].matches(_query);
+    return section.layout == HelpLayout.cards && index == 0;
   }
 
   void _togglePanel(HelpSection section, int index) {
-    final id = _panelId(section, index);
+    final expanded = _isExpanded(section, index);
+    setState(() => _overrides[_panelId(section, index)] = !expanded);
+  }
+
+  void _onSearch(String value) {
     setState(() {
-      if (_isExpanded(section, index)) {
-        _expanded.remove(id);
-        _expanded.add('!$id');
-      } else {
-        _expanded.remove('!$id');
-        _expanded.add(id);
-      }
+      _query = value.trim().toLowerCase();
+      // Let the new results decide what is open.
+      _overrides.clear();
     });
   }
 
@@ -140,11 +143,7 @@ class _HelpPageState extends State<HelpPage> {
             controller: _scrollController,
             child: Column(
               children: [
-                _Hero(
-                  lede: doc.lede,
-                  searchController: _searchController,
-                  onSearch: (value) => setState(() => _query = value.trim().toLowerCase()),
-                ),
+                _Hero(lede: doc.lede, searchController: _searchController, onSearch: _onSearch),
                 Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 1180),
