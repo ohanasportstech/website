@@ -13,6 +13,30 @@ import 'widgets/markdown_viewer.dart';
 import 'widgets/cart.dart';
 import 'utils/beta_access.dart';
 
+/// A [PageRoute] that swaps pages instantly, with no slide/fade animation.
+class NoTransitionPageRoute<T> extends PageRoute<T> {
+  NoTransitionPageRoute({required this.builder, required super.settings});
+
+  final WidgetBuilder builder;
+
+  @override
+  Color? get barrierColor => null;
+
+  @override
+  String? get barrierLabel => null;
+
+  @override
+  bool get maintainState => true;
+
+  @override
+  Duration get transitionDuration => Duration.zero;
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+    return builder(context);
+  }
+}
+
 // Environment configuration for Supabase
 // Set the environment via dart-define: --dart-define=SUPABASE_ENV=local|staging|production
 // Default is 'local' for development.
@@ -53,10 +77,7 @@ void main() async {
   }
 
   // Initialize Supabase
-  await Supabase.initialize(
-    url: supabaseUrl,
-    publishableKey: supabasePublishableKey,
-  );
+  await Supabase.initialize(url: supabaseUrl, publishableKey: supabasePublishableKey);
 
   // Validate any beta secret in the URL against the Cloudflare Pages Function.
   await BetaAccess.init();
@@ -100,102 +121,104 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => BetaAccess.instance),
       ],
       child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Kai Tennis',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: seed,
-          brightness: Brightness.light,
+        debugShowCheckedModeBanner: false,
+        title: 'Kai Tennis',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.light),
+          fontFamily: 'Inter',
         ),
-        fontFamily: 'Inter',
-      ),
-      builder: (context, child) {
-        final width = MediaQuery.sizeOf(context).width;
-        // Scale down typography when viewport is narrow
-        final scale = (width / 1000).clamp(0.8, 1.0);
-        final theme = Theme.of(context);
-        final adjustedTextTheme = _scaledTextTheme(theme.textTheme, scale);
-        return Theme(
-          data: theme.copyWith(textTheme: adjustedTextTheme),
-          child: child!,
-        );
-      },
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        final uri = Uri.parse(settings.name ?? '/');
-        final path = uri.path;
-        
-        // Handle routes with query parameters
-        if (path == '/playlist') {
-          final id = uri.queryParameters['id'];
-          return MaterialPageRoute(
-            builder: (context) => AppLinkFallbackPage(
-              contentType: 'playlist',
-              contentId: id,
-            ),
-            settings: settings,
+        builder: (context, child) {
+          final width = MediaQuery.sizeOf(context).width;
+          // Scale down typography when viewport is narrow
+          final scale = (width / 1000).clamp(0.8, 1.0);
+          final theme = Theme.of(context);
+          final adjustedTextTheme = _scaledTextTheme(theme.textTheme, scale);
+          return Theme(
+            data: theme.copyWith(textTheme: adjustedTextTheme),
+            child: child!,
           );
-        }
-        
-        if (path == '/drill') {
-          final id = uri.queryParameters['id'];
-          return MaterialPageRoute(
-            builder: (context) => AppLinkFallbackPage(
-              contentType: 'drill',
-              contentId: id,
-            ),
-            settings: settings,
-          );
-        }
+        },
+        initialRoute: '/',
+        onGenerateRoute: (settings) {
+          final uri = Uri.parse(settings.name ?? '/');
+          final path = uri.path.length > 1 && uri.path.endsWith('/')
+              ? uri.path.substring(0, uri.path.length - 1)
+              : uri.path;
 
-        if (path == '/invite') {
-          final code = uri.queryParameters['code'];
-          return MaterialPageRoute(
-            builder: (context) => AppLinkFallbackPage(
-              contentType: 'invite',
-              contentId: code,
-            ),
-            settings: settings,
-          );
-        }
-        
-        // Handle static routes
-        // Ordering routes are gated behind the beta feature flag in production.
-        final orderingRoutes = {'/order/success'};
-        if (orderingRoutes.contains(path) && !BetaAccess.enabled) {
-          return MaterialPageRoute(
-            builder: (context) => const HomePage(),
-            settings: settings,
-          );
-        }
+          // Handle routes with query parameters
+          if (path == '/playlist') {
+            final id = uri.queryParameters['id'];
+            return MaterialPageRoute(
+              builder: (context) => AppLinkFallbackPage(contentType: 'playlist', contentId: id),
+              settings: settings,
+            );
+          }
 
-        final routes = {
-          '/': (context) => const HomePage(),
-          '/about': (context) => const AboutPage(),
-          '/docs/privacy-policy': (context) => const MarkdownViewer(assetPath: 'assets/markdown/privacy-policy.md', title: 'Ohana Sports Privacy Policy', errorMessage: 'Failed to load Privacy Policy'),
-          '/docs/terms-of-use': (context) => const MarkdownViewer(assetPath: 'assets/markdown/terms-of-use.md', title: 'Ohana Sports Terms of Use', errorMessage: 'Failed to load Terms of Use'),
-          '/pages/data-deletion': (context) => const MarkdownViewer(assetPath: 'assets/markdown/data-deletion.md', title: 'Ohana Sports Data Deletion', errorMessage: 'Failed to load Data Deletion'),
-          '/pages/help': (context) => const HelpPage(),
-          '/kai-module': (context) => const KaiModulePage(),
-          '/order/success': (context) => const OrderSuccessPage(),
-          '/auth/callback': (context) => const AuthCallbackPage(),
-          '/pages/subscription': (context) => const MarkdownViewer(assetPath: 'assets/markdown/subscription.md', title: 'Ohana Sports Subscription', errorMessage: 'Failed to load Subscription'),
-        };
-        
-        if (routes.containsKey(path)) {
-          return MaterialPageRoute(
-            builder: routes[path]!,
-            settings: settings,
-          );
-        }
-        
-        // 404 - redirect to home
-        return MaterialPageRoute(
-          builder: (context) => const HomePage(),
-          settings: settings,
-        );
-      },
+          if (path == '/drill') {
+            final id = uri.queryParameters['id'];
+            return MaterialPageRoute(
+              builder: (context) => AppLinkFallbackPage(contentType: 'drill', contentId: id),
+              settings: settings,
+            );
+          }
+
+          if (path == '/invite') {
+            final code = uri.queryParameters['code'];
+            return MaterialPageRoute(
+              builder: (context) => AppLinkFallbackPage(contentType: 'invite', contentId: code),
+              settings: settings,
+            );
+          }
+
+          // Handle static routes
+          // Ordering routes are gated behind the beta feature flag in production.
+          final orderingRoutes = {'/order/success'};
+          if (orderingRoutes.contains(path) && !BetaAccess.enabled) {
+            return MaterialPageRoute(builder: (context) => const HomePage(), settings: settings);
+          }
+
+          final routes = {
+            '/': (context) => const HomePage(),
+            '/about': (context) => const AboutPage(),
+            '/docs/privacy-policy': (context) => const MarkdownViewer(
+              assetPath: 'assets/markdown/privacy-policy.md',
+              title: 'Ohana Sports Privacy Policy',
+              errorMessage: 'Failed to load Privacy Policy',
+            ),
+            '/docs/terms-of-use': (context) => const MarkdownViewer(
+              assetPath: 'assets/markdown/terms-of-use.md',
+              title: 'Ohana Sports Terms of Use',
+              errorMessage: 'Failed to load Terms of Use',
+            ),
+            '/docs/club-agreement': (context) => const MarkdownViewer(
+              assetPath: 'assets/markdown/club-agreement.md',
+              title: 'Ohana Sports Club Agreement',
+              errorMessage: 'Failed to load Club Agreement',
+            ),
+            '/pages/data-deletion': (context) => const MarkdownViewer(
+              assetPath: 'assets/markdown/data-deletion.md',
+              title: 'Ohana Sports Data Deletion',
+              errorMessage: 'Failed to load Data Deletion',
+            ),
+            '/pages/help': (context) => const HelpPage(),
+            '/kai-module': (context) => const KaiModulePage(),
+            '/order/success': (context) => const OrderSuccessPage(),
+            '/auth/callback': (context) => const AuthCallbackPage(),
+            '/pages/subscription': (context) => const MarkdownViewer(
+              assetPath: 'assets/markdown/subscription.md',
+              title: 'Ohana Sports Subscription',
+              errorMessage: 'Failed to load Subscription',
+            ),
+          };
+
+          if (routes.containsKey(path)) {
+            return NoTransitionPageRoute(builder: routes[path]!, settings: settings);
+          }
+
+          // 404 - redirect to home
+          return NoTransitionPageRoute(builder: (context) => const HomePage(), settings: settings);
+        },
       ),
     );
   }
