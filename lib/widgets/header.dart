@@ -1,31 +1,24 @@
 // MARK: Mobile AppBar
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:website/strings.dart';
-import 'package:website/utils/beta_access.dart';
 
 class MobileAppBar extends StatefulWidget implements PreferredSizeWidget {
   final VoidCallback? onGetKaiPressed;
   final VoidCallback? onAccountPressed;
   final double height;
 
-  const MobileAppBar({
-    super.key,
-    this.onGetKaiPressed,
-    this.onAccountPressed,
-    this.height = 56.0,
-  });
+  const MobileAppBar({super.key, this.onGetKaiPressed, this.onAccountPressed, this.height = 56.0});
 
   @override
   Size get preferredSize => Size.fromHeight(height);
-  
+
   @override
   State<MobileAppBar> createState() => _MobileAppBarState();
 }
 
 class _MobileAppBarState extends State<MobileAppBar> {
-  
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -34,18 +27,11 @@ class _MobileAppBarState extends State<MobileAppBar> {
       backgroundColor: Colors.transparent,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1.0),
-        child: Container(
-          color: Colors.grey[300],
-          height: 1.0,
-        ),
+        child: Container(color: Colors.grey[300], height: 1.0),
       ),
       flexibleSpace: AnimatedContainer(
         duration: const Duration(milliseconds: 100),
-        child: ClipRect(
-          child: Container(
-            color: Colors.white,
-          ),
-        ),
+        child: ClipRect(child: Container(color: Colors.white)),
       ),
       title: Text(
         Strings.navMain,
@@ -58,8 +44,10 @@ class _MobileAppBarState extends State<MobileAppBar> {
           child: FilledButton(
             onPressed: widget.onGetKaiPressed,
             child: Text(
-              context.watch<BetaAccess>().isEnabled ? Strings.navOrderKai : Strings.navGetKai,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+              Strings.navOrderKai,
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -78,11 +66,23 @@ class GlassHeader extends StatelessWidget {
   final VoidCallback? onLogoPressed;
   final VoidCallback? onCartPressed;
   final int cartCount;
-  const GlassHeader({super.key, this.onGetKaiPressed, this.onAccountPressed, this.onClubsPressed, this.onPlayersPressed, this.onHowItWorksPressed, this.onLogoPressed, this.onCartPressed, this.cartCount = 0});
+  const GlassHeader({
+    super.key,
+    this.onGetKaiPressed,
+    this.onAccountPressed,
+    this.onClubsPressed,
+    this.onPlayersPressed,
+    this.onHowItWorksPressed,
+    this.onLogoPressed,
+    this.onCartPressed,
+    this.cartCount = 0,
+  });
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 8, left: 0, right: 0,
+      top: 8,
+      left: 0,
+      right: 0,
       child: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -110,11 +110,11 @@ class GlassHeader extends StatelessWidget {
                           textDirection: TextDirection.ltr,
                         );
                         textPainter.layout();
-                        
+
                         // Add some padding (16px per item for padding and margins)
                         final totalWidth = textPainter.width + (4 * 16);
                         final hasEnoughSpace = constraints.maxWidth * 0.50 > totalWidth;
-                        
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30),
                           child: Row(
@@ -123,12 +123,15 @@ class GlassHeader extends StatelessWidget {
                               GestureDetector(
                                 onTap: onLogoPressed,
                                 child: Text(
-                                  Strings.navMain, 
-                                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                                  Strings.navMain,
+                                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                               const Spacer(),
-                              
+
                               // Navigation items
                               if (hasEnoughSpace) ...[
                                 SizedBox(
@@ -136,48 +139,61 @@ class GlassHeader extends StatelessWidget {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                    TextButton(
-                                      onPressed: onHowItWorksPressed,
-                                      child: Text(Strings.nav1, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-                                    ),
-                                    TextButton(
-                                      onPressed: onClubsPressed,
-                                      child: Text(Strings.nav2, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-                                    ),
-                                    TextButton(
-                                      onPressed: onPlayersPressed,
-                                      child: Text(Strings.nav3, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pushNamed('/about'),
-                                      child: Text(Strings.nav4, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-                                    ),
+                                      TextButton(
+                                        onPressed: onHowItWorksPressed,
+                                        child: Text(
+                                          Strings.nav1,
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: onClubsPressed,
+                                        child: Text(
+                                          Strings.nav2,
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: onPlayersPressed,
+                                        child: Text(
+                                          Strings.nav3,
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pushNamed('/about'),
+                                        child: Text(
+                                          Strings.nav4,
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
                               ],
-                              
+
                               // Get Kai button
                               FilledButton(
                                 onPressed: onGetKaiPressed,
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-                                  child: Text(context.watch<BetaAccess>().isEnabled ? Strings.navOrderKai : Strings.navGetKai, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
+                                  child: Text(
+                                    Strings.navOrderKai,
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              // Cart icon with badge (beta-only)
-                              if (context.watch<BetaAccess>().isEnabled)
-                                Badge(
-                                  isLabelVisible: cartCount > 0,
-                                  label: Text('$cartCount'),
-                                  child: IconButton(
-                                    onPressed: onCartPressed,
-                                    icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
-                                    tooltip: 'Cart',
-                                  ),
+                              Badge(
+                                isLabelVisible: cartCount > 0,
+                                label: Text('$cartCount'),
+                                child: IconButton(
+                                  onPressed: onCartPressed,
+                                  icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
+                                  tooltip: 'Cart',
                                 ),
-                              if (context.watch<BetaAccess>().isEnabled) const SizedBox(width: 4),
+                              ),
+                              const SizedBox(width: 4),
                             ],
                           ),
                         );

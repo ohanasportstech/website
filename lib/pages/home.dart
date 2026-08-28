@@ -12,7 +12,7 @@ import '../widgets/quilt_grid.dart';
 import '../widgets/feature_section.dart';
 import '../widgets/loop_video.dart';
 import '../strings.dart';
-import '../utils/beta_access.dart';
+
 import '../utils/turnstile.dart';
 
 class HomePage extends StatefulWidget {
@@ -72,11 +72,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _handleGetKaiPressed(BuildContext context) {
-    if (BetaAccess.enabled) {
-      Navigator.of(context).pushNamed('/kai-module');
-    } else {
-      _scrollToKey(_contactKey);
-    }
+    Navigator.of(context).pushNamed('/kai-module');
   }
 
   @override

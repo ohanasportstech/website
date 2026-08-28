@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:website/widgets/header.dart';
 import 'package:website/widgets/cart.dart' show CartModel, AdminOrg, CartDrawer;
-import 'package:website/utils/beta_access.dart';
 
 class KaiModulePage extends StatefulWidget {
   const KaiModulePage({super.key});
@@ -34,7 +33,6 @@ class _KaiModulePageState extends State<KaiModulePage> {
   @override
   void initState() {
     super.initState();
-    BetaAccess.init();
     _handleTransferToken();
   }
 
@@ -58,8 +56,6 @@ class _KaiModulePageState extends State<KaiModulePage> {
 
         if (user != null && mounted) {
           // Transfer token validated; enable ordering mode.
-          BetaAccess.instance.enable();
-
           final cart = context.read<CartModel>();
           final isOrgAdmin = data['is_org_admin'] as bool? ?? false;
 
@@ -88,70 +84,69 @@ class _KaiModulePageState extends State<KaiModulePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 700;
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: isMobile ? MobileAppBar(onGetKaiPressed: () => Navigator.of(context).pushNamed('/kai-module')) : null,
       body: Stack(
         children: [
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 96,
-            left: 0,
-            right: 0,
-            bottom: 0,
+          MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(0.8)),
             child: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1200),
+                  constraints: const BoxConstraints(maxWidth: 1300),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 40, 24, 48),
+                    padding: EdgeInsets.fromLTRB(
+                      24,
+                      MediaQuery.of(context).padding.top + (isMobile ? 56 : 96) + 40,
+                      24,
+                      48,
+                    ),
                     child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final isMobile = constraints.maxWidth < 800;
+                      builder: (context, constraints) {
+                        final isMobile = constraints.maxWidth < 800;
 
-                      final imageSection = _buildImageSection();
-                      final detailsSection = _buildDetailsSection();
+                        final imageSection = _buildImageSection();
+                        final detailsSection = _buildDetailsSection();
 
-                      if (isMobile) {
-                        return Column(
+                        if (isMobile) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [imageSection, const SizedBox(height: 32), detailsSection],
+                          );
+                        }
+
+                        return Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            imageSection,
-                            const SizedBox(height: 32),
-                            detailsSection,
+                            Expanded(flex: 6, child: imageSection),
+                            const SizedBox(width: 56),
+                            Expanded(flex: 5, child: detailsSection),
                           ],
                         );
-                      }
-
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(child: imageSection),
-                          const SizedBox(width: 56),
-                          Expanded(child: detailsSection),
-                        ],
-                      );
-                    },
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
+          ),
+          if (!isMobile)
+            GlassHeader(
+              onLogoPressed: () => Navigator.of(context).pushNamed('/'),
+              onGetKaiPressed: () => Navigator.of(context).pushNamed('/kai-module'),
+              onHowItWorksPressed: () => Navigator.of(context).pushNamed('/?section=how-it-works'),
+              onClubsPressed: () => Navigator.of(context).pushNamed('/?section=clubs'),
+              onPlayersPressed: () => Navigator.of(context).pushNamed('/?section=players'),
+              onCartPressed: () => setState(() => _cartOpen = true),
+              cartCount: context.watch<CartModel>().quantity,
             ),
-          ),
-          GlassHeader(
-            onLogoPressed: () => Navigator.of(context).pushNamed('/'),
-            onGetKaiPressed: () => Navigator.of(context).pushNamed('/kai-module'),
-            onHowItWorksPressed: () => Navigator.of(context).pushNamed('/?section=how-it-works'),
-            onClubsPressed: () => Navigator.of(context).pushNamed('/?section=clubs'),
-            onPlayersPressed: () => Navigator.of(context).pushNamed('/?section=players'),
-            onCartPressed: () => setState(() => _cartOpen = true),
-            cartCount: context.watch<CartModel>().quantity,
-          ),
-          if (_cartOpen)
-            CartDrawer(onClose: () => setState(() => _cartOpen = false)),
+          if (_cartOpen) CartDrawer(onClose: () => setState(() => _cartOpen = false)),
           if (_processingTransfer)
             Container(
               color: Colors.black.withValues(alpha: 0.5),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             ),
         ],
       ),
@@ -160,12 +155,17 @@ class _KaiModulePageState extends State<KaiModulePage> {
 
   Widget _buildBulletItem(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.all(2),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.circle, size: 8, color: Colors.black87),
           const SizedBox(width: 8),
-          Text(text, style: Theme.of(context).textTheme.bodyLarge),
+          Padding(
+            padding: const EdgeInsets.only(top: 7),
+            child: Icon(Icons.circle, size: 6, color: Colors.black87),
+          ),
+          const SizedBox(width: 8),
+          Expanded(child: Text(text, style: Theme.of(context).textTheme.bodyLarge)),
         ],
       ),
     );
@@ -179,19 +179,11 @@ class _KaiModulePageState extends State<KaiModulePage> {
           aspectRatio: 4 / 3,
           child: Container(
             clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(12),
-            ),
+            decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(12)),
             child: Stack(
               children: [
                 // Product image carousel
-                Positioned.fill(
-                  child: Image.asset(
-                    _productImages[_currentImageIndex],
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                Positioned.fill(child: Image.asset(_productImages[_currentImageIndex], fit: BoxFit.cover)),
                 // Navigation arrows
                 Positioned(
                   left: 12,
@@ -200,9 +192,7 @@ class _KaiModulePageState extends State<KaiModulePage> {
                   child: Align(
                     alignment: Alignment.center,
                     child: IconButton(
-                      onPressed: _currentImageIndex > 0
-                          ? () => setState(() => _currentImageIndex--)
-                          : null,
+                      onPressed: _currentImageIndex > 0 ? () => setState(() => _currentImageIndex--) : null,
                       icon: const Icon(Icons.chevron_left),
                     ),
                   ),
@@ -245,9 +235,7 @@ class _KaiModulePageState extends State<KaiModulePage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
-                        color: selected
-                            ? Theme.of(context).colorScheme.primary
-                            : Colors.transparent,
+                        color: selected ? Theme.of(context).colorScheme.primary : Colors.transparent,
                         width: 2,
                       ),
                     ),
@@ -274,157 +262,97 @@ class _KaiModulePageState extends State<KaiModulePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Product name
-        Text(
-          'KAI Module',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 16),
+        Text('KAI Module', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
 
         // Price
         Text(
           '\$399',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 18),
 
         // Description
         Text(
-          'Kai turns your tennis ball machine into a powerful training partner. Compatible with PLAYMATE iSMASH and iGENIE.',
+          'Upgrade your existing PlayMate® ball machine with smarter training, without replacing the machine you already own.',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 6),
 
-        // What's included
-        Text(
-          'How it works',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+        _buildBulletItem('60 days of full Kai access included, cancel anytime'),
+        _buildBulletItem('Unlimited use for your club’s members and pros'),
+        _buildBulletItem('Works with PlayMate® iGenie and iSmash machines'),
+        _buildBulletItem('One simple upgrade, no new ball machine required'),
+        const SizedBox(height: 18),
+
+        // Pricing and ordering UI
+        Container(
+          padding: const EdgeInsets.all(24),
+          constraints: const BoxConstraints(maxWidth: 520),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('KAI Module', style: Theme.of(context).textTheme.titleLarge),
+                        const SizedBox(height: 8),
+                        Text('\$399', style: Theme.of(context).textTheme.bodyLarge),
+                        const SizedBox(height: 8),
+                        Text(
+                          '12 month warranty\nFree shipping',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.green[700]),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [Image.asset('assets/images/module.png', height: 100, fit: BoxFit.contain)],
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 4),
+              const Divider(),
+              const SizedBox(height: 4),
+              Text(
+                'Subscription Pricing: 1st module \$199/mo, 2nd \$149/mo, 3rd+ \$99/mo each',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '60-day free trial for new customers',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.green[700]),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-        _buildBulletItem('Install the KAI Module on your ball machine'),
-        _buildBulletItem('Download the app and connect via Bluetooth'),
-        _buildBulletItem('Train with over 60 drills and exercises'),
-        _buildBulletItem('Track your progress and improve your game'),
         const SizedBox(height: 32),
-
-        // Pricing and ordering UI (beta-only)
-        if (context.watch<BetaAccess>().isEnabled) ...[
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Pricing',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hardware',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Text(
-                            '\$399 per module',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Subscription',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Text(
-                            'From \$199/mo',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          Text(
-                            '60-day free trial',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.green[700],
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const Divider(),
-                const SizedBox(height: 8),
-                Text(
-                  'Tiered pricing: 1st module \$199/mo, 2nd \$149/mo, 3rd+ \$99/mo each',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
+        SizedBox(
+          width: 520,
+          height: 56,
+          child: FilledButton(
+            onPressed: () {
+              context.read<CartModel>().addOne();
+              setState(() => _cartOpen = true);
+            },
+            child: const Text('Add to Cart', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           ),
-          const SizedBox(height: 32),
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: FilledButton(
-              onPressed: () {
-                context.read<CartModel>().addOne();
-                setState(() => _cartOpen = true);
-              },
-              child: const Text(
-                'Add to Cart',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ] else ...[
-          // Public-facing message until ordering is ready
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Coming Soon',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'The Kai Module will be available for purchase in Summer 2026. Join the waitlist to be the first to know when ordering opens.',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ],
     );
   }
