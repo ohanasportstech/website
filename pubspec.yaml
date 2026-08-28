@@ -76,4 +76,4 @@ flutter:
   fonts:
     - family: Inter
       fonts:
-        - asset: assets/fonts/Inter.ttf
+        - asset: fonts/Inter.ttf
