@@ -164,13 +164,6 @@ class MyApp extends StatelessWidget {
             );
           }
 
-          // Handle static routes
-          // Ordering routes are gated behind the beta feature flag in production.
-          final orderingRoutes = {'/order/success'};
-          if (orderingRoutes.contains(path) && !BetaAccess.enabled) {
-            return MaterialPageRoute(builder: (context) => const HomePage(), settings: settings);
-          }
-
           final routes = {
             '/': (context) => const HomePage(),
             '/about': (context) => const AboutPage(),
@@ -184,10 +177,20 @@ class MyApp extends StatelessWidget {
               title: 'Ohana Sports Terms of Use',
               errorMessage: 'Failed to load Terms of Use',
             ),
-            '/docs/club-agreement': (context) => const MarkdownViewer(
-              assetPath: 'assets/markdown/club-agreement.md',
-              title: 'Ohana Sports Club Agreement',
-              errorMessage: 'Failed to load Club Agreement',
+            '/docs/terms-of-purchase': (context) => const MarkdownViewer(
+              assetPath: 'assets/markdown/terms-of-purchase.md',
+              title: 'Ohana Sports Terms of Purchase',
+              errorMessage: 'Failed to load Terms of Purchase',
+            ),
+            '/docs/copyright-policy': (context) => const MarkdownViewer(
+              assetPath: 'assets/markdown/copyright-policy.md',
+              title: 'Ohana Sports Copyright and DMCA Policy',
+              errorMessage: 'Failed to load Copyright and DMCA Policy',
+            ),
+            '/docs/warranty': (context) => const MarkdownViewer(
+              assetPath: 'assets/markdown/warranty.md',
+              title: 'Ohana Sports Warranty',
+              errorMessage: 'Failed to load Warranty',
             ),
             '/pages/data-deletion': (context) => const MarkdownViewer(
               assetPath: 'assets/markdown/data-deletion.md',
