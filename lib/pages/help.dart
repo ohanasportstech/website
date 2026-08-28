@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:website/utils/help_doc.dart';
+import 'package:website/widgets/header.dart';
+import 'package:website/widgets/cart.dart' show CartModel, CartDrawer;
 
 const _kaiBlue = Color(0xFF0077C8);
 const _kaiInk = Color(0xFF0A1A2B);
@@ -67,11 +70,15 @@ class _HelpPageState extends State<HelpPage> {
   HelpAudience _audience = HelpAudience.all;
   String _query = '';
   bool _showBackToTop = false;
+  bool _cartOpen = false;
+  String? _initialSection;
+  bool _hasScrolledToInitialSection = false;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _initialSection = Uri.base.queryParameters['section'];
   }
 
   @override
@@ -119,14 +126,34 @@ class _HelpPageState extends State<HelpPage> {
 
   void _scrollTo(HelpSection section) {
     final key = _sectionKeys[section.title];
-    final context = key?.currentContext;
-    if (context == null) return;
-    Scrollable.ensureVisible(
-      context,
-      duration: const Duration(milliseconds: 450),
-      curve: Curves.easeInOutCubic,
-      alignment: 0.05,
+    final ctx = key?.currentContext;
+    if (ctx == null) return;
+
+    final renderBox = ctx.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    // Get the widget's position relative to the scroll view.
+    final scrollableState = Scrollable.of(ctx);
+    final scrollPosition = scrollableState.position;
+    final targetOffset = renderBox.localToGlobal(Offset.zero, ancestor: scrollableState.context.findRenderObject());
+
+    // Leave space for the glass header.
+    const headerClearance = 120.0;
+    final destination = (scrollPosition.pixels + targetOffset.dy - headerClearance).clamp(
+      scrollPosition.minScrollExtent,
+      scrollPosition.maxScrollExtent,
     );
+
+    _scrollController.animateTo(destination, duration: const Duration(milliseconds: 450), curve: Curves.easeInOutCubic);
+  }
+
+  void _maybeScrollToInitialSection(List<HelpSection> sections) {
+    final target = _initialSection;
+    if (target == null || _hasScrolledToInitialSection) return;
+    final match = sections.where((s) => s.title.toLowerCase() == target.toLowerCase()).firstOrNull;
+    if (match == null) return;
+    _hasScrolledToInitialSection = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollTo(match));
   }
 
   List<HelpSection> _visibleSections(HelpDoc doc) {
@@ -135,7 +162,10 @@ class _HelpPageState extends State<HelpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 700;
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: isMobile ? MobileAppBar(onGetKaiPressed: () => Navigator.of(context).pushNamed('/kai-module')) : null,
       backgroundColor: const Color(0xFFF6F8FB),
       floatingActionButton: _showBackToTop
           ? FloatingActionButton.small(
@@ -150,62 +180,108 @@ class _HelpPageState extends State<HelpPage> {
               child: const Icon(Icons.arrow_upward),
             )
           : null,
-      body: FutureBuilder<HelpDoc>(
-        future: _doc,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(_kaiBlue)));
-          }
-          if (snapshot.hasError || snapshot.data == null) {
-            return const Center(
-              child: Padding(padding: EdgeInsets.all(24), child: Text('Failed to load Help')),
-            );
-          }
+      body: Stack(
+        children: [
+          FutureBuilder<HelpDoc>(
+            future: _doc,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(_kaiBlue)),
+                );
+              }
+              if (snapshot.hasError || snapshot.data == null) {
+                return const Center(
+                  child: Padding(padding: EdgeInsets.all(24), child: Text('Failed to load Help')),
+                );
+              }
 
-          final doc = snapshot.data!;
-          final sections = _visibleSections(doc);
-          final isWide = MediaQuery.sizeOf(context).width >= _wideBreakpoint;
+              final doc = snapshot.data!;
+              final sections = _visibleSections(doc);
+              _maybeScrollToInitialSection(doc.sections);
+              final isWide = MediaQuery.sizeOf(context).width >= _wideBreakpoint;
 
-          return SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-                _Hero(lede: doc.lede, searchController: _searchController, onSearch: _onSearch),
-                Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1180),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(isWide ? 32 : 16, 28, isWide ? 32 : 16, 96),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _AudienceFilter(selected: _audience, onChanged: (value) => setState(() => _audience = value)),
-                          const SizedBox(height: 24),
-                          if (sections.isEmpty)
-                            _EmptyResults(query: _searchController.text)
-                          else if (isWide)
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 260,
-                                  child: _TableOfContents(sections: sections, onSelected: _scrollTo),
+              return SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    SizedBox(height: isMobile ? 56 : MediaQuery.of(context).padding.top + 96),
+                    _Hero(lede: doc.lede, searchController: _searchController, onSearch: _onSearch),
+                    const Divider(height: 1),
+                    Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1180),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(isWide ? 32 : 16, 0, isWide ? 32 : 16, 96),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (sections.isEmpty)
+                                _EmptyResults(query: _searchController.text)
+                              else if (isWide)
+                                IntrinsicHeight(
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          const SizedBox(height: 24),
+                                          SizedBox(
+                                            width: 240,
+                                            child: _TableOfContents(sections: sections, onSelected: _scrollTo),
+                                          ),
+                                        ],
+                                      ),
+                                      const VerticalDivider(width: 1),
+                                      const SizedBox(width: 32),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 24),
+                                            _AudienceFilter(
+                                              selected: _audience,
+                                              onChanged: (value) => setState(() => _audience = value),
+                                            ),
+                                            const SizedBox(height: 24),
+                                            _buildSections(sections),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              else ...[
+                                const SizedBox(height: 24),
+                                _AudienceFilter(
+                                  selected: _audience,
+                                  onChanged: (value) => setState(() => _audience = value),
                                 ),
-                                const SizedBox(width: 32),
-                                Expanded(child: _buildSections(sections)),
+                                const SizedBox(height: 24),
+                                _buildSections(sections),
                               ],
-                            )
-                          else
-                            _buildSections(sections),
-                        ],
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              );
+            },
+          ),
+          if (!isMobile)
+            GlassHeader(
+              onLogoPressed: () => Navigator.of(context).pushNamed('/'),
+              onGetKaiPressed: () => Navigator.of(context).pushNamed('/kai-module'),
+              onHowItWorksPressed: () => Navigator.of(context).pushNamed('/?section=how-it-works'),
+              onClubsPressed: () => Navigator.of(context).pushNamed('/?section=clubs'),
+              onPlayersPressed: () => Navigator.of(context).pushNamed('/?section=players'),
+              onCartPressed: () => setState(() => _cartOpen = true),
+              cartCount: context.watch<CartModel>().quantity,
             ),
-          );
-        },
+          if (_cartOpen) CartDrawer(onClose: () => setState(() => _cartOpen = false)),
+        ],
       ),
     );
   }
@@ -241,78 +317,51 @@ class _Hero extends StatelessWidget {
   Widget build(BuildContext context) {
     final isWide = MediaQuery.sizeOf(context).width >= _wideBreakpoint;
 
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [_kaiInk, _kaiBlue]),
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1180),
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(isWide ? 32 : 20, isWide ? 72 : 44, isWide ? 32 : 20, isWide ? 56 : 36),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextButton.icon(
-                  onPressed: () => Navigator.of(context).canPop()
-                      ? Navigator.of(context).pop()
-                      : Navigator.of(context).pushNamed('/'),
-                  icon: const Icon(Icons.arrow_back, color: Colors.white70),
-                  label: const Text('Kai Tennis', style: TextStyle(color: Colors.white70)),
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1300),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(isWide ? 32 : 20, 40, isWide ? 32 : 20, isWide ? 56 : 36),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Help Center',
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 12),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 720),
+                child: Text(lede.replaceAll('\n', ' '), style: Theme.of(context).textTheme.titleMedium),
+              ),
+              const SizedBox(height: 28),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 520),
+                child: TextField(
+                  controller: searchController,
+                  onChanged: onSearch,
+                  style: const TextStyle(color: _kaiInk),
+                  decoration: InputDecoration(
+                    hintText: 'Search help — drills, sharing, Bluetooth…',
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: searchController.text.isEmpty
+                        ? null
+                        : IconButton(
+                            icon: const Icon(Icons.close),
+                            tooltip: 'Clear search',
+                            onPressed: () {
+                              searchController.clear();
+                              onSearch('');
+                            },
+                          ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  'Help Center',
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -1,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 720),
-                  child: Text(
-                    lede,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleMedium?.copyWith(color: Colors.white.withValues(alpha: 0.85), height: 1.6),
-                  ),
-                ),
-                const SizedBox(height: 28),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 520),
-                  child: TextField(
-                    controller: searchController,
-                    onChanged: onSearch,
-                    style: const TextStyle(color: _kaiInk),
-                    decoration: InputDecoration(
-                      hintText: 'Search help — drills, sharing, Bluetooth…',
-                      prefixIcon: const Icon(Icons.search),
-                      suffixIcon: searchController.text.isEmpty
-                          ? null
-                          : IconButton(
-                              icon: const Icon(Icons.close),
-                              tooltip: 'Clear search',
-                              onPressed: () {
-                                searchController.clear();
-                                onSearch('');
-                              },
-                            ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -369,42 +418,27 @@ class _TableOfContents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.black12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(12, 8, 12, 12),
-            child: Text(
-              'On this page',
-              style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black54, letterSpacing: 0.4),
-            ),
-          ),
-          for (final section in sections)
-            InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: () => onSelected(section),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                child: Row(
-                  children: [
-                    SizedBox(width: 20, child: Center(child: _helpIcon(section.iconName, size: 18))),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(section.title, style: const TextStyle(fontWeight: FontWeight.w600, height: 1.3)),
-                    ),
-                  ],
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final section in sections)
+          InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: () => onSelected(section),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              child: Row(
+                children: [
+                  SizedBox(width: 20, child: Center(child: _helpIcon(section.iconName, size: 18))),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(section.title, style: const TextStyle(fontWeight: FontWeight.w600, height: 1.3)),
+                  ),
+                ],
               ),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }

@@ -62,46 +62,48 @@ class MarkdownViewer extends StatelessWidget {
                   ),
                 );
               }
-              return Markdown(
-                data: snapshot.data ?? '',
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 96),
-                onTapLink: (text, href, title) async {
-                  if (href == null) return;
-                  final uri = Uri.parse(href);
-                  if (uri.hasScheme) {
-                    // Absolute URL (http, https, mailto, etc.) - open externally.
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(uri);
+              return SelectionArea(
+                child: Markdown(
+                  data: snapshot.data ?? '',
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 96),
+                  onTapLink: (text, href, title) async {
+                    if (href == null) return;
+                    final uri = Uri.parse(href);
+                    if (uri.hasScheme) {
+                      // Absolute URL (http, https, mailto, etc.) - open externally.
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      }
+                    } else {
+                      // Relative link to another in-app page (e.g. /docs/terms-of-purchase/).
+                      Navigator.of(context).pushNamed(href);
                     }
-                  } else {
-                    // Relative link to another in-app page (e.g. /docs/club-agreement/).
-                    Navigator.of(context).pushNamed(href);
-                  }
-                },
-                styleSheet: MarkdownStyleSheet(
-                  p: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.75, color: Colors.black87),
-                  pPadding: const EdgeInsets.only(bottom: 4.0),
-                  blockSpacing: 4.0,
-                  h1: Theme.of(
-                    context,
-                  ).textTheme.headlineLarge?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
-                  h1Padding: const EdgeInsets.only(top: 32.0),
-                  h2: Theme.of(
-                    context,
-                  ).textTheme.headlineSmall?.copyWith(color: Colors.black, fontWeight: FontWeight.w600),
-                  h2Padding: const EdgeInsets.only(top: 32.0),
-                  h3: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(color: Colors.black87, fontWeight: FontWeight.w500),
-                  h3Padding: const EdgeInsets.only(top: 32.0),
-                  h4: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(color: Colors.black87, fontWeight: FontWeight.w500),
-                  h4Padding: const EdgeInsets.only(top: 32.0),
-                  listIndent: 24.0, // Indentation for lists
-                  listBulletPadding: const EdgeInsets.only(right: 8.0), // Space after list bullets
-                  a: const TextStyle(color: Colors.blue),
-                  code: const TextStyle(backgroundColor: Color(0xFFf5f5f5)),
+                  },
+                  styleSheet: MarkdownStyleSheet(
+                    p: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.75, color: Colors.black87),
+                    pPadding: const EdgeInsets.only(bottom: 4.0),
+                    blockSpacing: 4.0,
+                    h1: Theme.of(
+                      context,
+                    ).textTheme.headlineLarge?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                    h1Padding: const EdgeInsets.only(top: 32.0),
+                    h2: Theme.of(
+                      context,
+                    ).textTheme.headlineSmall?.copyWith(color: Colors.black, fontWeight: FontWeight.w600),
+                    h2Padding: const EdgeInsets.only(top: 32.0),
+                    h3: Theme.of(
+                      context,
+                    ).textTheme.titleLarge?.copyWith(color: Colors.black87, fontWeight: FontWeight.w500),
+                    h3Padding: const EdgeInsets.only(top: 32.0),
+                    h4: Theme.of(
+                      context,
+                    ).textTheme.titleLarge?.copyWith(color: Colors.black87, fontWeight: FontWeight.w500),
+                    h4Padding: const EdgeInsets.only(top: 32.0),
+                    listIndent: 24.0, // Indentation for lists
+                    listBulletPadding: const EdgeInsets.only(right: 8.0), // Space after list bullets
+                    a: const TextStyle(color: Colors.blue),
+                    code: const TextStyle(backgroundColor: Color(0xFFf5f5f5)),
+                  ),
                 ),
               );
             },
