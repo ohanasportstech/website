@@ -6,6 +6,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:web/web.dart' as web;
 
 // ---------------------------------------------------------------------------
+// BillingCommitment
+// ---------------------------------------------------------------------------
+
+enum BillingCommitment { monthly, annual }
+
+// ---------------------------------------------------------------------------
 // AdminOrg — represents an organization the user is admin of
 // ---------------------------------------------------------------------------
 
@@ -18,6 +24,7 @@ class AdminOrg {
   final bool cancelAtPeriodEnd;
   final int stripeSubscriptionQty;
   final int moduleCount;
+  final BillingCommitment billingCommitment;
 
   AdminOrg({
     required this.orgId,
@@ -28,10 +35,12 @@ class AdminOrg {
     this.cancelAtPeriodEnd = false,
     this.stripeSubscriptionQty = 0,
     this.moduleCount = 0,
+    this.billingCommitment = BillingCommitment.monthly,
   });
 
   factory AdminOrg.fromJson(Map<String, dynamic> json) {
     final subEndStr = json['sub_end'] as String?;
+    final commitment = json['billing_commitment'] as String?;
     return AdminOrg(
       orgId: json['org_id'] as String,
       orgName: json['org_name'] as String,
@@ -41,11 +50,16 @@ class AdminOrg {
       cancelAtPeriodEnd: json['cancel_at_period_end'] as bool? ?? false,
       stripeSubscriptionQty: json['stripe_subscription_qty'] as int? ?? 0,
       moduleCount: json['module_count'] as int? ?? 0,
+      billingCommitment: commitment == 'annual' ? BillingCommitment.annual : BillingCommitment.monthly,
     );
   }
 
-  bool get isExistingCustomer =>
-      stripeCustomerId != null && stripeCustomerId!.isNotEmpty;
+  bool get isExistingCustomer => stripeCustomerId != null && stripeCustomerId!.isNotEmpty;
+
+  bool get hasActiveSubscription {
+    final status = billingStatus?.toLowerCase();
+    return isExistingCustomer && (status == 'active' || status == 'trialing');
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -57,12 +71,18 @@ class PricingConfig {
   final int subTier1PriceCents;
   final int subTier2PriceCents;
   final int subTier3PriceCents;
+  final int subTier1AnnualPriceCents;
+  final int subTier2AnnualPriceCents;
+  final int subTier3AnnualPriceCents;
 
   const PricingConfig({
     required this.hardwarePriceCents,
     required this.subTier1PriceCents,
     required this.subTier2PriceCents,
     required this.subTier3PriceCents,
+    required this.subTier1AnnualPriceCents,
+    required this.subTier2AnnualPriceCents,
+    required this.subTier3AnnualPriceCents,
   });
 
   static const PricingConfig defaults = PricingConfig(
@@ -70,6 +90,9 @@ class PricingConfig {
     subTier1PriceCents: 19900,
     subTier2PriceCents: 14900,
     subTier3PriceCents: 9900,
+    subTier1AnnualPriceCents: 199000,
+    subTier2AnnualPriceCents: 149000,
+    subTier3AnnualPriceCents: 99000,
   );
 
   factory PricingConfig.fromJson(Map<String, dynamic> json) {
@@ -78,14 +101,25 @@ class PricingConfig {
       subTier1PriceCents: json['sub_tier1_price_cents'] as int? ?? 19900,
       subTier2PriceCents: json['sub_tier2_price_cents'] as int? ?? 14900,
       subTier3PriceCents: json['sub_tier3_price_cents'] as int? ?? 9900,
+      subTier1AnnualPriceCents: json['sub_tier1_annual_price_cents'] as int? ?? 199000,
+      subTier2AnnualPriceCents: json['sub_tier2_annual_price_cents'] as int? ?? 149000,
+      subTier3AnnualPriceCents: json['sub_tier3_annual_price_cents'] as int? ?? 99000,
     );
   }
 
-  int calculateMonthlyCents(int qty) {
+  int costCents(int qty, BillingCommitment commitment) {
     if (qty <= 0) return 0;
-    if (qty == 1) return subTier1PriceCents;
-    if (qty == 2) return subTier1PriceCents + subTier2PriceCents;
-    return subTier1PriceCents + subTier2PriceCents + (qty - 2) * subTier3PriceCents;
+    final t1 = commitment == BillingCommitment.annual ? subTier1AnnualPriceCents : subTier1PriceCents;
+    final t2 = commitment == BillingCommitment.annual ? subTier2AnnualPriceCents : subTier2PriceCents;
+    final t3 = commitment == BillingCommitment.annual ? subTier3AnnualPriceCents : subTier3PriceCents;
+    if (qty == 1) return t1;
+    if (qty == 2) return t1 + t2;
+    return t1 + t2 + (qty - 2) * t3;
+  }
+
+  int effectiveMonthlyCents(int qty) {
+    if (qty <= 0) return 0;
+    return (costCents(qty, BillingCommitment.annual) / 12).round();
   }
 }
 
@@ -103,6 +137,8 @@ class CartModel extends ChangeNotifier {
   bool _isTransferredSession = false;
   bool _isTransferredOrgAdmin = false;
   String? _transferToken;
+  BillingCommitment _billingCommitment = BillingCommitment.monthly;
+  bool _commitmentLocked = false;
 
   int get quantity => _quantity;
   bool get isEmpty => _quantity == 0;
@@ -110,15 +146,14 @@ class CartModel extends ChangeNotifier {
   bool get showVolumeMessage => _showVolumeMessage;
   List<AdminOrg> get adminOrgs => _adminOrgs;
   String? get selectedOrgId => _selectedOrgId;
-  AdminOrg? get selectedOrg =>
-      _selectedOrgId != null
-          ? _adminOrgs.firstWhere((o) => o.orgId == _selectedOrgId)
-          : null;
+  AdminOrg? get selectedOrg => _selectedOrgId != null ? _adminOrgs.firstWhere((o) => o.orgId == _selectedOrgId) : null;
   PricingConfig get pricing => _pricing;
   String? get transferredUserEmail => _transferredUserEmail;
   bool get isTransferredSession => _isTransferredSession;
   bool get isTransferredOrgAdmin => _isTransferredOrgAdmin;
   String? get transferToken => _transferToken;
+  BillingCommitment get billingCommitment => _billingCommitment;
+  bool get commitmentLocked => _commitmentLocked;
 
   static const int maxQuantity = 5;
 
@@ -147,12 +182,30 @@ class CartModel extends ChangeNotifier {
     _adminOrgs = orgs;
     if (orgs.length == 1) {
       _selectedOrgId = orgs.first.orgId;
+      _resolveCommitment(orgs.first);
     }
     notifyListeners();
   }
 
   void setSelectedOrgId(String? orgId) {
     _selectedOrgId = orgId;
+    final org = _adminOrgs.where((o) => o.orgId == orgId).firstOrNull;
+    if (org != null) {
+      _resolveCommitment(org);
+    } else {
+      _commitmentLocked = false;
+    }
+    notifyListeners();
+  }
+
+  void _resolveCommitment(AdminOrg org) {
+    _billingCommitment = org.billingCommitment;
+    _commitmentLocked = org.hasActiveSubscription;
+  }
+
+  void setBillingCommitment(BillingCommitment commitment) {
+    if (_commitmentLocked) return;
+    _billingCommitment = commitment;
     notifyListeners();
   }
 
@@ -177,6 +230,8 @@ class CartModel extends ChangeNotifier {
     _isTransferredSession = false;
     _isTransferredOrgAdmin = false;
     _transferToken = null;
+    _billingCommitment = BillingCommitment.monthly;
+    _commitmentLocked = false;
     notifyListeners();
   }
 }
@@ -230,10 +285,8 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
 
   int _hardwareTotal(int qty) => 399 * qty;
 
-  int _monthlySubscription(int qty) {
-    if (qty == 1) return 199;
-    if (qty == 2) return 199 + 149;
-    return 199 + 149 + ((qty - 2) * 99);
+  String _formatCents(int cents) {
+    return '\$${(cents / 100).toStringAsFixed(cents % 100 == 0 ? 0 : 2)}';
   }
 
   @override
@@ -285,9 +338,7 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
 
   Future<void> _loadPricing(CartModel cart) async {
     try {
-      final pricingResponse = await Supabase.instance.client
-          .schema('ost_admin_public')
-          .rpc('config_get_pricing');
+      final pricingResponse = await Supabase.instance.client.schema('ost_admin_public').rpc('config_get_pricing');
       final pricingList = pricingResponse as List?;
       if (pricingList != null && pricingList.isNotEmpty) {
         cart.setPricing(PricingConfig.fromJson(pricingList.first as Map<String, dynamic>));
@@ -300,14 +351,10 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
   Future<void> _loadUserOrgs(CartModel cart) async {
     try {
       // Load admin orgs from Supabase for authenticated users
-      final orgsResponse = await Supabase.instance.client
-          .schema('ost_admin_public')
-          .rpc('user_get_admin_orgs');
+      final orgsResponse = await Supabase.instance.client.schema('ost_admin_public').rpc('user_get_admin_orgs');
 
       if (orgsResponse != null) {
-        final orgs = (orgsResponse as List)
-            .map((o) => AdminOrg.fromJson(o as Map<String, dynamic>))
-            .toList();
+        final orgs = (orgsResponse as List).map((o) => AdminOrg.fromJson(o as Map<String, dynamic>)).toList();
         cart.setAdminOrgs(orgs);
       }
     } catch (e) {
@@ -336,8 +383,9 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
         // Returning admin banner (only for non-logged-in users)
         if (!_isLoggedIn(context) && _showReturningAdminBanner)
           MaterialBanner(
-            content: const Text(
+            content: Text(
               'Already using Kai? Order additional modules from the app to take advantage of tiered subscription pricing.',
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             actions: [
               IconButton(
@@ -414,25 +462,19 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
               const SizedBox(height: 24),
 
               // Module quantity selector
-              Text('Module Quantity', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
+              Text('Kai Module', style: Theme.of(context).textTheme.titleMedium),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   IconButton(
-                    onPressed: qty > 1
-                        ? () => cart.setQuantity(qty - 1)
-                        : null,
+                    onPressed: qty > 1 ? () => cart.setQuantity(qty - 1) : null,
                     icon: const Icon(Icons.remove),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text('$qty', style: Theme.of(context).textTheme.headlineSmall),
                   ),
-                  IconButton(
-                    onPressed: () => cart.addOne(),
-                    icon: const Icon(Icons.add),
-                  ),
+                  IconButton(onPressed: () => cart.addOne(), icon: const Icon(Icons.add)),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Visibility(
@@ -445,15 +487,13 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: Theme.of(context).colorScheme.outlineVariant,
-                          ),
+                          border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
                         ),
                         child: RichText(
                           text: TextSpan(
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                ),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                             children: const [
                               TextSpan(text: 'For more than 5 modules, please contact us at '),
                               TextSpan(
@@ -469,6 +509,15 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
                   ),
                 ],
               ),
+              const SizedBox(height: 16),
+
+              // Commitment selector — hidden when an active subscriber's plan is locked
+              Text('Subscription', style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              if (cart.commitmentLocked && cart.selectedOrg != null)
+                _buildLockedCommitmentBadge(cart)
+              else
+                _buildCommitmentSelector(cart),
               const SizedBox(height: 32),
 
               // Live pricing display
@@ -483,71 +532,42 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
                   children: [
                     Text(
                       'Order Summary',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
-                    _buildPriceRow(
-                      'Hardware',
-                      '\$399 × $qty',
-                      '\$${_hardwareTotal(qty)}',
-                    ),
+                    _buildPriceRow('Kai Module', '\$399 × $qty', '\$${_hardwareTotal(qty)}'),
                     const SizedBox(height: 8),
                     // Show tiered pricing breakdown for logged-in users
                     if (_isLoggedIn(context) && cart.selectedOrg != null)
                       _buildLoggedInPricing(cart)
                     else
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildPriceRow(
-                            'Monthly Subscription',
-                            qty == 1
-                                ? '\$199/mo'
-                                : qty == 2
-                                    ? '\$199 + \$149/mo'
-                                    : '\$199 + \$149 + ${qty - 2}×\$99/mo',
-                            '\$${_monthlySubscription(qty)}/mo',
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '60-day free trial, then monthly billing',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.green[700],
-                                ),
-                          ),
-                        ],
-                      ),
+                      _buildNewCustomerPricing(cart),
                     const Divider(height: 24),
-                    _buildPriceRow(
-                      'Subtotal Due Today',
-                      '',
-                      '\$${_hardwareTotal(qty)}',
-                      isBold: true,
-                    ),
+                    _buildPriceRow('Subtotal Due Today', '', '\$${_hardwareTotal(qty)}', isBold: true),
                   ],
                 ),
               ),
               const SizedBox(height: 32),
 
               // CTA - disabled if logged in but no org selected
-              Builder(builder: (context) {
-                final canCheckout = !_isLoggedIn(context) || cart.selectedOrgId != null;
-                return SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: FilledButton(
-                    onPressed: (_loading || !canCheckout) ? null : _continueToCheckout,
-                    child: _loading
-                        ? const CircularProgressIndicator()
-                        : const Text(
-                            'Continue to Checkout',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                  ),
-                );
-              }),
+              Builder(
+                builder: (context) {
+                  final canCheckout = !_isLoggedIn(context) || cart.selectedOrgId != null;
+                  return SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: FilledButton(
+                      onPressed: (_loading || !canCheckout) ? null : _continueToCheckout,
+                      child: _loading
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              'Continue to Checkout',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -569,16 +589,114 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
             children: [
               Text(label, style: style),
               if (detail.isNotEmpty)
-                Text(
-                  detail,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-                ),
+                Text(detail, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
             ],
           ),
         ),
         Text(value, style: style),
       ],
     );
+  }
+
+  Widget _buildCommitmentSelector(CartModel cart) {
+    final isAnnual = cart.billingCommitment == BillingCommitment.annual;
+    final pricing = cart.pricing;
+    final qty = cart.quantity;
+    final monthlyTotal = pricing.costCents(qty, BillingCommitment.monthly);
+    final annualTotal = pricing.costCents(qty, BillingCommitment.annual);
+    final savings = monthlyTotal * 12 - annualTotal;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final monthlyCard = _CommitmentCard(
+              title: 'Monthly Plan',
+              subtitle: 'Cancel anytime',
+              price: '${_formatCents(monthlyTotal)}/month',
+              selected: !isAnnual,
+              onTap: () => cart.setBillingCommitment(BillingCommitment.monthly),
+            );
+            final annualCard = _CommitmentCard(
+              title: 'Annual Plan',
+              subtitle: savings > 0 ? 'Save ${_formatCents(savings)}/year' : 'Billed annually',
+              price: '${_formatCents(annualTotal)}/year',
+              selected: isAnnual,
+              onTap: () => cart.setBillingCommitment(BillingCommitment.annual),
+            );
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: monthlyCard),
+                const SizedBox(width: 12),
+                Expanded(child: annualCard),
+              ],
+            );
+          },
+        ),
+        const SizedBox(height: 8),
+        Text(
+          isAnnual ? '60-day free trial, then annual billing' : '60-day free trial, then monthly billing',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.green[700]),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLockedCommitmentBadge(CartModel cart) {
+    final isAnnual = cart.billingCommitment == BillingCommitment.annual;
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Additional modules will be added to your existing ${isAnnual ? 'annual' : 'monthly'} plan, using tiered pricing. When activated, your club will be charged on a prorated basis for the remaining time on your current plan.',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNewCustomerPricing(CartModel cart) {
+    final qty = cart.quantity;
+    final commitment = cart.billingCommitment;
+    final totalCents = cart.pricing.costCents(qty, commitment);
+    final isAnnual = commitment == BillingCommitment.annual;
+    final detail = _subscriptionDetailText(qty, commitment, cart.pricing);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildPriceRow(
+          isAnnual ? 'Annual Plan' : 'Monthly Plan',
+          detail,
+          isAnnual ? '${_formatCents(totalCents)}/yr' : '${_formatCents(totalCents)}/mo',
+        ),
+      ],
+    );
+  }
+
+  String _subscriptionDetailText(int qty, BillingCommitment commitment, PricingConfig pricing) {
+    final t1 =
+        (commitment == BillingCommitment.annual ? pricing.subTier1AnnualPriceCents : pricing.subTier1PriceCents) ~/ 100;
+    final t2 =
+        (commitment == BillingCommitment.annual ? pricing.subTier2AnnualPriceCents : pricing.subTier2PriceCents) ~/ 100;
+    final t3 =
+        (commitment == BillingCommitment.annual ? pricing.subTier3AnnualPriceCents : pricing.subTier3PriceCents) ~/ 100;
+    final t4 = commitment == BillingCommitment.annual ? '/yr' : '/mo';
+    if (qty <= 0) return '';
+    if (qty == 1) return '\$$t1$t4';
+    if (qty == 2) return '\$$t1 + \$$t2$t4';
+    return '\$$t1 + \$$t2 + ${qty - 2}×\$$t3$t4';
   }
 
   Future<void> _continueToCheckout() async {
@@ -589,9 +707,7 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
     // For logged-in users with orgs, validate org selection
     if (_isLoggedIn(context)) {
       if (cart.selectedOrgId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a club')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a club')));
         return;
       }
     }
@@ -609,6 +725,7 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
           'module_qty': qty,
           'success_url': '$origin/order/success?session_id={CHECKOUT_SESSION_ID}',
           'cancel_url': '$origin/order',
+          'billing_commitment': cart.billingCommitment.name,
         };
 
         // If transferred user has a transfer token, include it for authorization
@@ -618,10 +735,7 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
 
         dynamic response;
         try {
-          response = await Supabase.instance.client.functions.invoke(
-            'create-checkout-session',
-            body: body,
-          );
+          response = await Supabase.instance.client.functions.invoke('create-checkout-session', body: body);
         } catch (invokeError) {
           throw Exception('FUNCTION INVOKE ERROR: $invokeError');
         }
@@ -653,6 +767,7 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
             'module_qty': qty,
             'success_url': '$origin/order/success?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url': '$origin/order',
+            'billing_commitment': cart.billingCommitment.name,
           },
         );
 
@@ -673,9 +788,7 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
     } catch (e) {
       if (mounted) {
         setState(() => _loading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
@@ -693,18 +806,11 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Club/Organization',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600],
-                ),
-          ),
+          Text('Club/Organization', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
           const SizedBox(height: 4),
           Text(
             orgs.first.orgName,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
           ),
           const Divider(),
         ],
@@ -733,10 +839,7 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
               value: cart.selectedOrgId,
               hint: const Text('Select a club'),
               items: orgs.map((org) {
-                return DropdownMenuItem(
-                  value: org.orgId,
-                  child: Text(org.orgName),
-                );
+                return DropdownMenuItem(value: org.orgId, child: Text(org.orgName));
               }).toList(),
               onChanged: (value) {
                 cart.setSelectedOrgId(value);
@@ -753,18 +856,11 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Contact Email',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-              ),
-        ),
+        Text('Contact Email', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600])),
         const SizedBox(height: 4),
         Text(
           _getUserEmail(context) ?? '',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
         ),
         const Divider(),
       ],
@@ -780,52 +876,35 @@ class _OrderDrawerContentState extends State<OrderDrawerContent> {
     final qty = cart.quantity;
     final currentQty = org.stripeSubscriptionQty;
     final newTotalQty = currentQty + qty;
+    final commitment = cart.billingCommitment;
+    final isAnnual = commitment == BillingCommitment.annual;
+    final interval = isAnnual ? 'yr' : 'mo';
 
-    final currentMonthly = cart.pricing.calculateMonthlyCents(currentQty);
-    final newMonthly = cart.pricing.calculateMonthlyCents(newTotalQty);
-    final additionalMonthly = newMonthly - currentMonthly;
-
-    String formatCents(int cents) {
-      return '\$${(cents / 100).toStringAsFixed(0)}';
-    }
+    final currentTotal = cart.pricing.costCents(currentQty, commitment);
+    final newTotal = cart.pricing.costCents(newTotalQty, commitment);
+    final additionalTotal = newTotal - currentTotal;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Subscription Update (when activated):',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-              ),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
         ),
         const SizedBox(height: 12),
-        _buildPriceRow(
-          'Current monthly',
-          '',
-          '${formatCents(currentMonthly)}/mo',
-        ),
+        _buildPriceRow('Current ${isAnnual ? 'annual' : 'monthly'}', '', '${_formatCents(currentTotal)}/$interval'),
         const SizedBox(height: 4),
-        _buildPriceRow(
-          'New monthly',
-          '',
-          '${formatCents(newMonthly)}/mo',
-        ),
+        _buildPriceRow('New ${isAnnual ? 'annual' : 'monthly'}', '', '${_formatCents(newTotal)}/$interval'),
         const SizedBox(height: 4),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text('Additional cost', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[600])),
             Text(
-              'Additional cost',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-            ),
-            Text(
-              '+${formatCents(additionalMonthly)}/mo',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.green[700],
-                    fontWeight: FontWeight.w500,
-                  ),
+              '+${_formatCents(additionalTotal)}/$interval',
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: Colors.green[700], fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -855,16 +934,15 @@ class _CartDrawerState extends State<CartDrawer> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _slideAnimation = Tween<Offset>(
       begin: const Offset(1, 0),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
-    _fadeAnimation = Tween<double>(begin: 0, end: 1)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _fadeAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _controller.forward();
   }
 
@@ -900,60 +978,112 @@ class _CartDrawerState extends State<CartDrawer> with SingleTickerProviderStateM
             position: _slideAnimation,
             child: FocusScope(
               child: Container(
-              width: 480,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.18),
-                    blurRadius: 32,
-                    offset: const Offset(-4, 0),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  // Drawer header with close button
-                  SafeArea(
-                    bottom: false,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 20, 12, 0),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Your Cart',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            onPressed: _close,
-                            icon: const Icon(Icons.close),
-                            tooltip: 'Close cart',
-                          ),
-                        ],
+                width: 480,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.18), blurRadius: 32, offset: const Offset(-4, 0)),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    // Drawer header with close button
+                    SafeArea(
+                      bottom: false,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 20, 12, 0),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Your Cart',
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            const Spacer(),
+                            IconButton(onPressed: _close, icon: const Icon(Icons.close), tooltip: 'Close cart'),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const Divider(),
-                  // Body: empty state or order form
-                  Expanded(
-                    child: cart.isEmpty
-                        ? _EmptyCartState(onClose: _close)
-                        : SingleChildScrollView(
-                            padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
-                            child: OrderDrawerContent(),
-                          ),
-                  ),
-                ],
+                    const Divider(),
+                    // Body: empty state or order form
+                    Expanded(
+                      child: cart.isEmpty
+                          ? _EmptyCartState(onClose: _close)
+                          : SingleChildScrollView(
+                              padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+                              child: OrderDrawerContent(),
+                            ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            ),  // FocusScope
+            ), // FocusScope
           ),
         ),
       ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// _CommitmentCard — selectable monthly / annual commitment option
+// ---------------------------------------------------------------------------
+
+class _CommitmentCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final String price;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _CommitmentCard({
+    required this.title,
+    required this.subtitle,
+    required this.price,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: selected ? colorScheme.primary.withValues(alpha: 0.08) : colorScheme.surface,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: selected ? colorScheme.primary : colorScheme.outlineVariant,
+            width: selected ? 2 : 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                if (selected) Icon(Icons.check_circle, size: 18, color: colorScheme.primary),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(price, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 2),
+            Row(
+              children: [Expanded(child: Text(subtitle, style: Theme.of(context).textTheme.bodySmall))],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
