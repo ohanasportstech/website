@@ -88,7 +88,7 @@ class Strings {
     'Rugged hardware built for real club usage',
     'Precision calibration for improved shot consistency',
     'Over-the-air updates through the Kai Tennis app',
-    'Installs in minutes on your existing PlayMate machine',
+    'Installs in minutes on your existing PlayMate® machine',
   ];
 
   // How it works
@@ -101,7 +101,7 @@ class Strings {
   static const how3Desc = 'Browse the library, set your level, and press start - Kai will take it from there.';
 
   // Testimonials
-  static const testimonialsHeader = 'Players love Kai';
+  static const testimonialsHeader = 'Players Love Kai';
   static const quote1 = 'No more running back and forth tweaking dials and wasting balls!';
   static const quote1Author = 'Alex, 4.0 USTA';
   static const quote2 = 'The app is easy to use and I have so many options of skills that I can work on.';
@@ -110,19 +110,19 @@ class Strings {
   static const quote3Author = 'Brett, college player';
 
   // FAQ
-  static const faqHeader = 'Frequently Asked Questions';
+  static const faqHeader = 'Common Questions';
   static const faq1Q = 'Will it work with my ball machine?';
   static const faq1A =
-      'Kai has been developed to work with the most common PlayMate® ball machines. We are working at expanding to more brands and models in the future.';
+      'Kai has been developed to work with the PlayMate® iGenie and iSmash ball machines. We are working at expanding to more brands and models in the future.';
   static const faq2Q = 'Is there a subscription?';
   static const faq2A =
-      'Kai is currently in an Early Access stage of development and free for select tennis clubs and players. We plan to have a subscription model to help us keep developing and expanding Kai early in 2026.';
+      'Kai offers a monthly subscription for full flexibility and an annual commitment with up-front billing that saves approximately two months. Both options include a 60-day free trial for new organizations.';
   static const faq3Q = 'When can I get a Kai Module?';
   static const faq3A =
-      'Kai will launch in 2026 and you\'ll be able to order one through our website. In the meantime you can install the Kai Tennis App and look around, or contact us to get your name on the waitlist or potentially join our Early Access program.';
+      'Orders typically ship within one week. For larger orders or during periods of high demand, we\'ll confirm timing when you order.';
 
   // Contact
-  static const contactHeader = 'Try Kai';
+  static const contactHeader = 'Contact Us';
   static const contactLead =
       'Tell us a little about yourself and we\'ll connect you with a Kai Tennis expert who can share more about the product and answer any questions you have.';
   static const contactName = 'Your name';
@@ -147,4 +147,22 @@ class Strings {
   // Footer
   static const footerCopyright = '© 2026 Ohana Sports';
   static const footerTagline = 'Made for players, with heart.';
+  static const socialHandle = 'rallywithkai';
+  static const socialYouTube = 'https://www.youtube.com/@$socialHandle';
+  static const socialFacebook = 'https://www.facebook.com/$socialHandle';
+  static const socialInstagram = 'https://www.instagram.com/$socialHandle';
+  static const socialTikTok = 'https://www.tiktok.com/@$socialHandle';
+  static const socialX = 'https://x.com/$socialHandle';
+
+  // Quick links
+  static const quickLinksHelpCenter = 'Help Center';
+  static const quickLinksLegal = 'Legal';
+  static const quickLinksFaq = 'FAQ';
+  static const quickLinksAboutUs = 'About Us';
+  static const legalTermsOfUse = 'Terms of Use';
+  static const legalTermsOfPurchase = 'Terms of Purchase';
+  static const legalPrivacyPolicy = 'Privacy Policy';
+  static const legalCopyrightPolicy = 'Copyright Policy';
+  static const legalDataDeletion = 'Data Deletion';
+  static const legalWarranty = 'Warranty';
 }

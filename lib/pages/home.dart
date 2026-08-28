@@ -24,7 +24,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final ScrollController _scrollController;
-  double _scroll = 0;
   bool _cartOpen = false;
   final GlobalKey _contactKey = GlobalKey();
   final GlobalKey _getAppKey = GlobalKey();
@@ -35,10 +34,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController()
-      ..addListener(() {
-        setState(() => _scroll = _scrollController.position.pixels);
-      });
+    _scrollController = ScrollController();
     // Scroll to a section if a ?section= query param was passed on navigation.
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToSectionFromUri());
   }
@@ -98,9 +94,7 @@ class _HomePageState extends State<HomePage> {
                 slivers: [
                   if (isMobile) SliverToBoxAdapter(child: SizedBox(height: 56)),
                   SliverToBoxAdapter(
-                    child: _MaxWidth(
-                      child: _HeroSection(isMobile: isMobile, scroll: _scroll),
-                    ),
+                    child: _MaxWidth(child: _HeroSection(isMobile: isMobile)),
                   ),
                   SliverToBoxAdapter(
                     child: _MaxWidth(child: _MeetKaiSection(isMobile: isMobile)),
@@ -137,6 +131,7 @@ class _HomePageState extends State<HomePage> {
                       child: _ContactSection(key: _contactKey, isMobile: isMobile),
                     ),
                   ),
+                  SliverToBoxAdapter(child: _MaxWidth(child: _QuickLinksSection())),
                   SliverToBoxAdapter(
                     child: _MaxWidth(child: _GetTheAppSection(key: _getAppKey)),
                   ),
@@ -183,8 +178,7 @@ class _MaxWidth extends StatelessWidget {
 // MARK: Hero
 class _HeroSection extends StatelessWidget {
   final bool isMobile;
-  final double scroll;
-  const _HeroSection({required this.isMobile, required this.scroll});
+  const _HeroSection({required this.isMobile});
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -433,18 +427,19 @@ class _Step extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const SizedBox(width: 12),
           Container(
-            width: 60, // Fixed size for the circle
-            height: 60, // Fixed size for the circle
+            width: 40, // Fixed size for the circle
+            height: 40, // Fixed size for the circle
             decoration: BoxDecoration(color: color.primary, shape: BoxShape.circle),
             alignment: Alignment.center,
             child: Text(
               number,
               style: Theme.of(
                 context,
-              ).textTheme.displaySmall?.copyWith(color: color.onPrimary, fontWeight: FontWeight.bold),
+              ).textTheme.titleLarge?.copyWith(color: color.onPrimary, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(width: 20),
@@ -713,37 +708,40 @@ class _FaqSection extends StatelessWidget {
       decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainer),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              Strings.faqHeader,
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 8),
-            for (final f in faqs)
-              Theme(
-                data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                child: ExpansionTile(
-                  title: Padding(
-                    padding: const EdgeInsets.only(top: 24.0),
-                    child: Text(f[0], style: Theme.of(context).textTheme.titleLarge),
-                  ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(f[1], style: Theme.of(context).textTheme.titleMedium),
+        child: Material(
+          type: MaterialType.transparency,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                Strings.faqHeader,
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              for (final f in faqs)
+                Theme(
+                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    title: Padding(
+                      padding: const EdgeInsets.only(top: 24.0),
+                      child: Text(f[0], style: Theme.of(context).textTheme.titleLarge),
+                    ),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(f[1], style: Theme.of(context).textTheme.titleMedium),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -857,9 +855,6 @@ class _ContactSectionState extends State<_ContactSection> {
     return Container(
       padding: _sectionPadding(isMobile),
       alignment: Alignment.centerLeft,
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: color.outlineVariant)),
-      ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 600),
         child: Column(
@@ -1034,6 +1029,99 @@ class _CtaSection extends StatelessWidget {
 }
 */
 
+// MARK: Quick links section
+class _QuickLinksSection extends StatelessWidget {
+  const _QuickLinksSection();
+
+  void _navigate(BuildContext context, String route) {
+    Navigator.of(context).pushNamed(route);
+  }
+
+  Widget _textLink(BuildContext context, String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      mouseCursor: SystemMouseCursors.click,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Text(
+          label,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black87, fontWeight: FontWeight.w600),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final legalItems = const [
+      [Strings.legalTermsOfUse, '/docs/terms-of-use'],
+      [Strings.legalTermsOfPurchase, '/docs/terms-of-purchase'],
+      [Strings.legalPrivacyPolicy, '/docs/privacy-policy'],
+      [Strings.legalCopyrightPolicy, '/docs/copyright-policy'],
+      [Strings.legalDataDeletion, '/pages/data-deletion'],
+      [Strings.legalWarranty, '/docs/warranty'],
+    ];
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+          bottom: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+        ),
+      ),
+      child: Center(
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 8,
+          runSpacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            _textLink(context, Strings.quickLinksHelpCenter, () => _navigate(context, '/pages/help')),
+            _LegalDropdown(items: legalItems, onSelected: (route) => _navigate(context, route)),
+            _textLink(context, Strings.quickLinksFaq, () => _navigate(context, '/pages/help?section=faq')),
+            _textLink(context, Strings.quickLinksAboutUs, () => _navigate(context, '/about')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LegalDropdown extends StatelessWidget {
+  final List<List<String>> items;
+  final ValueChanged<String> onSelected;
+
+  const _LegalDropdown({required this.items, required this.onSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      onSelected: onSelected,
+      position: PopupMenuPosition.under,
+      tooltip: '',
+      itemBuilder: (context) =>
+          items.map((item) => PopupMenuItem<String>(value: item[1], child: Text(item[0]))).toList(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              Strings.quickLinksLegal,
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(color: Colors.black87, fontWeight: FontWeight.w600),
+            ),
+            const Icon(Icons.arrow_drop_down, color: Colors.black87, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 // MARK: Get the app section
 class _GetTheAppSection extends StatelessWidget {
   const _GetTheAppSection({super.key});
@@ -1044,10 +1132,7 @@ class _GetTheAppSection extends StatelessWidget {
     final playUrl = Uri.parse('https://play.google.com/store/apps/details?id=net.OhanaSports.Kai');
     return Container(
       padding: _sectionPadding(MediaQuery.of(context).size.width < 700),
-      decoration: BoxDecoration(
-        color: color.surfaceContainer,
-        border: Border(top: BorderSide(color: color.outlineVariant)),
-      ),
+      decoration: BoxDecoration(color: color.surfaceContainer),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
@@ -1096,24 +1181,59 @@ class _GetTheAppSection extends StatelessWidget {
 // MARK: Footer
 class _Footer extends StatelessWidget {
   const _Footer();
+
+  Future<void> _launchSocial(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  Widget _socialIcon(String asset, String url, String label) {
+    return InkWell(
+      onTap: () => _launchSocial(url),
+      borderRadius: BorderRadius.circular(8),
+      mouseCursor: SystemMouseCursors.click,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: SvgPicture.asset(
+          asset,
+          height: 32,
+          semanticsLabel: label,
+          colorFilter: ColorFilter.mode(Colors.grey[800]!, BlendMode.srcIn),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
-      ),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Text(Strings.footerCopyright),
-              SizedBox(height: 8),
-              Text(Strings.footerTagline),
-              SizedBox(height: 400),
+            children: [
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  _socialIcon('assets/icons/youtube.svg', Strings.socialYouTube, 'YouTube'),
+                  _socialIcon('assets/icons/facebook.svg', Strings.socialFacebook, 'Facebook'),
+                  _socialIcon('assets/icons/instagram.svg', Strings.socialInstagram, 'Instagram'),
+                  _socialIcon('assets/icons/tiktok.svg', Strings.socialTikTok, 'TikTok'),
+                  _socialIcon('assets/icons/x.svg', Strings.socialX, 'X'),
+                ],
+              ),
+              const SizedBox(height: 24),
+              const Text(Strings.footerCopyright),
+              const SizedBox(height: 8),
+              const Text(Strings.footerTagline),
+              const SizedBox(height: 400),
             ],
           ),
         ),
