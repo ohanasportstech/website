@@ -145,7 +145,7 @@ class Strings {
   static const ctaJoinWaitlist = 'Join the Waitlist';
 
   // Footer
-  static const footerCopyright = '© 2026 Ohana Sports';
+  static const footerCopyright = '© 2026 Ohana Sports. All rights reserved.';
   static const footerTagline = 'Made for players, with heart.';
   static const socialHandle = 'rallywithkai';
   static const socialYouTube = 'https://www.youtube.com/@$socialHandle';
