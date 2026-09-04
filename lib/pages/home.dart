@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:website/widgets/contact_section.dart';
 import 'package:website/widgets/header.dart';
+import 'package:website/widgets/page_footer.dart';
 import 'package:website/widgets/cart.dart';
 import '../widgets/card.dart';
 import '../widgets/triple_cap.dart';
@@ -12,8 +11,6 @@ import '../widgets/quilt_grid.dart';
 import '../widgets/feature_section.dart';
 import '../widgets/loop_video.dart';
 import '../strings.dart';
-
-import '../utils/turnstile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -85,77 +82,79 @@ class _HomePageState extends State<HomePage> {
       extendBodyBehindAppBar: true,
       appBar: isMobile ? MobileAppBar(onGetKaiPressed: () => _handleGetKaiPressed(context)) : null,
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Stack(
-            children: [
-              CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  if (isMobile) SliverToBoxAdapter(child: SizedBox(height: 56)),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(child: _HeroSection(isMobile: isMobile)),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(child: _MeetKaiSection(isMobile: isMobile)),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(
-                      child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile),
+      body: SelectionArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Stack(
+              children: [
+                CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    if (isMobile) SliverToBoxAdapter(child: SizedBox(height: 56)),
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(child: _HeroSection(isMobile: isMobile)),
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(child: _CarouselSection(isMobile: isMobile)),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(child: _AdvancedTechnologySection(isMobile: isMobile)),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(
-                      child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile),
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(child: _MeetKaiSection(isMobile: isMobile)),
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(
-                      child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile),
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(
+                        child: _ClubsCollegesSection(key: _clubsKey, isMobile: isMobile),
+                      ),
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(child: _TestimonialsSection(isMobile: isMobile)),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(child: _FaqSection(isMobile: isMobile)),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(
-                      child: _ContactSection(key: _contactKey, isMobile: isMobile),
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(child: _CarouselSection(isMobile: isMobile)),
                     ),
-                  ),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _QuickLinksSection())),
-                  SliverToBoxAdapter(
-                    child: _MaxWidth(child: _GetTheAppSection(key: _getAppKey)),
-                  ),
-                  SliverToBoxAdapter(child: _MaxWidth(child: _Footer())),
-                ],
-              ),
-              if (!isMobile)
-                GlassHeader(
-                  onLogoPressed: () => _scrollController.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOutCubic,
-                  ),
-                  onGetKaiPressed: () => _handleGetKaiPressed(context),
-                  onHowItWorksPressed: () => _scrollToKey(_howItWorksKey),
-                  onClubsPressed: () => _scrollToKey(_clubsKey),
-                  onPlayersPressed: () => _scrollToKey(_playersKey),
-                  onCartPressed: () => setState(() => _cartOpen = true),
-                  cartCount: context.watch<CartModel>().quantity,
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(child: _AdvancedTechnologySection(isMobile: isMobile)),
+                    ),
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(
+                        child: _SkillLevelsSection(key: _playersKey, isMobile: isMobile),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(
+                        child: _HowItWorksSection(key: _howItWorksKey, isMobile: isMobile),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(child: _TestimonialsSection(isMobile: isMobile)),
+                    ),
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(child: _FaqSection(isMobile: isMobile)),
+                    ),
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(
+                        child: ContactSection(key: _contactKey, isMobile: isMobile),
+                      ),
+                    ),
+                    SliverToBoxAdapter(child: _MaxWidth(child: const QuickLinksSection())),
+                    SliverToBoxAdapter(
+                      child: _MaxWidth(child: GetTheAppSection(key: _getAppKey)),
+                    ),
+                    SliverToBoxAdapter(child: _MaxWidth(child: const Footer())),
+                  ],
                 ),
-              if (_cartOpen) CartDrawer(onClose: () => setState(() => _cartOpen = false)),
-            ],
-          );
-        },
+                if (!isMobile)
+                  GlassHeader(
+                    onLogoPressed: () => _scrollController.animateTo(
+                      0,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOutCubic,
+                    ),
+                    onGetKaiPressed: () => _handleGetKaiPressed(context),
+                    onHowItWorksPressed: () => _scrollToKey(_howItWorksKey),
+                    onClubsPressed: () => _scrollToKey(_clubsKey),
+                    onPlayersPressed: () => _scrollToKey(_playersKey),
+                    onCartPressed: () => setState(() => _cartOpen = true),
+                    cartCount: context.watch<CartModel>().quantity,
+                  ),
+                if (_cartOpen) CartDrawer(onClose: () => setState(() => _cartOpen = false)),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -748,246 +747,6 @@ class _FaqSection extends StatelessWidget {
   }
 }
 
-// MARK: Contact
-class _ContactSection extends StatefulWidget {
-  final bool isMobile;
-  const _ContactSection({super.key, required this.isMobile});
-
-  @override
-  State<_ContactSection> createState() => _ContactSectionState();
-}
-
-class _ContactSectionState extends State<_ContactSection> {
-  static const String _turnstileSiteKey = String.fromEnvironment('TURNSTILE_SITE_KEY');
-
-  final _nameController = TextEditingController();
-  final _organizationController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _zipController = TextEditingController();
-  final _messageController = TextEditingController();
-  bool _loading = false;
-  String? _error;
-  bool _sent = false;
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _organizationController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _zipController.dispose();
-    _messageController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _submit() async {
-    setState(() => _error = null);
-
-    final name = _nameController.text.trim();
-    final organization = _organizationController.text.trim();
-    final email = _emailController.text.trim();
-    final phone = _phoneController.text.trim();
-    final zip = _zipController.text.trim();
-    final message = _messageController.text.trim();
-
-    if (name.isEmpty || email.isEmpty) {
-      setState(() => _error = Strings.contactValidationNameEmail);
-      return;
-    }
-
-    if (!email.contains('@') || !email.contains('.')) {
-      setState(() => _error = Strings.contactValidationEmail);
-      return;
-    }
-
-    if (_turnstileSiteKey.isEmpty) {
-      setState(() => _error = Strings.contactNotConfigured);
-      return;
-    }
-
-    setState(() => _loading = true);
-
-    try {
-      final token = await requestContactTurnstileToken(_turnstileSiteKey);
-
-      final response = await Supabase.instance.client.functions.invoke(
-        'contact-submission',
-        body: {
-          'name': name,
-          'organization_name': organization,
-          'email': email,
-          'phone': phone,
-          'zip_code': zip,
-          'message': message,
-          'turnstile_token': token,
-        },
-      );
-
-      if (response.status != 200) {
-        final data = response.data;
-        final msg = data is Map<String, dynamic>
-            ? data['error'] ?? Strings.contactSubmitError
-            : Strings.contactSubmitError;
-        throw Exception(msg);
-      }
-
-      setState(() {
-        _sent = true;
-        _nameController.clear();
-        _organizationController.clear();
-        _emailController.clear();
-        _phoneController.clear();
-        _zipController.clear();
-        _messageController.clear();
-      });
-    } catch (e) {
-      setState(() => _error = e.toString());
-    } finally {
-      setState(() => _loading = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
-    final isMobile = widget.isMobile;
-    return Container(
-      padding: _sectionPadding(isMobile),
-      alignment: Alignment.centerLeft,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              Strings.contactHeader,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              Strings.contactLead,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: color.onSurfaceVariant),
-            ),
-            const SizedBox(height: 16),
-            if (_sent) ...[
-              Text(
-                Strings.contactSubmitSuccess,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: color.primary),
-              ),
-              const SizedBox(height: 16),
-            ] else ...[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 12,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 12,
-                    children: [
-                      _buildField(_nameController, Strings.contactName, TextInputType.name, isMobile),
-                      _buildField(
-                        _organizationController,
-                        Strings.contactOrganizationName,
-                        TextInputType.text,
-                        isMobile,
-                      ),
-                    ],
-                  ),
-                  if (isMobile)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 12,
-                      children: [
-                        _buildField(_emailController, Strings.contactEmail, TextInputType.emailAddress, isMobile),
-                        _buildField(_phoneController, Strings.contactPhone, TextInputType.phone, isMobile),
-                        _buildField(_zipController, Strings.contactZip, TextInputType.text, isMobile),
-                      ],
-                    )
-                  else
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildField(
-                            _emailController,
-                            Strings.contactEmail,
-                            TextInputType.emailAddress,
-                            isMobile,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildField(_phoneController, Strings.contactPhone, TextInputType.phone, isMobile),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(child: _buildField(_zipController, Strings.contactZip, TextInputType.text, isMobile)),
-                      ],
-                    ),
-                  _buildField(
-                    _messageController,
-                    Strings.contactMessage,
-                    TextInputType.multiline,
-                    isMobile,
-                    maxLines: 5,
-                    minLines: 3,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              if (_error != null) ...[Text(_error!, style: TextStyle(color: color.error)), const SizedBox(height: 12)],
-              SizedBox(
-                width: isMobile ? double.infinity : 180,
-                child: FilledButton(
-                  onPressed: _loading ? null : _submit,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-                    child: _loading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                          )
-                        : const Text(Strings.contactSend),
-                  ),
-                ),
-              ),
-            ],
-            const SizedBox(height: 8),
-            Text(
-              Strings.contactAlt,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color.onSurfaceVariant),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildField(
-    TextEditingController controller,
-    String label,
-    TextInputType type,
-    bool isMobile, {
-    int? maxLines,
-    int? minLines,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      child: TextField(
-        controller: controller,
-        keyboardType: type,
-        maxLines: maxLines,
-        minLines: minLines,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
-          alignLabelWithHint: true,
-        ),
-      ),
-    );
-  }
-}
-
 /*
 // MARK: CTA
 class _CtaSection extends StatelessWidget {
@@ -1029,215 +788,3 @@ class _CtaSection extends StatelessWidget {
 }
 */
 
-// MARK: Quick links section
-class _QuickLinksSection extends StatelessWidget {
-  const _QuickLinksSection();
-
-  void _navigate(BuildContext context, String route) {
-    Navigator.of(context).pushNamed(route);
-  }
-
-  Widget _textLink(BuildContext context, String label, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      mouseCursor: SystemMouseCursors.click,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Text(
-          label,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black87, fontWeight: FontWeight.w600),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final legalItems = const [
-      [Strings.legalTermsOfUse, '/docs/terms-of-use'],
-      [Strings.legalTermsOfPurchase, '/docs/terms-of-purchase'],
-      [Strings.legalPrivacyPolicy, '/docs/privacy-policy'],
-      [Strings.legalCopyrightPolicy, '/docs/copyright-policy'],
-      [Strings.legalDataDeletion, '/pages/data-deletion'],
-      [Strings.legalWarranty, '/docs/warranty'],
-    ];
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-          bottom: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-        ),
-      ),
-      child: Center(
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 8,
-          runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            _textLink(context, Strings.quickLinksHelpCenter, () => _navigate(context, '/pages/help')),
-            _LegalDropdown(items: legalItems, onSelected: (route) => _navigate(context, route)),
-            _textLink(context, Strings.quickLinksFaq, () => _navigate(context, '/pages/help?section=faq')),
-            _textLink(context, Strings.quickLinksAboutUs, () => _navigate(context, '/about')),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _LegalDropdown extends StatelessWidget {
-  final List<List<String>> items;
-  final ValueChanged<String> onSelected;
-
-  const _LegalDropdown({required this.items, required this.onSelected});
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-      onSelected: onSelected,
-      position: PopupMenuPosition.under,
-      tooltip: '',
-      itemBuilder: (context) =>
-          items.map((item) => PopupMenuItem<String>(value: item[1], child: Text(item[0]))).toList(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              Strings.quickLinksLegal,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(color: Colors.black87, fontWeight: FontWeight.w600),
-            ),
-            const Icon(Icons.arrow_drop_down, color: Colors.black87, size: 20),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// MARK: Get the app section
-class _GetTheAppSection extends StatelessWidget {
-  const _GetTheAppSection({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
-    final appleUrl = Uri.parse('https://apps.apple.com/us/app/kai-tennis/id6748925788');
-    final playUrl = Uri.parse('https://play.google.com/store/apps/details?id=net.OhanaSports.Kai');
-    return Container(
-      padding: _sectionPadding(MediaQuery.of(context).size.width < 700),
-      decoration: BoxDecoration(color: color.surfaceContainer),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                Strings.ctaGetApp,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 24),
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 24,
-                runSpacing: 24,
-                children: [
-                  InkWell(
-                    onTap: () => launchUrl(appleUrl, mode: LaunchMode.externalApplication),
-                    borderRadius: BorderRadius.circular(12),
-                    child: SvgPicture.asset(
-                      'assets/icons/AppStore.svg',
-                      height: 44,
-                      semanticsLabel: 'Download on the App Store',
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () => launchUrl(playUrl, mode: LaunchMode.externalApplication),
-                    borderRadius: BorderRadius.circular(12),
-                    child: SvgPicture.asset(
-                      'assets/icons/GooglePlay.svg',
-                      height: 44,
-                      semanticsLabel: 'Get it on Google Play',
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// MARK: Footer
-class _Footer extends StatelessWidget {
-  const _Footer();
-
-  Future<void> _launchSocial(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
-
-  Widget _socialIcon(String asset, String url, String label) {
-    return InkWell(
-      onTap: () => _launchSocial(url),
-      borderRadius: BorderRadius.circular(8),
-      mouseCursor: SystemMouseCursors.click,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: SvgPicture.asset(
-          asset,
-          height: 32,
-          semanticsLabel: label,
-          colorFilter: ColorFilter.mode(Colors.grey[800]!, BlendMode.srcIn),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 16,
-                runSpacing: 16,
-                children: [
-                  _socialIcon('assets/icons/youtube.svg', Strings.socialYouTube, 'YouTube'),
-                  _socialIcon('assets/icons/facebook.svg', Strings.socialFacebook, 'Facebook'),
-                  _socialIcon('assets/icons/instagram.svg', Strings.socialInstagram, 'Instagram'),
-                  _socialIcon('assets/icons/tiktok.svg', Strings.socialTikTok, 'TikTok'),
-                  _socialIcon('assets/icons/x.svg', Strings.socialX, 'X'),
-                ],
-              ),
-              const SizedBox(height: 24),
-              const Text(Strings.footerCopyright),
-              const SizedBox(height: 8),
-              const Text(Strings.footerTagline),
-              const SizedBox(height: 400),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
