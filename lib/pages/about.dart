@@ -228,7 +228,7 @@ class _ValuesSection extends StatelessWidget {
         icon: Icons.trending_up_outlined,
         title: 'Always Be Improving',
         desc:
-            'Tennis is a game of constant adjustment, and we think building should work the same way. We test, learn, listen, and keep making Kai better, one session at a time.',
+            'Tennis is a game of constant adjustment, and we think building solutions should work the same way. We test, learn, listen, and keep making Kai better, one session at a time.',
       ),
     ];
 
@@ -335,7 +335,7 @@ class _TeamSection extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          "We're Joe and Victor, the two founders behind Ohana Sports. We design, build, test, and improve Kai ourselves, often with a racquet in one hand and a laptop in the other.",
+          "We are Joe and Victor, the two founders behind Ohana Sports. We design, build, test, and improve Kai ourselves, often with a racquet in one hand and a laptop in the other.",
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: colors.onSurfaceVariant, height: 1.6),
         ),
         const SizedBox(height: 16),
