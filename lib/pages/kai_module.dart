@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:website/widgets/header.dart';
 import 'package:website/widgets/cart.dart' show CartModel, AdminOrg, CartDrawer;
+import 'package:website/utils/beta_access.dart';
 
 class KaiModulePage extends StatefulWidget {
   const KaiModulePage({super.key});
@@ -33,6 +34,7 @@ class _KaiModulePageState extends State<KaiModulePage> {
   @override
   void initState() {
     super.initState();
+    BetaAccess.init();
     _handleTransferToken();
   }
 
@@ -56,6 +58,8 @@ class _KaiModulePageState extends State<KaiModulePage> {
 
         if (user != null && mounted) {
           // Transfer token validated; enable ordering mode.
+          BetaAccess.instance.enable();
+
           final cart = context.read<CartModel>();
           final isOrgAdmin = data['is_org_admin'] as bool? ?? false;
 
@@ -258,6 +262,8 @@ class _KaiModulePageState extends State<KaiModulePage> {
   }
 
   Widget _buildDetailsSection() {
+    final isBeta = context.watch<BetaAccess>().isEnabled;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -288,71 +294,96 @@ class _KaiModulePageState extends State<KaiModulePage> {
         _buildBulletItem('One simple upgrade, no new ball machine required'),
         const SizedBox(height: 18),
 
-        // Pricing and ordering UI
-        Container(
-          padding: const EdgeInsets.all(24),
-          constraints: const BoxConstraints(maxWidth: 520),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('KAI Module', style: Theme.of(context).textTheme.titleLarge),
-                        const SizedBox(height: 8),
-                        Text('\$399', style: Theme.of(context).textTheme.bodyLarge),
-                        const SizedBox(height: 8),
-                        Text(
-                          '12 month warranty\nFree shipping',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.green[700]),
-                        ),
-                      ],
+        // Pricing and ordering UI (beta-only)
+        if (isBeta) ...[
+          Container(
+            padding: const EdgeInsets.all(24),
+            constraints: const BoxConstraints(maxWidth: 520),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('KAI Module', style: Theme.of(context).textTheme.titleLarge),
+                          const SizedBox(height: 8),
+                          Text('\$399', style: Theme.of(context).textTheme.bodyLarge),
+                          const SizedBox(height: 8),
+                          Text(
+                            '12 month warranty\nFree shipping',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.green[700]),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 24),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [Image.asset('assets/images/module.png', height: 100, fit: BoxFit.contain)],
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [Image.asset('assets/images/module.png', height: 100, fit: BoxFit.contain)],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              const Divider(),
-              const SizedBox(height: 4),
-              Text(
-                'Subscription Pricing: 1st module \$199/mo, 2nd \$149/mo, 3rd+ \$99/mo each',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '60-day free trial for new customers',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.green[700]),
-              ),
-            ],
+                  ],
+                ),
+                const SizedBox(height: 4),
+                const Divider(),
+                const SizedBox(height: 4),
+                Text(
+                  'Subscription Pricing: 1st module \$199/mo, 2nd \$149/mo, 3rd+ \$99/mo each',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '60-day free trial for new customers',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.green[700]),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 32),
-        SizedBox(
-          width: 520,
-          height: 56,
-          child: FilledButton(
-            onPressed: () {
-              context.read<CartModel>().addOne();
-              setState(() => _cartOpen = true);
-            },
-            child: const Text('Add to Cart', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 32),
+          SizedBox(
+            width: 520,
+            height: 56,
+            child: FilledButton(
+              onPressed: () {
+                context.read<CartModel>().addOne();
+                setState(() => _cartOpen = true);
+              },
+              child: const Text('Add to Cart', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
           ),
-        ),
+        ] else ...[
+          // Public-facing message until ordering is ready
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Coming Soon',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'The Kai Module will be available for purchase in Summer 2026. Join the waitlist to be the first to know when ordering opens.',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }

@@ -119,7 +119,7 @@ class Strings {
       'Kai offers a monthly subscription for full flexibility and an annual commitment with up-front billing that saves approximately two months. Both options include a 60-day free trial for new organizations.';
   static const faq3Q = 'When can I get a Kai Module?';
   static const faq3A =
-      'Orders typically ship within one week. For larger orders or during periods of high demand, we\'ll confirm timing when you order.';
+      'Kai will launch in 2026 and you\'ll be able to order one through our website. In the meantime you can install the Kai Tennis App and look around, or contact us to get your name on the waitlist or potentially join our Early Access program.';
 
   // Contact
   static const contactHeader = 'Contact Us';

@@ -11,6 +11,7 @@ import 'pages/auth_callback.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'widgets/markdown_viewer.dart';
 import 'widgets/cart.dart';
+import 'utils/beta_access.dart';
 
 /// A [PageRoute] that swaps pages instantly, with no slide/fade animation.
 class NoTransitionPageRoute<T> extends PageRoute<T> {
@@ -78,6 +79,9 @@ void main() async {
   // Initialize Supabase
   await Supabase.initialize(url: supabaseUrl, publishableKey: supabasePublishableKey);
 
+  // Validate any beta secret in the URL against the Cloudflare Pages Function.
+  await BetaAccess.init();
+
   runApp(const MyApp());
 }
 
@@ -112,7 +116,10 @@ class MyApp extends StatelessWidget {
     final seed = const Color(0xFF0077C8); // kaiBlue
 
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => CartModel())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartModel()),
+        ChangeNotifierProvider(create: (_) => BetaAccess.instance),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Kai Tennis',
@@ -162,6 +169,12 @@ class MyApp extends StatelessWidget {
               builder: (context) => AppLinkFallbackPage(contentType: 'invite', contentId: code),
               settings: settings,
             );
+          }
+
+          // Ordering routes are gated behind the beta feature flag in production.
+          final orderingRoutes = {'/order/success'};
+          if (orderingRoutes.contains(path) && !BetaAccess.enabled) {
+            return MaterialPageRoute(builder: (context) => const HomePage(), settings: settings);
           }
 
           final routes = {
