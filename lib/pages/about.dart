@@ -346,10 +346,12 @@ class _TeamSection extends StatelessWidget {
       ],
     );
 
-    final placeholderBlock = Container(
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(color: colors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(24)),
-      child: Center(child: Icon(Icons.groups_outlined, size: 196, color: colors.primary.withValues(alpha: 0.5))),
+    final teamImage = ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: AspectRatio(
+        aspectRatio: 4 / 3,
+        child: Transform.scale(scale: 1.2, child: Image.asset('assets/images/Team.jpeg', fit: BoxFit.cover)),
+      ),
     );
 
     return Container(
@@ -370,14 +372,14 @@ class _TeamSection extends StatelessWidget {
                   isMobile
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [teamBody, const SizedBox(height: 32), placeholderBlock],
+                          children: [teamBody, const SizedBox(height: 32), teamImage],
                         )
                       : Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(flex: 5, child: teamBody),
                             const SizedBox(width: 64),
-                            Expanded(flex: 5, child: placeholderBlock),
+                            Expanded(flex: 5, child: teamImage),
                           ],
                         ),
                 ],
