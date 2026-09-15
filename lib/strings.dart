@@ -76,7 +76,7 @@ class Strings {
   static const cncTitle2 = 'Pro-designed Drills';
   static const cncDesc2 = 'Structured training for every level, from fundamentals to point play.';
   static const cncTitle3 = 'Personalized Lessons';
-  static const cncDesc3 = 'Pros can create tailered drills for clinics and share them for practice.';
+  static const cncDesc3 = 'Pros can create tailored drills for clinics and share them for practice.';
 
   // Advanced Technology
   static const advancedTechnologyHeader = 'Advanced Technology. Effortless Upgrade.';

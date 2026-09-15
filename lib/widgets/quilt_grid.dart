@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class QuiltGridItem {
@@ -39,15 +40,6 @@ class QuiltGrid extends StatelessWidget {
     );
   }
 
-  Widget _withTextScale(BuildContext context, double scale, Widget child) {
-    final mq = MediaQuery.of(context);
-    final clamped = scale.clamp(0.3, 1.0);
-    return MediaQuery(
-      data: mq.copyWith(textScaler: TextScaler.linear(clamped)),
-      child: child,
-    );
-  }
-
   Widget _buildMobileLayout(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,9 +63,24 @@ class QuiltGrid extends StatelessWidget {
   }
 
   Widget _buildQuiltLayout(BuildContext context, BoxConstraints constraints) {
-    // Create a staggered/masonry layout matching the reference design
-
     if (items.isEmpty) return const SizedBox.shrink();
+
+    final n = items.length;
+    final columnWidths = <int, TableColumnWidth>{};
+    for (var i = 0; i < n; i++) {
+      columnWidths[i * 2] = const FlexColumnWidth();
+      if (i < n - 1) columnWidths[i * 2 + 1] = FixedColumnWidth(spacing);
+    }
+    final descGroup = AutoSizeGroup();
+
+    List<Widget> rowCells(List<Widget> cells) {
+      final children = <Widget>[];
+      for (var i = 0; i < cells.length; i++) {
+        children.add(cells[i]);
+        if (i < cells.length - 1) children.add(SizedBox(width: spacing));
+      }
+      return children;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,137 +93,120 @@ class QuiltGrid extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.black54),
         ),
         const SizedBox(height: 40),
-        _buildTextImageCard(context, items[0]),
-        const SizedBox(height: 40),
-        _buildImageTextCard(context, items[1]),
-        const SizedBox(height: 40),
-        _buildTextImageCard(context, items[2]),
+        Table(
+          columnWidths: columnWidths,
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          children: [
+            TableRow(children: rowCells(items.map((item) => _titleCell(context, item)).toList())),
+            TableRow(children: rowCells(items.map((item) => _imageCell(context, item)).toList())),
+            TableRow(children: rowCells(items.map((item) => _descCell(context, item, descGroup)).toList())),
+          ],
+        ),
       ],
     );
   }
 
-  Widget _buildTextImageCard(BuildContext context, QuiltGridItem item) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final tile = (constraints.maxWidth - spacing) / 2 * 0.85;
-        final scale = (tile / 420).clamp(0.55, 1.0);
-        return GestureDetector(
-          onTap: item.onTap,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _withTextScale(context, scale, TextCard(size: tile, title: item.title, description: item.description)),
-              SizedBox(width: spacing),
-              _SquareImage(size: tile, image: item.image),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildImageTextCard(BuildContext context, QuiltGridItem item) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final tile = (constraints.maxWidth - spacing) / 2 * 0.85;
-        final scale = (tile / 420).clamp(0.55, 1.0);
-        return GestureDetector(
-          onTap: item.onTap,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _SquareImage(size: tile, image: item.image),
-              SizedBox(width: spacing),
-              _withTextScale(context, scale, TextCard(size: tile, title: item.title, description: item.description)),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   Widget _buildCard(BuildContext context, QuiltGridItem item, bool isMobile) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        color: colors.surface,
+        border: Border.all(color: colors.outlineVariant),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: AspectRatio(
-              aspectRatio: 4 / 3,
-              child: Image.asset(item.image, fit: BoxFit.cover),
-            ),
-          ),
           Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.title,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  item.description,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                ),
-              ],
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: isMobile ? 18 : 20),
+            child: Text(
+              item.title,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
+          AspectRatio(aspectRatio: 1, child: Image.asset(item.image, fit: BoxFit.cover)),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: isMobile ? 20 : 24),
+            child: Text(
+              item.description,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: colors.onSurfaceVariant, height: 1.55),
             ),
           ),
         ],
       ),
     );
   }
-}
 
-class TextCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final double size;
-  const TextCard({required this.size, required this.title, required this.description, super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _titleCell(BuildContext context, QuiltGridItem item) {
+    final colors = Theme.of(context).colorScheme;
+    final style = Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600);
     return Container(
-      height: size,
-      width: size,
-      padding: const EdgeInsets.only(left: 46, right: 24, top: 24, bottom: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+      decoration: BoxDecoration(
+        color: colors.surface,
+        border: Border(
+          left: BorderSide(color: colors.outlineVariant),
+          top: BorderSide(color: colors.outlineVariant),
+          right: BorderSide(color: colors.outlineVariant),
+        ),
+        borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+      ),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Text(title, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: 12),
-          Text(
-            description,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.black54),
-          ),
+          Opacity(opacity: 0, child: Text(' \n ', maxLines: 2, style: style)),
+          Text(item.title, textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis, style: style),
         ],
       ),
     );
   }
-}
 
-class _SquareImage extends StatelessWidget {
-  final double size;
-  final String image;
-  const _SquareImage({required this.size, required this.image});
+  Widget _imageCell(BuildContext context, QuiltGridItem item) {
+    final colors = Theme.of(context).colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.surface,
+        border: Border(
+          left: BorderSide(color: colors.outlineVariant),
+          right: BorderSide(color: colors.outlineVariant),
+        ),
+      ),
+      child: AspectRatio(aspectRatio: 1, child: Image.asset(item.image, fit: BoxFit.cover)),
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: SizedBox(
-        width: size,
-        height: size,
-        child: Image.asset(image, fit: BoxFit.cover),
+  Widget _descCell(BuildContext context, QuiltGridItem item, AutoSizeGroup group) {
+    final colors = Theme.of(context).colorScheme;
+    final style = Theme.of(context).textTheme.bodyLarge?.copyWith(color: colors.onSurfaceVariant, height: 1.55);
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.surface,
+        border: Border(
+          left: BorderSide(color: colors.outlineVariant),
+          bottom: BorderSide(color: colors.outlineVariant),
+          right: BorderSide(color: colors.outlineVariant),
+        ),
+        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)),
+      ),
+      alignment: Alignment.topCenter,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Opacity(opacity: 0, child: Text(' \n \n ', maxLines: 3, style: style)),
+          AutoSizeText(
+            item.description,
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            group: group,
+            minFontSize: 12,
+            style: style,
+          ),
+        ],
       ),
     );
   }
