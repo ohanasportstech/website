@@ -361,12 +361,12 @@ the exact same session on their own.
 
 ### The Kai Module
 
-The **Kai Module** is a small Bluetooth controller that is permanently installed on
+The Kai Module is a small Bluetooth controller that is permanently installed on
 the ball machine at participating clubs. There is nothing for you to plug in,
 carry, or pick up at the front desk — if the machine has a module, the app will find
 it.
 
-Supported machines: **PlayMate iSmash** and **PlayMate iGenie**.
+Supported machines: PlayMate® iSmash and iGenie.
 
 ### Power on
 
@@ -378,12 +378,12 @@ Supported machines: **PlayMate iSmash** and **PlayMate iGenie**.
 
 ### Connect
 
-- Kai uses **Bluetooth LE** to save your phone's battery, and no manual pairing is
+- Kai uses Bluetooth LE to save your phone's battery, and no manual pairing is
   required.
 
 - Open the app and it automatically searches for and connects to the nearby module.
 
-- The range is about **30 meters**, so you can connect from anywhere on the court.
+- The range is about 30 meters, so you can connect from anywhere on the court.
 
 - If your club has more than one machine, the app asks which module you want to
   use, listed by the name your club gave it.
@@ -530,7 +530,7 @@ Just turn the machine on and open the app.
 
 ### Which ball machines work with Kai?
 
-PlayMate **iSmash** and **iGenie**. We're working on support for more machines and
+PlayMate® **iSmash** and **iGenie**. We're working on support for more machines and
 brands.
 
 ### Do I have to pay for Kai?

@@ -6,7 +6,6 @@ class Strings {
   static const nav3 = 'For Individuals';
   static const nav4 = 'About Us';
   static const navCTA = 'Get the App';
-  static const navGetKai = 'Try Kai';
   static const navOrderKai = 'Order Kai';
   static const navAccount = 'Account';
 
@@ -119,7 +118,7 @@ class Strings {
       'Kai offers a monthly subscription for full flexibility and an annual commitment with up-front billing that saves approximately two months. Both options include a 60-day free trial for new organizations.';
   static const faq3Q = 'When can I get a Kai Module?';
   static const faq3A =
-      'Kai will launch in 2026 and you\'ll be able to order one through our website. In the meantime you can install the Kai Tennis App and look around, or contact us to get your name on the waitlist or potentially join our Early Access program.';
+      'Kai Modules are available to order now through our website. You can also install the Kai Tennis app to explore drills and features, or contact us with any questions.';
 
   // Contact
   static const contactHeader = 'Contact Us';
@@ -142,7 +141,7 @@ class Strings {
   // CTA
   static const ctaHeader = 'Ready to rally with Kai Tennis?';
   static const ctaGetApp = 'Get Kai Tennis';
-  static const ctaJoinWaitlist = 'Join the Waitlist';
+  static const ctaOrderKai = 'Order Kai';
 
   // Footer
   static const footerCopyright = '© 2026 Ohana Sports. All rights reserved.';

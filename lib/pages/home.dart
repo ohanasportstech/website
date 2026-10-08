@@ -4,7 +4,6 @@ import 'package:website/widgets/contact_section.dart';
 import 'package:website/widgets/header.dart';
 import 'package:website/widgets/page_footer.dart';
 import 'package:website/widgets/cart.dart';
-import 'package:website/utils/beta_access.dart';
 import '../widgets/card.dart';
 import '../widgets/triple_cap.dart';
 import '../widgets/carousel.dart';
@@ -66,11 +65,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _handleGetKaiPressed(BuildContext context) {
-    if (BetaAccess.enabled) {
-      Navigator.of(context).pushNamed('/kai-module');
-    } else {
-      _scrollToKey(_contactKey);
-    }
+    Navigator.of(context).pushNamed('/kai-module');
   }
 
   @override
@@ -782,7 +777,7 @@ class _CtaSection extends StatelessWidget {
               runSpacing: 12,
               children: [
                 FilledButton(onPressed: () {}, child: const Text(Strings.ctaGetApp)),
-                FilledButton(onPressed: () {}, child: const Text(Strings.ctaJoinWaitlist)),
+                FilledButton(onPressed: () {}, child: const Text(Strings.ctaOrderKai)),
               ],
             ),
           ],

@@ -1,41 +1,51 @@
-### Early Access: Free Through 2025
+### Kai Module & Subscription
 
-Right now, **Kai is completely free to use**.  
+The Kai Module is available to order now for **$399**. It upgrades your existing PlayMate® iGenie or iSmash ball machine with app-based control, a curated drill library, custom workouts, and more.
 
-We invite everyone who belongs to a participating tennis club in the Pacific Northwest to try Kai, train with our drills, and give feedback - tell us what you think!
+Each Module requires an active Kai subscription, billed monthly or annually per Module:
 
-Starting in 2026, we will be introducing subscription plans to help us continue building something truly special and support our community.
+- **1st Module:** $199/month or $1,990/year
+- **2nd Module:** $149/month or $1,490/year
+- **3rd+ Modules:** $99/month per Module or $990/year per Module
 
-- **New pro designed drills** to continuously update our library with fresh, high-quality training content.  
-- **App enhancements** with new features and better ways to help you reach your tennis goals.
-- **Smarter tools** for coaches, pros, and everyone in the community to create and share custom drills.
-
-<br>
-
----
-<br>
-
-## What to Expect
-
-When we launch subscriptions in 2026, we’ll offer **a few simple, flexible tiers** to match different players’ needs:
-
-- **Essentials** – For players who use a ball machine occasionally and want a super easy way to start and stop basic drills.  
-- **Premium** – For players ready to push their game further with rally-style simulations, advanced drills, and skill-focused training.  
-- **Pro** – For coaches, parents, and team captains who want to create custom training plans, assign drills, and share them with students, children, or teammates.
-
-As we get closer to launch, we’ll share **full details on pricing, features, and plans** so you can choose the best fit.
+Paying annually saves the equivalent of two months each year.
 
 <br>
 
 ---
 <br>
 
-## We’re Just Getting Started
+## 60-Day Free Trial
 
-We can’t wait to fully launch Kai in 2026.
- 
-Until then, enjoy unlimited access for free in 2025 — and thank you for being part of "../images/markdown"this exciting journey from the start.
+New customers receive a **60-day free trial** that starts when the first Module is activated. The trial is per customer, not per Module, so purchasing or activating additional Modules does not restart or extend the trial.
 
-Let’s rally together and make training smarter, more fun, and more connected.  
+You can cancel anytime before the trial ends and your subscription will not begin. After the trial, your chosen billing cadence (monthly or annual) begins automatically unless cancelled.
+
+<br>
+
+---
+<br>
+
+## What's Included
+
+A Kai subscription unlocks the full set of features for every Module under your account:
+
+- **Pro-designed drill library** — groundstrokes, volleys, movement, point play, and more.
+- **Custom drills and playlists** — create, save, and share your own training plans.
+- **Progress tracking** — practice time, shots, favorites, and recent activity.
+- **Club management tools** — invite administrators, assign Modules, and manage your subscription from the Kai Tennis app.
+
+<br>
+
+---
+<br>
+
+## Order or Manage Your Subscription
+
+Ready to get started? [Order a Kai Module](/kai-module) through our website.
+
+After your order, download the Kai Tennis app to activate your Module, manage your subscription, and start training.
+
+If you have questions, reach out to us at [info@ohanasports.net](mailto:info@ohanasports.net).
+
 **– The Kai Team**
-
